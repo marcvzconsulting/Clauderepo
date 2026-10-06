@@ -1,0 +1,115 @@
+/// Datumtabel op dagniveau (2023-2028). Feiten staan op de eerste dag van de maand.
+table DimDatum
+	lineageTag: e9c031bf-1672-4df5-9634-b685e17d16fd
+	dataCategory: Time
+
+	column DatumKey
+		dataType: int64
+		isHidden
+		lineageTag: 87ac79de-3edf-45ef-aa76-14fc859d003d
+		summarizeBy: none
+		sourceColumn: DatumKey
+
+		annotation SummarizationSetBy = User
+
+	column Datum
+		dataType: dateTime
+		isKey
+		formatString: dd-MM-yyyy
+		lineageTag: 7ca92545-92ce-4c52-8977-80be75890cc1
+		summarizeBy: none
+		sourceColumn: Datum
+
+		annotation SummarizationSetBy = User
+
+	column Jaar
+		dataType: int64
+		formatString: 0
+		lineageTag: 823ee818-0b98-4e4d-a351-205f2656c9aa
+		summarizeBy: none
+		sourceColumn: Jaar
+
+		annotation SummarizationSetBy = User
+
+	column Kwartaal
+		dataType: string
+		lineageTag: 05e59ef8-39a7-478c-80c8-65004cf047e3
+		summarizeBy: none
+		sourceColumn: Kwartaal
+
+		annotation SummarizationSetBy = User
+
+	column JaarKwartaal
+		dataType: string
+		lineageTag: 28e8a488-8e85-4820-bf19-2168d3e38d5d
+		summarizeBy: none
+		sourceColumn: JaarKwartaal
+
+		annotation SummarizationSetBy = User
+
+	column Maandnummer
+		dataType: int64
+		formatString: 0
+		lineageTag: 3bc1546f-d273-43b8-8ae0-0414252583e4
+		summarizeBy: none
+		sourceColumn: Maandnummer
+
+		annotation SummarizationSetBy = User
+
+	column Maand
+		dataType: string
+		lineageTag: f38f4ca9-5851-4c57-8d80-b9dde8031a83
+		summarizeBy: none
+		sourceColumn: Maand
+		sortByColumn: Maandnummer
+
+		annotation SummarizationSetBy = User
+
+	column MaandKort
+		dataType: string
+		lineageTag: 654e0097-e3e1-4882-a02a-96930dcd96e4
+		summarizeBy: none
+		sourceColumn: MaandKort
+		sortByColumn: Maandnummer
+
+		annotation SummarizationSetBy = User
+
+	column JaarMaand
+		dataType: string
+		lineageTag: 3f9c65b3-6e0c-4eb0-a952-d1a256101818
+		summarizeBy: none
+		sourceColumn: JaarMaand
+		sortByColumn: JaarMaandSort
+
+		annotation SummarizationSetBy = User
+
+	column JaarMaandSort
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 9be33a51-c765-43b1-af6f-5d872721c9e5
+		summarizeBy: none
+		sourceColumn: JaarMaandSort
+
+		annotation SummarizationSetBy = User
+
+	column IsActual
+		dataType: int64
+		formatString: 0
+		lineageTag: 6be26d3a-a19b-4171-8113-b46367aa27d4
+		summarizeBy: none
+		sourceColumn: IsActual
+
+		annotation SummarizationSetBy = User
+
+	partition DimDatum = m
+		mode: import
+		source =
+			let
+			    Bron = Csv.Document(File.Contents(CsvMap & "DimDatum.csv"), [Delimiter=",", Columns=11, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+			    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
+			    Typen = Table.TransformColumnTypes(Kop, {{"DatumKey", Int64.Type}, {"Datum", type date}, {"Jaar", Int64.Type}, {"Kwartaal", type text}, {"JaarKwartaal", type text}, {"Maandnummer", Int64.Type}, {"Maand", type text}, {"MaandKort", type text}, {"JaarMaand", type text}, {"JaarMaandSort", Int64.Type}, {"IsActual", Int64.Type}}, "en-US")
+			in
+			    Typen
+
+	annotation PBI_ResultType = Table

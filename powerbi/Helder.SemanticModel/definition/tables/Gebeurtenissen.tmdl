@@ -1,0 +1,48 @@
+/// Verklarende gebeurtenissen (storyline) met toelichting.
+table Gebeurtenissen
+	lineageTag: e0830e4d-d38a-41ec-88fa-da12a17bfc75
+
+	column DatumKey
+		dataType: int64
+		isHidden
+		lineageTag: 928905bf-8639-4de1-a633-957726aa8faf
+		summarizeBy: none
+		sourceColumn: DatumKey
+
+		annotation SummarizationSetBy = User
+
+	column Titel
+		dataType: string
+		lineageTag: 7499ac12-f5f0-4810-9dc7-43bc62e887e9
+		summarizeBy: none
+		sourceColumn: Titel
+
+		annotation SummarizationSetBy = User
+
+	column Soort
+		dataType: string
+		lineageTag: f29fcfbb-3856-42c9-ae01-6a442791652e
+		summarizeBy: none
+		sourceColumn: Soort
+
+		annotation SummarizationSetBy = User
+
+	column Toelichting
+		dataType: string
+		lineageTag: ca41ad5f-e448-4e1f-9df5-5e5e2a118ad3
+		summarizeBy: none
+		sourceColumn: Toelichting
+
+		annotation SummarizationSetBy = User
+
+	partition Gebeurtenissen = m
+		mode: import
+		source =
+			let
+			    Bron = Csv.Document(File.Contents(CsvMap & "Gebeurtenissen.csv"), [Delimiter=",", Columns=4, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+			    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
+			    Typen = Table.TransformColumnTypes(Kop, {{"DatumKey", Int64.Type}, {"Titel", type text}, {"Soort", type text}, {"Toelichting", type text}}, "en-US")
+			in
+			    Typen
+
+	annotation PBI_ResultType = Table

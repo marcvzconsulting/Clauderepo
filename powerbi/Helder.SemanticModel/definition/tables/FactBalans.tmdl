@@ -1,0 +1,50 @@
+/// Balansstanden per maandeinde in lang formaat; passiva en eigen vermogen negatief opgeslagen.
+table FactBalans
+	lineageTag: 66d8f6fc-f7d5-4a94-81db-5f91428cee24
+
+	column DatumKey
+		dataType: int64
+		isHidden
+		lineageTag: d6a30b82-0cbe-401d-94e0-84f086e37085
+		summarizeBy: none
+		sourceColumn: DatumKey
+
+		annotation SummarizationSetBy = User
+
+	column ScenarioKey
+		dataType: int64
+		isHidden
+		lineageTag: 477c5705-c963-466e-8717-a4c2d3c99330
+		summarizeBy: none
+		sourceColumn: ScenarioKey
+
+		annotation SummarizationSetBy = User
+
+	column Balanspost
+		dataType: string
+		lineageTag: 2b429869-25e4-4a8f-9d60-4df8abac82d6
+		summarizeBy: none
+		sourceColumn: Balanspost
+
+		annotation SummarizationSetBy = User
+
+	column Bedrag
+		dataType: double
+		formatString: #,0
+		lineageTag: b9d0f78d-bd0b-4680-a247-06d10a10cef4
+		summarizeBy: sum
+		sourceColumn: Bedrag
+
+		annotation SummarizationSetBy = User
+
+	partition FactBalans = m
+		mode: import
+		source =
+			let
+			    Bron = Csv.Document(File.Contents(CsvMap & "FactBalans.csv"), [Delimiter=",", Columns=4, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+			    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
+			    Typen = Table.TransformColumnTypes(Kop, {{"DatumKey", Int64.Type}, {"ScenarioKey", Int64.Type}, {"Balanspost", type text}, {"Bedrag", type number}}, "en-US")
+			in
+			    Typen
+
+	annotation PBI_ResultType = Table

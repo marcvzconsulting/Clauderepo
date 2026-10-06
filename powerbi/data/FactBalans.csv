@@ -1,0 +1,757 @@
+DatumKey,ScenarioKey,Balanspost,Bedrag
+20230101,1,Liquide middelen,2855544.01
+20230101,1,Debiteuren,8189395.97
+20230101,1,Voorraden,17354074.91
+20230101,1,Materiële vaste activa,11870476.19
+20230101,1,Crediteuren,-7773879.89
+20230101,1,Belastingschuld,-350000
+20230101,1,Termijnlening,0
+20230101,1,Rekening-courantkrediet,0
+20230101,1,Eigen vermogen,-32145611.19
+20230201,1,Liquide middelen,5684117.77
+20230201,1,Debiteuren,6698443.91
+20230201,1,Voorraden,14464044.00
+20230201,1,Materiële vaste activa,11738809.52
+20230201,1,Crediteuren,-6743023.13
+20230201,1,Belastingschuld,-350000
+20230201,1,Termijnlening,0
+20230201,1,Rekening-courantkrediet,0
+20230201,1,Eigen vermogen,-31492392.07
+20230301,1,Liquide middelen,5704782.90
+20230301,1,Debiteuren,6396985.01
+20230301,1,Voorraden,14613315.96
+20230301,1,Materiële vaste activa,11605000
+20230301,1,Crediteuren,-7072930.66
+20230301,1,Belastingschuld,0
+20230301,1,Termijnlening,0
+20230301,1,Rekening-courantkrediet,0
+20230301,1,Eigen vermogen,-31247153.21
+20230401,1,Liquide middelen,2500000
+20230401,1,Debiteuren,9258619.10
+20230401,1,Voorraden,18982675.39
+20230401,1,Materiële vaste activa,11469047.62
+20230401,1,Crediteuren,-8999176.26
+20230401,1,Belastingschuld,0
+20230401,1,Termijnlening,0
+20230401,1,Rekening-courantkrediet,-1839303.45
+20230401,1,Eigen vermogen,-31371862.39
+20230501,1,Liquide middelen,2500000
+20230501,1,Debiteuren,11208716.25
+20230501,1,Voorraden,22971923.76
+20230501,1,Materiële vaste activa,11330952.38
+20230501,1,Crediteuren,-10461117.06
+20230501,1,Belastingschuld,0
+20230501,1,Termijnlening,0
+20230501,1,Rekening-courantkrediet,-5970091.87
+20230501,1,Eigen vermogen,-31580383.46
+20230601,1,Liquide middelen,2500000
+20230601,1,Debiteuren,11670813.36
+20230601,1,Voorraden,24152372.07
+20230601,1,Materiële vaste activa,11190714.29
+20230601,1,Crediteuren,-11879648.25
+20230601,1,Belastingschuld,0
+20230601,1,Termijnlening,0
+20230601,1,Rekening-courantkrediet,-5963836.16
+20230601,1,Eigen vermogen,-31670415.30
+20230701,1,Liquide middelen,2500000
+20230701,1,Debiteuren,11488551.64
+20230701,1,Voorraden,21617830.00
+20230701,1,Materiële vaste activa,11048333.33
+20230701,1,Crediteuren,-10853065.73
+20230701,1,Belastingschuld,0
+20230701,1,Termijnlening,0
+20230701,1,Rekening-courantkrediet,-4102474.76
+20230701,1,Eigen vermogen,-31699174.47
+20230801,1,Liquide middelen,2500000
+20230801,1,Debiteuren,10121612.04
+20230801,1,Voorraden,18795257.70
+20230801,1,Materiële vaste activa,10903809.52
+20230801,1,Crediteuren,-9458644.90
+20230801,1,Belastingschuld,0
+20230801,1,Termijnlening,0
+20230801,1,Rekening-courantkrediet,-1205710.66
+20230801,1,Eigen vermogen,-31656323.71
+20230901,1,Liquide middelen,2542071.18
+20230901,1,Debiteuren,10143849.17
+20230901,1,Voorraden,17084051.21
+20230901,1,Materiële vaste activa,10757142.86
+20230901,1,Crediteuren,-8769309.29
+20230901,1,Belastingschuld,0
+20230901,1,Termijnlening,0
+20230901,1,Rekening-courantkrediet,0
+20230901,1,Eigen vermogen,-31757805.13
+20231001,1,Liquide middelen,4452902.98
+20231001,1,Debiteuren,9598849.92
+20231001,1,Voorraden,15625671.23
+20231001,1,Materiële vaste activa,10608333.33
+20231001,1,Crediteuren,-8498385.87
+20231001,1,Belastingschuld,0
+20231001,1,Termijnlening,0
+20231001,1,Rekening-courantkrediet,0
+20231001,1,Eigen vermogen,-31787371.58
+20231101,1,Liquide middelen,5354587.57
+20231101,1,Debiteuren,9111143.42
+20231101,1,Voorraden,15042940.57
+20231101,1,Materiële vaste activa,10457380.95
+20231101,1,Crediteuren,-8394820.69
+20231101,1,Belastingschuld,0
+20231101,1,Termijnlening,0
+20231101,1,Rekening-courantkrediet,0
+20231101,1,Eigen vermogen,-31571231.83
+20231201,1,Liquide middelen,7268342.05
+20231201,1,Debiteuren,7963739.53
+20231201,1,Voorraden,13560750.43
+20231201,1,Materiële vaste activa,10304285.71
+20231201,1,Crediteuren,-7581355.62
+20231201,1,Belastingschuld,0
+20231201,1,Termijnlening,0
+20231201,1,Rekening-courantkrediet,0
+20231201,1,Eigen vermogen,-31515762.11
+20240101,1,Liquide middelen,27215094.31
+20240101,1,Debiteuren,7316122.66
+20240101,1,Voorraden,11303431.50
+20240101,1,Materiële vaste activa,11899047.62
+20240101,1,Crediteuren,-6718069.05
+20240101,1,Belastingschuld,0
+20240101,1,Termijnlening,-20000000
+20240101,1,Rekening-courantkrediet,0
+20240101,1,Eigen vermogen,-31015627.04
+20240201,1,Liquide middelen,24829541.07
+20240201,1,Debiteuren,7922573.57
+20240201,1,Voorraden,11175847.13
+20240201,1,Materiële vaste activa,13470833.33
+20240201,1,Crediteuren,-6661925.19
+20240201,1,Belastingschuld,0
+20240201,1,Termijnlening,-20000000
+20240201,1,Rekening-courantkrediet,0
+20240201,1,Eigen vermogen,-30736869.92
+20240301,1,Liquide middelen,23805407.89
+20240301,1,Debiteuren,8495716.32
+20240301,1,Voorraden,11146528.73
+20240301,1,Materiële vaste activa,15019642.86
+20240301,1,Crediteuren,-7415263.66
+20240301,1,Belastingschuld,0
+20240301,1,Termijnlening,-20000000
+20240301,1,Rekening-courantkrediet,0
+20240301,1,Eigen vermogen,-31052032.13
+20240401,1,Liquide middelen,18980687.18
+20240401,1,Debiteuren,10972328.00
+20240401,1,Voorraden,15094390.76
+20240401,1,Materiële vaste activa,16545476.19
+20240401,1,Crediteuren,-9657068.66
+20240401,1,Belastingschuld,0
+20240401,1,Termijnlening,-20000000
+20240401,1,Rekening-courantkrediet,0
+20240401,1,Eigen vermogen,-31935813.48
+20240501,1,Liquide middelen,12455587.75
+20240501,1,Debiteuren,14436135.39
+20240501,1,Voorraden,18233745.00
+20240501,1,Materiële vaste activa,18048333.33
+20240501,1,Crediteuren,-11612810.27
+20240501,1,Belastingschuld,-28635.73
+20240501,1,Termijnlening,-20000000
+20240501,1,Rekening-courantkrediet,0
+20240501,1,Eigen vermogen,-31532355.48
+20240601,1,Liquide middelen,10959250.45
+20240601,1,Debiteuren,14963970.14
+20240601,1,Voorraden,19322549.75
+20240601,1,Materiële vaste activa,19528214.29
+20240601,1,Crediteuren,-12629688.55
+20240601,1,Belastingschuld,0
+20240601,1,Termijnlening,-20000000
+20240601,1,Rekening-courantkrediet,0
+20240601,1,Eigen vermogen,-32144296.09
+20240701,1,Liquide middelen,11203827.79
+20240701,1,Debiteuren,13873538.42
+20240701,1,Voorraden,18268234.45
+20240701,1,Materiële vaste activa,20985119.05
+20240701,1,Crediteuren,-11808231.63
+20240701,1,Belastingschuld,-97573.53
+20240701,1,Termijnlening,-20000000
+20240701,1,Rekening-courantkrediet,0
+20240701,1,Eigen vermogen,-32424914.53
+20240801,1,Liquide middelen,12813343.99
+20240801,1,Debiteuren,11716556.93
+20240801,1,Voorraden,16607193.69
+20240801,1,Materiële vaste activa,22419047.62
+20240801,1,Crediteuren,-10815881.32
+20240801,1,Belastingschuld,-153758.93
+20240801,1,Termijnlening,-20000000
+20240801,1,Rekening-courantkrediet,0
+20240801,1,Eigen vermogen,-32586501.99
+20240901,1,Liquide middelen,13772866.03
+20240901,1,Debiteuren,11895206.96
+20240901,1,Voorraden,15719218.67
+20240901,1,Materiële vaste activa,22080000.00
+20240901,1,Crediteuren,-10581891.03
+20240901,1,Belastingschuld,0
+20240901,1,Termijnlening,-20000000
+20240901,1,Rekening-courantkrediet,0
+20240901,1,Eigen vermogen,-32885400.62
+20241001,1,Liquide middelen,15374312.27
+20241001,1,Debiteuren,11377784.66
+20241001,1,Voorraden,14536699.44
+20241001,1,Materiële vaste activa,21738809.52
+20241001,1,Crediteuren,-9993067.09
+20241001,1,Belastingschuld,-38477.65
+20241001,1,Termijnlening,-20000000
+20241001,1,Rekening-courantkrediet,0
+20241001,1,Eigen vermogen,-32996061.15
+20241101,1,Liquide middelen,16665130.28
+20241101,1,Debiteuren,10243144.50
+20241101,1,Voorraden,13867682.26
+20241101,1,Materiële vaste activa,21395476.19
+20241101,1,Crediteuren,-9301286.42
+20241101,1,Belastingschuld,-38477.65
+20241101,1,Termijnlening,-20000000
+20241101,1,Rekening-courantkrediet,0
+20241101,1,Eigen vermogen,-32831669.16
+20241201,1,Liquide middelen,17665677.95
+20241201,1,Debiteuren,10272982.99
+20241201,1,Voorraden,12719022.81
+20241201,1,Materiële vaste activa,21050000.00
+20241201,1,Crediteuren,-8866537.30
+20241201,1,Belastingschuld,0
+20241201,1,Termijnlening,-20000000
+20241201,1,Rekening-courantkrediet,0
+20241201,1,Eigen vermogen,-32841146.45
+20250101,1,Liquide middelen,17880635.28
+20250101,1,Debiteuren,9316840.23
+20250101,1,Voorraden,12224903.42
+20250101,1,Materiële vaste activa,20702380.95
+20250101,1,Crediteuren,-7781569.32
+20250101,1,Belastingschuld,0
+20250101,1,Termijnlening,-20000000
+20250101,1,Rekening-courantkrediet,0
+20250101,1,Eigen vermogen,-32343190.56
+20250201,1,Liquide middelen,17779477.10
+20250201,1,Debiteuren,8303218.08
+20250201,1,Voorraden,12011986.33
+20250201,1,Materiële vaste activa,20352619.05
+20250201,1,Crediteuren,-7925841.59
+20250201,1,Belastingschuld,0
+20250201,1,Termijnlening,-19666666.67
+20250201,1,Rekening-courantkrediet,0
+20250201,1,Eigen vermogen,-30854792.30
+20250301,1,Liquide middelen,16392700.18
+20250301,1,Debiteuren,9129258.75
+20250301,1,Voorraden,13700438.19
+20250301,1,Materiële vaste activa,20000714.29
+20250301,1,Crediteuren,-9095266.61
+20250301,1,Belastingschuld,0
+20250301,1,Termijnlening,-19333333.33
+20250301,1,Rekening-courantkrediet,0
+20250301,1,Eigen vermogen,-30794511.47
+20250401,1,Liquide middelen,13377155.75
+20250401,1,Debiteuren,13164942.13
+20250401,1,Voorraden,16488782.02
+20250401,1,Materiële vaste activa,19646666.67
+20250401,1,Crediteuren,-11659589.62
+20250401,1,Belastingschuld,0
+20250401,1,Termijnlening,-19000000.00
+20250401,1,Rekening-courantkrediet,0
+20250401,1,Eigen vermogen,-32017956.94
+20250501,1,Liquide middelen,8252294.03
+20250501,1,Debiteuren,16002330.30
+20250501,1,Voorraden,20711873.14
+20250501,1,Materiële vaste activa,19290476.19
+20250501,1,Crediteuren,-14040368.95
+20250501,1,Belastingschuld,-142900.24
+20250501,1,Termijnlening,-18666666.67
+20250501,1,Rekening-courantkrediet,0
+20250501,1,Eigen vermogen,-31407037.81
+20250601,1,Liquide middelen,7487035.71
+20250601,1,Debiteuren,16750303.84
+20250601,1,Voorraden,21615415.71
+20250601,1,Materiële vaste activa,18932142.86
+20250601,1,Crediteuren,-14169141.04
+20250601,1,Belastingschuld,0
+20250601,1,Termijnlening,-18333333.33
+20250601,1,Rekening-courantkrediet,0
+20250601,1,Eigen vermogen,-32282423.74
+20250701,1,Liquide middelen,7686670.85
+20250701,1,Debiteuren,15665027.15
+20250701,1,Voorraden,21860376.68
+20250701,1,Materiële vaste activa,18571666.67
+20250701,1,Crediteuren,-13280209.95
+20250701,1,Belastingschuld,-57045.78
+20250701,1,Termijnlening,-18000000.00
+20250701,1,Rekening-courantkrediet,0
+20250701,1,Eigen vermogen,-32446485.62
+20250801,1,Liquide middelen,11403633.90
+20250801,1,Debiteuren,14975290.61
+20250801,1,Voorraden,18673643.72
+20250801,1,Materiële vaste activa,18209047.62
+20250801,1,Crediteuren,-13055631.51
+20250801,1,Belastingschuld,-66278.64
+20250801,1,Termijnlening,-17666666.67
+20250801,1,Rekening-courantkrediet,0
+20250801,1,Eigen vermogen,-32473039.04
+20250901,1,Liquide middelen,9879187.00
+20250901,1,Debiteuren,15204561.14
+20250901,1,Voorraden,19643203.03
+20250901,1,Materiële vaste activa,17844285.71
+20250901,1,Crediteuren,-12602975.57
+20250901,1,Belastingschuld,0
+20250901,1,Termijnlening,-17333333.33
+20250901,1,Rekening-courantkrediet,0
+20250901,1,Eigen vermogen,-32634927.98
+20251001,1,Liquide middelen,12223459.07
+20251001,1,Debiteuren,13750792.81
+20251001,1,Voorraden,18476902.37
+20251001,1,Materiële vaste activa,17477380.95
+20251001,1,Crediteuren,-11987213.32
+20251001,1,Belastingschuld,-79049.62
+20251001,1,Termijnlening,-17000000.00
+20251001,1,Rekening-courantkrediet,0
+20251001,1,Eigen vermogen,-32862272.25
+20251101,1,Liquide middelen,12670833.79
+20251101,1,Debiteuren,14068272.67
+20251101,1,Voorraden,16675736.94
+20251101,1,Materiële vaste activa,17108333.33
+20251101,1,Crediteuren,-11072472.65
+20251101,1,Belastingschuld,-79049.62
+20251101,1,Termijnlening,-16666666.67
+20251101,1,Rekening-courantkrediet,0
+20251101,1,Eigen vermogen,-32704987.80
+20251201,1,Liquide middelen,14941530.27
+20251201,1,Debiteuren,12733756.37
+20251201,1,Voorraden,14742785.88
+20251201,1,Materiële vaste activa,16737142.86
+20251201,1,Crediteuren,-10073536.82
+20251201,1,Belastingschuld,0
+20251201,1,Termijnlening,-16333333.33
+20251201,1,Rekening-courantkrediet,0
+20251201,1,Eigen vermogen,-32748345.22
+20260101,1,Liquide middelen,16439597.14
+20260101,1,Debiteuren,11234663.35
+20260101,1,Voorraden,13520222.71
+20260101,1,Materiële vaste activa,16363809.52
+20260101,1,Crediteuren,-9379196.77
+20260101,1,Belastingschuld,0
+20260101,1,Termijnlening,-16000000.00
+20260101,1,Rekening-courantkrediet,0
+20260101,1,Eigen vermogen,-32179095.95
+20260201,1,Liquide middelen,15906460.78
+20260201,1,Debiteuren,11670222.77
+20260201,1,Voorraden,12995047.94
+20260201,1,Materiële vaste activa,15988333.33
+20260201,1,Crediteuren,-8923249.73
+20260201,1,Belastingschuld,0
+20260201,1,Termijnlening,-15666666.67
+20260201,1,Rekening-courantkrediet,0
+20260201,1,Eigen vermogen,-31970148.42
+20260301,1,Liquide middelen,14821083.48
+20260301,1,Debiteuren,12690975.49
+20260301,1,Voorraden,14845529.60
+20260301,1,Materiële vaste activa,15610714.29
+20260301,1,Crediteuren,-9928838.10
+20260301,1,Belastingschuld,0
+20260301,1,Termijnlening,-15333333.33
+20260301,1,Rekening-courantkrediet,0
+20260301,1,Eigen vermogen,-32706131.43
+20260401,1,Liquide middelen,11270737.04
+20260401,1,Debiteuren,16738173.23
+20260401,1,Voorraden,19208106.78
+20260401,1,Materiële vaste activa,15230952.38
+20260401,1,Crediteuren,-13020956.49
+20260401,1,Belastingschuld,-403703.10
+20260401,1,Termijnlening,-15000000.00
+20260401,1,Rekening-courantkrediet,0
+20260401,1,Eigen vermogen,-34023309.84
+20260501,1,Liquide middelen,4322060.48
+20260501,1,Debiteuren,20148648.57
+20260501,1,Voorraden,23689147.92
+20260501,1,Materiële vaste activa,14849047.62
+20260501,1,Crediteuren,-14535401.17
+20260501,1,Belastingschuld,-862897.64
+20260501,1,Termijnlening,-14666666.67
+20260501,1,Rekening-courantkrediet,0
+20260501,1,Eigen vermogen,-32943939.11
+20260601,1,Liquide middelen,2500000
+20260601,1,Debiteuren,23154572.77
+20260601,1,Voorraden,24417681.90
+20260601,1,Materiële vaste activa,14465000.00
+20260601,1,Crediteuren,-16175898.38
+20260601,1,Belastingschuld,0
+20260601,1,Termijnlening,-14333333.33
+20260601,1,Rekening-courantkrediet,-244007.77
+20260601,1,Eigen vermogen,-33784015.18
+20260701,1,Liquide middelen,6196265.69
+20260701,1,Debiteuren,20835866.06
+20260701,1,Voorraden,23547088.97
+20260701,1,Materiële vaste activa,14078809.52
+20260701,1,Crediteuren,-16175130.84
+20260701,1,Belastingschuld,-180312.13
+20260701,1,Termijnlening,-14000000.00
+20260701,1,Rekening-courantkrediet,0
+20260701,1,Eigen vermogen,-34302587.28
+20260801,1,Liquide middelen,10172833.99
+20260801,1,Debiteuren,18224858.76
+20260801,1,Voorraden,20177547.12
+20260801,1,Materiële vaste activa,13690476.19
+20260801,1,Crediteuren,-13609923.30
+20260801,1,Belastingschuld,-310918.61
+20260801,1,Termijnlening,-13666666.67
+20260801,1,Rekening-courantkrediet,0
+20260801,1,Eigen vermogen,-34678207.48
+20260901,1,Liquide middelen,12435039.30
+20260901,1,Debiteuren,16696319.51
+20260901,1,Voorraden,18761065.01
+20260901,1,Materiële vaste activa,13300000.00
+20260901,1,Crediteuren,-12724459.71
+20260901,1,Belastingschuld,0
+20260901,1,Termijnlening,-13333333.33
+20260901,1,Rekening-courantkrediet,0
+20260901,1,Eigen vermogen,-35134630.77
+20261001,3,Liquide middelen,15046684.76
+20261001,3,Debiteuren,14524790.99
+20261001,3,Voorraden,17842150.16
+20261001,3,Materiële vaste activa,13185714.29
+20261001,3,Crediteuren,-12204223.21
+20261001,3,Belastingschuld,-67205.44
+20261001,3,Termijnlening,-13000000.00
+20261001,3,Rekening-courantkrediet,0
+20261001,3,Eigen vermogen,-35327911.54
+20261101,3,Liquide middelen,16352548.50
+20261101,3,Debiteuren,13359665.51
+20261101,3,Voorraden,16406069.91
+20261101,3,Materiële vaste activa,13065972.22
+20261101,3,Crediteuren,-11286953.34
+20261101,3,Belastingschuld,-67205.44
+20261101,3,Termijnlening,-12666666.67
+20261101,3,Rekening-courantkrediet,0
+20261101,3,Eigen vermogen,-35163430.70
+20261201,3,Liquide middelen,17402825.48
+20261201,3,Debiteuren,12493360.28
+20261201,3,Voorraden,15352225.63
+20261201,3,Materiële vaste activa,12940773.81
+20261201,3,Crediteuren,-10613021.33
+20261201,3,Belastingschuld,0
+20261201,3,Termijnlening,-12333333.33
+20261201,3,Rekening-courantkrediet,0
+20261201,3,Eigen vermogen,-35242830.54
+20270101,3,Liquide middelen,18571181.69
+20270101,3,Debiteuren,11185381.23
+20270101,3,Voorraden,13739081.89
+20270101,3,Materiële vaste activa,12810119.05
+20270101,3,Crediteuren,-9589714.51
+20270101,3,Belastingschuld,0
+20270101,3,Termijnlening,-12000000.00
+20270101,3,Rekening-courantkrediet,0
+20270101,3,Eigen vermogen,-34716049.36
+20270201,3,Liquide middelen,18203179.86
+20270201,3,Debiteuren,11147788.88
+20270201,3,Voorraden,13688648.47
+20270201,3,Materiële vaste activa,12674007.94
+20270201,3,Crediteuren,-9560840.09
+20270201,3,Belastingschuld,0
+20270201,3,Termijnlening,-11666666.67
+20270201,3,Rekening-courantkrediet,0
+20270201,3,Eigen vermogen,-34486118.38
+20270301,3,Liquide middelen,16855801.12
+20270301,3,Debiteuren,12528841.77
+20270301,3,Voorraden,15369975.43
+20270301,3,Materiële vaste activa,12532440.48
+20270301,3,Crediteuren,-10634629.90
+20270301,3,Belastingschuld,0
+20270301,3,Termijnlening,-11333333.33
+20270301,3,Rekening-courantkrediet,0
+20270301,3,Eigen vermogen,-35319095.56
+20270401,3,Liquide middelen,12411896.05
+20270401,3,Debiteuren,16767613.86
+20270401,3,Voorraden,20556064.21
+20270401,3,Materiële vaste activa,12385416.67
+20270401,3,Crediteuren,-13939182.50
+20270401,3,Belastingschuld,-478305.36
+20270401,3,Termijnlening,-11000000
+20270401,3,Rekening-courantkrediet,0
+20270401,3,Eigen vermogen,-36703502.93
+20270501,3,Liquide middelen,6344321.70
+20270501,3,Debiteuren,20975004.08
+20270501,3,Voorraden,25693460.44
+20270501,3,Materiële vaste activa,12232936.51
+20270501,3,Crediteuren,-17213261.86
+20270501,3,Belastingschuld,-1030884.61
+20270501,3,Termijnlening,-10666666.67
+20270501,3,Rekening-courantkrediet,0
+20270501,3,Eigen vermogen,-36334909.60
+20270601,3,Liquide middelen,3857214.75
+20270601,3,Debiteuren,22802420.40
+20270601,3,Voorraden,27919059.29
+20270601,3,Materiële vaste activa,12075000.00
+20270601,3,Crediteuren,-18633673.01
+20270601,3,Belastingschuld,0
+20270601,3,Termijnlening,-10333333.33
+20270601,3,Rekening-courantkrediet,0
+20270601,3,Eigen vermogen,-37686688.10
+20270701,3,Liquide middelen,6555633.97
+20270701,3,Debiteuren,21579573.50
+20270701,3,Voorraden,26409197.50
+20270701,3,Materiële vaste activa,11911607.14
+20270701,3,Crediteuren,-17676241.45
+20270701,3,Belastingschuld,-282015.30
+20270701,3,Termijnlening,-10000000.00
+20270701,3,Rekening-courantkrediet,0
+20270701,3,Eigen vermogen,-38497755.37
+20270801,3,Liquide middelen,10318496.31
+20270801,3,Debiteuren,19467799.43
+20270801,3,Voorraden,23813862.44
+20270801,3,Materiële vaste activa,11742757.94
+20270801,3,Crediteuren,-16027695.76
+20270801,3,Belastingschuld,-506161.32
+20270801,3,Termijnlening,-9666666.67
+20270801,3,Rekening-courantkrediet,0
+20270801,3,Eigen vermogen,-39142392.36
+20270901,3,Liquide middelen,12163737.85
+20270901,3,Debiteuren,18312888.18
+20270901,3,Voorraden,22384397.42
+20270901,3,Materiële vaste activa,11568452.38
+20270901,3,Crediteuren,-15121608.40
+20270901,3,Belastingschuld,0
+20270901,3,Termijnlening,-9333333.33
+20270901,3,Rekening-courantkrediet,0
+20270901,3,Eigen vermogen,-39974534.09
+20271001,3,Liquide middelen,13862993.64
+20271001,3,Debiteuren,17401509.48
+20271001,3,Voorraden,21262749.12
+20271001,3,Materiële vaste activa,11388690.48
+20271001,3,Crediteuren,-14411004.64
+20271001,3,Belastingschuld,-136844.23
+20271001,3,Termijnlening,-9000000.00
+20271001,3,Rekening-courantkrediet,0
+20271001,3,Eigen vermogen,-40368093.84
+20271101,3,Liquide middelen,15745701.72
+20271101,3,Debiteuren,16015829.98
+20271101,3,Voorraden,19565974.30
+20271101,3,Materiële vaste activa,11203472.22
+20271101,3,Crediteuren,-13334026.88
+20271101,3,Belastingschuld,-143383.65
+20271101,3,Termijnlening,-8666666.67
+20271101,3,Rekening-courantkrediet,0
+20271101,3,Eigen vermogen,-40386901.02
+20271201,3,Liquide middelen,17573413.54
+20271201,3,Debiteuren,14718468.09
+20271201,3,Voorraden,17982192.15
+20271201,3,Materiële vaste activa,11012797.62
+20271201,3,Crediteuren,-12328750.30
+20271201,3,Belastingschuld,0
+20271201,3,Termijnlening,-8333333.33
+20271201,3,Rekening-courantkrediet,0
+20271201,3,Eigen vermogen,-40624787.77
+20280101,3,Liquide middelen,19255654.88
+20280101,3,Debiteuren,13186667.86
+20280101,3,Voorraden,16103619.67
+20280101,3,Materiële vaste activa,10816666.67
+20280101,3,Crediteuren,-11136216.66
+20280101,3,Belastingschuld,0
+20280101,3,Termijnlening,-8000000.00
+20280101,3,Rekening-courantkrediet,0
+20280101,3,Eigen vermogen,-40226392.42
+20280201,3,Liquide middelen,19139586.73
+20280201,3,Debiteuren,13152032.34
+20280201,3,Voorraden,16056163.06
+20280201,3,Materiële vaste activa,10615079.37
+20280201,3,Crediteuren,-11109435.43
+20280201,3,Belastingschuld,0
+20280201,3,Termijnlening,-7666666.67
+20280201,3,Rekening-courantkrediet,0
+20280201,3,Eigen vermogen,-40186759.41
+20280301,3,Liquide middelen,17682143.76
+20280301,3,Debiteuren,14794934.70
+20280301,3,Voorraden,18044488.52
+20280301,3,Materiële vaste activa,10408035.71
+20280301,3,Crediteuren,-12379494.51
+20280301,3,Belastingschuld,0
+20280301,3,Termijnlening,-7333333.33
+20280301,3,Rekening-courantkrediet,0
+20280301,3,Eigen vermogen,-41216774.85
+20280401,3,Liquide middelen,12799744.19
+20280401,3,Debiteuren,19815668.67
+20280401,3,Voorraden,24151356.57
+20280401,3,Materiële vaste activa,10195535.71
+20280401,3,Crediteuren,-16272176.68
+20280401,3,Belastingschuld,-638125.23
+20280401,3,Termijnlening,-7000000.00
+20280401,3,Rekening-courantkrediet,0
+20280401,3,Eigen vermogen,-43052003.23
+20280501,3,Liquide middelen,5379013.50
+20280501,3,Debiteuren,24804255.60
+20280501,3,Voorraden,30206684.99
+20280501,3,Materiële vaste activa,9977579.37
+20280501,3,Crediteuren,-20132668.87
+20280501,3,Belastingschuld,-1364168.32
+20280501,3,Termijnlening,-6666666.67
+20280501,3,Rekening-courantkrediet,0
+20280501,3,Eigen vermogen,-42204029.61
+20280601,3,Liquide middelen,2580097.11
+20280601,3,Debiteuren,26983070.73
+20280601,3,Voorraden,32844377.04
+20280601,3,Materiële vaste activa,9754166.67
+20280601,3,Crediteuren,-21816478.01
+20280601,3,Belastingschuld,0
+20280601,3,Termijnlening,-6333333.33
+20280601,3,Rekening-courantkrediet,0
+20280601,3,Eigen vermogen,-44011900.21
+20280701,3,Liquide middelen,6115422.64
+20280701,3,Debiteuren,25553379.00
+20280701,3,Voorraden,31088718.26
+20280701,3,Materiële vaste activa,9525297.62
+20280701,3,Crediteuren,-20702379.04
+20280701,3,Belastingschuld,-404682.87
+20280701,3,Termijnlening,-6000000.00
+20280701,3,Rekening-courantkrediet,0
+20280701,3,Eigen vermogen,-45175755.60
+20280801,3,Liquide middelen,10910727.49
+20280801,3,Debiteuren,23070015.30
+20280801,3,Voorraden,28054066.57
+20280801,3,Materiële vaste activa,9290972.22
+20280801,3,Crediteuren,-18773570.98
+20280801,3,Belastingschuld,-741400.09
+20280801,3,Termijnlening,-5666666.67
+20280801,3,Rekening-courantkrediet,0
+20280801,3,Eigen vermogen,-46144143.86
+20280901,3,Liquide middelen,13232444.82
+20280901,3,Debiteuren,21719241.76
+20280901,3,Voorraden,26391190.76
+20280901,3,Materiële vaste activa,9051190.48
+20280901,3,Crediteuren,-17718755.32
+20280901,3,Belastingschuld,0
+20280901,3,Termijnlening,-5333333.33
+20280901,3,Rekening-courantkrediet,0
+20280901,3,Eigen vermogen,-47341979.16
+20281001,3,Liquide middelen,15596560.29
+20281001,3,Debiteuren,20653612.83
+20281001,3,Voorraden,25086997.42
+20281001,3,Materiële vaste activa,8805952.38
+20281001,3,Crediteuren,-16891808.05
+20281001,3,Belastingschuld,-234608.61
+20281001,3,Termijnlening,-5000000.00
+20281001,3,Rekening-courantkrediet,0
+20281001,3,Eigen vermogen,-48016706.25
+20281101,3,Liquide middelen,18176657.75
+20281101,3,Debiteuren,19022461.52
+20281101,3,Voorraden,23101209.02
+20281101,3,Materiële vaste activa,8555257.94
+20281101,3,Crediteuren,-15630453.56
+20281101,3,Belastingschuld,-313853.61
+20281101,3,Termijnlening,-4666666.67
+20281101,3,Rekening-courantkrediet,0
+20281101,3,Eigen vermogen,-48244612.40
+20281201,3,Liquide middelen,20482657.69
+20281201,3,Debiteuren,17496516.15
+20281201,3,Voorraden,21249289.90
+20281201,3,Materiële vaste activa,8299107.14
+20281201,3,Crediteuren,-14454080.76
+20281201,3,Belastingschuld,0
+20281201,3,Termijnlening,-4333333.33
+20281201,3,Rekening-courantkrediet,0
+20281201,3,Eigen vermogen,-48740156.80
+20290101,3,Liquide middelen,22830777.92
+20290101,3,Debiteuren,15687491.05
+20290101,3,Voorraden,19043575.90
+20290101,3,Materiële vaste activa,8037500.00
+20290101,3,Crediteuren,-13052863.73
+20290101,3,Belastingschuld,0
+20290101,3,Termijnlening,-4000000.00
+20290101,3,Rekening-courantkrediet,0
+20290101,3,Eigen vermogen,-48546481.14
+20290201,3,Liquide middelen,23055658.31
+20290201,3,Debiteuren,15658891.99
+20290201,3,Voorraden,19002570.14
+20290201,3,Materiële vaste activa,7770436.51
+20290201,3,Crediteuren,-13030412.35
+20290201,3,Belastingschuld,-12982.85
+20290201,3,Termijnlening,-3666666.67
+20290201,3,Rekening-courantkrediet,0
+20290201,3,Eigen vermogen,-48777495.08
+20290301,3,Liquide middelen,21478307.82
+20290301,3,Debiteuren,17632584.78
+20290301,3,Voorraden,21376787.92
+20290301,3,Materiële vaste activa,7497916.67
+20290301,3,Crediteuren,-14547246.63
+20290301,3,Belastingschuld,0
+20290301,3,Termijnlening,-3333333.33
+20290301,3,Rekening-courantkrediet,0
+20290301,3,Eigen vermogen,-50105017.22
+20290401,3,Liquide middelen,16080046.88
+20290401,3,Debiteuren,23636190.02
+20290401,3,Voorraden,28635208.35
+20290401,3,Materiële vaste activa,7219940.48
+20290401,3,Crediteuren,-19175727.99
+20290401,3,Belastingschuld,-848985.25
+20290401,3,Termijnlening,-3000000.00
+20290401,3,Rekening-courantkrediet,0
+20290401,3,Eigen vermogen,-52546672.48
+20290501,3,Liquide middelen,6728586.63
+20290501,3,Debiteuren,29607892.95
+20290501,3,Voorraden,35839909.08
+20290501,3,Materiële vaste activa,6936507.94
+20290501,3,Crediteuren,-23770755.54
+20290501,3,Belastingschuld,-1806385.54
+20290501,3,Termijnlening,-2666666.67
+20290501,3,Rekening-courantkrediet,0
+20290501,3,Eigen vermogen,-50869088.86
+20290601,3,Liquide middelen,3532361.83
+20290601,3,Debiteuren,32231790.89
+20290601,3,Voorraden,38996926.49
+20290601,3,Materiële vaste activa,6647619.05
+20290601,3,Crediteuren,-25786605.28
+20290601,3,Belastingschuld,0
+20290601,3,Termijnlening,-2333333.33
+20290601,3,Rekening-courantkrediet,0
+20290601,3,Eigen vermogen,-53288759.65
+20290701,3,Liquide middelen,8147178.29
+20290701,3,Debiteuren,30546569.81
+20290701,3,Voorraden,36939054.53
+20290701,3,Materiële vaste activa,6353273.81
+20290701,3,Crediteuren,-24479778.25
+20290701,3,Belastingschuld,-572124.94
+20290701,3,Termijnlening,-2000000.00
+20290701,3,Rekening-courantkrediet,0
+20290701,3,Eigen vermogen,-54934173.25
+20290801,3,Liquide middelen,14268060.15
+20290801,3,Debiteuren,27600426.49
+20290801,3,Voorraden,33359975.92
+20290801,3,Materiële vaste activa,6053472.22
+20290801,3,Crediteuren,-22203483.64
+20290801,3,Belastingschuld,-1063740.41
+20290801,3,Termijnlening,-1666666.67
+20290801,3,Rekening-courantkrediet,0
+20290801,3,Eigen vermogen,-56348044.07
+20290901,3,Liquide middelen,17178668.45
+20290901,3,Debiteuren,26007581.61
+20290901,3,Voorraden,31409963.28
+20290901,3,Materiële vaste activa,5748214.29
+20290901,3,Crediteuren,-20965608.52
+20290901,3,Belastingschuld,0
+20290901,3,Termijnlening,-1333333.33
+20290901,3,Rekening-courantkrediet,0
+20290901,3,Eigen vermogen,-58045485.78
+20291001,3,Liquide middelen,20409511.70
+20291001,3,Debiteuren,24751394.17
+20291001,3,Voorraden,29881351.62
+20291001,3,Materiële vaste activa,5437500.00
+20291001,3,Crediteuren,-19995545.16
+20291001,3,Belastingschuld,-371191.45
+20291001,3,Termijnlening,-1000000.00
+20291001,3,Rekening-courantkrediet,0
+20291001,3,Eigen vermogen,-59113020.88
+20291101,3,Liquide middelen,23897551.21
+20291101,3,Debiteuren,22814136.01
+20291101,3,Voorraden,27536970.40
+20291101,3,Materiële vaste activa,5121329.37
+20291101,3,Crediteuren,-18505301.35
+20291101,3,Belastingschuld,-555353.56
+20291101,3,Termijnlening,-666666.67
+20291101,3,Rekening-courantkrediet,0
+20291101,3,Eigen vermogen,-59642665.39
+20291201,3,Liquide middelen,26796740.86
+20291201,3,Debiteuren,21003458.78
+20291201,3,Voorraden,25352755.80
+20291201,3,Materiële vaste activa,4799702.38
+20291201,3,Crediteuren,-17116774.13
+20291201,3,Belastingschuld,0
+20291201,3,Termijnlening,-333333.33
+20291201,3,Rekening-courantkrediet,0
+20291201,3,Eigen vermogen,-60502550.36

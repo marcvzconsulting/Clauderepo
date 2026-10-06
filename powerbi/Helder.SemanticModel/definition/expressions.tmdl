@@ -1,0 +1,5 @@
+/// Map met de CSV-bestanden van het Helder-model (eindig op een backslash).
+expression CsvMap = "C:\Helder\powerbi\data\" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 8f8dfe81-99a9-4a48-9353-a685a0db4e8d
+
+	annotation PBI_ResultType = Text

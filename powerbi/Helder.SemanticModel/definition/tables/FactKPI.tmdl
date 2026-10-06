@@ -1,0 +1,113 @@
+/// Werkkapitaal- en covenant-KPI's per maand zoals door het model gerapporteerd.
+table FactKPI
+	lineageTag: e59fa1b5-8c8f-431c-ac56-ff608dd2451c
+
+	column DatumKey
+		dataType: int64
+		isHidden
+		lineageTag: cc65af32-ee35-4f0f-9858-79ad72681fa8
+		summarizeBy: none
+		sourceColumn: DatumKey
+
+		annotation SummarizationSetBy = User
+
+	column ScenarioKey
+		dataType: int64
+		isHidden
+		lineageTag: e98ec851-0872-4781-92c8-f3d1152b077f
+		summarizeBy: none
+		sourceColumn: ScenarioKey
+
+		annotation SummarizationSetBy = User
+
+	column DSO
+		dataType: double
+		formatString: 0.0
+		lineageTag: 992cd76f-357d-4bd9-b77b-6037cc6a862b
+		summarizeBy: none
+		sourceColumn: DSO
+
+		annotation SummarizationSetBy = User
+
+	column DIO
+		dataType: double
+		formatString: 0.0
+		lineageTag: c42627a6-b6a2-4c80-8c92-ec9c94873bcf
+		summarizeBy: none
+		sourceColumn: DIO
+
+		annotation SummarizationSetBy = User
+
+	column DPO
+		dataType: double
+		formatString: 0.0
+		lineageTag: 6bf2bc32-af80-4f08-82fd-7bf7eabaae67
+		summarizeBy: none
+		sourceColumn: DPO
+
+		annotation SummarizationSetBy = User
+
+	column NettoSchuld
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 11822e08-e8fe-41c0-8feb-ceb3feb0c74b
+		summarizeBy: none
+		sourceColumn: NettoSchuld
+
+		annotation SummarizationSetBy = User
+
+	column LTMEBITDA
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c27f7d1c-6ad2-47a4-8be6-bf85e0d36706
+		summarizeBy: none
+		sourceColumn: LTMEBITDA
+
+		annotation SummarizationSetBy = User
+
+	column Leverage
+		dataType: double
+		formatString: 0.00
+		lineageTag: cec123d4-6f2b-4d25-b19c-1bcd29511978
+		summarizeBy: none
+		sourceColumn: Leverage
+
+		annotation SummarizationSetBy = User
+
+	column ICR
+		dataType: double
+		formatString: 0.00
+		lineageTag: 079b9ece-ed5b-431a-90f4-feca6f896584
+		summarizeBy: none
+		sourceColumn: ICR
+
+		annotation SummarizationSetBy = User
+
+	column RCFHeadroom
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 143a3eb6-b1f1-4c31-be1e-499a85ebf816
+		summarizeBy: none
+		sourceColumn: RCFHeadroom
+
+		annotation SummarizationSetBy = User
+
+	column Eenmalig
+		dataType: string
+		lineageTag: 1255d931-0bcb-4842-b9bb-1ae0f0de9fc6
+		summarizeBy: none
+		sourceColumn: Eenmalig
+
+		annotation SummarizationSetBy = User
+
+	partition FactKPI = m
+		mode: import
+		source =
+			let
+			    Bron = Csv.Document(File.Contents(CsvMap & "FactKPI.csv"), [Delimiter=",", Columns=11, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+			    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
+			    Typen = Table.TransformColumnTypes(Kop, {{"DatumKey", Int64.Type}, {"ScenarioKey", Int64.Type}, {"DSO", type number}, {"DIO", type number}, {"DPO", type number}, {"NettoSchuld", type number}, {"LTMEBITDA", type number}, {"Leverage", type number}, {"ICR", type number}, {"RCFHeadroom", type number}, {"Eenmalig", type text}}, "en-US")
+			in
+			    Typen
+
+	annotation PBI_ResultType = Table

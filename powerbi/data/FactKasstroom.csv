@@ -1,0 +1,1009 @@
+DatumKey,ScenarioKey,Kasstroompost,Bedrag
+20230101,1,Nettowinst,-804388.81
+20230101,1,Afschrijvingen,309523.81
+20230101,1,Mutatie debiteuren,1210604.03
+20230101,1,Mutatie voorraden,-154074.91
+20230101,1,Mutatie crediteuren,473879.89
+20230101,1,Mutatie belastingschuld,0
+20230101,1,Investeringen,-180000
+20230101,1,Opname termijnlening,0
+20230101,1,Aflossing termijnlening,0
+20230101,1,Mutatie RCF,-4000000
+20230101,1,Dividend,0
+20230101,1,Kapitaalstorting,0
+20230201,1,Nettowinst,-653219.12
+20230201,1,Afschrijvingen,311666.67
+20230201,1,Mutatie debiteuren,1490952.06
+20230201,1,Mutatie voorraden,2890030.91
+20230201,1,Mutatie crediteuren,-1030856.76
+20230201,1,Mutatie belastingschuld,0
+20230201,1,Investeringen,-180000
+20230201,1,Opname termijnlening,0
+20230201,1,Aflossing termijnlening,0
+20230201,1,Mutatie RCF,0
+20230201,1,Dividend,0
+20230201,1,Kapitaalstorting,0
+20230301,1,Nettowinst,-245238.86
+20230301,1,Afschrijvingen,313809.52
+20230301,1,Mutatie debiteuren,301458.90
+20230301,1,Mutatie voorraden,-149271.96
+20230301,1,Mutatie crediteuren,329907.53
+20230301,1,Mutatie belastingschuld,-350000
+20230301,1,Investeringen,-180000
+20230301,1,Opname termijnlening,0
+20230301,1,Aflossing termijnlening,0
+20230301,1,Mutatie RCF,0
+20230301,1,Dividend,0
+20230301,1,Kapitaalstorting,0
+20230401,1,Nettowinst,124709.18
+20230401,1,Afschrijvingen,315952.38
+20230401,1,Mutatie debiteuren,-2861634.09
+20230401,1,Mutatie voorraden,-4369359.43
+20230401,1,Mutatie crediteuren,1926245.60
+20230401,1,Mutatie belastingschuld,0
+20230401,1,Investeringen,-180000
+20230401,1,Opname termijnlening,0
+20230401,1,Aflossing termijnlening,0
+20230401,1,Mutatie RCF,1839303.45
+20230401,1,Dividend,0
+20230401,1,Kapitaalstorting,0
+20230501,1,Nettowinst,208521.07
+20230501,1,Afschrijvingen,318095.24
+20230501,1,Mutatie debiteuren,-1950097.15
+20230501,1,Mutatie voorraden,-3989248.37
+20230501,1,Mutatie crediteuren,1461940.80
+20230501,1,Mutatie belastingschuld,0
+20230501,1,Investeringen,-180000
+20230501,1,Opname termijnlening,0
+20230501,1,Aflossing termijnlening,0
+20230501,1,Mutatie RCF,4130788.42
+20230501,1,Dividend,0
+20230501,1,Kapitaalstorting,0
+20230601,1,Nettowinst,90031.84
+20230601,1,Afschrijvingen,320238.10
+20230601,1,Mutatie debiteuren,-462097.10
+20230601,1,Mutatie voorraden,-1180448.31
+20230601,1,Mutatie crediteuren,1418531.19
+20230601,1,Mutatie belastingschuld,0
+20230601,1,Investeringen,-180000
+20230601,1,Opname termijnlening,0
+20230601,1,Aflossing termijnlening,0
+20230601,1,Mutatie RCF,-6255.71
+20230601,1,Dividend,0
+20230601,1,Kapitaalstorting,0
+20230701,1,Nettowinst,28759.17
+20230701,1,Afschrijvingen,322380.95
+20230701,1,Mutatie debiteuren,182261.72
+20230701,1,Mutatie voorraden,2534542.07
+20230701,1,Mutatie crediteuren,-1026582.51
+20230701,1,Mutatie belastingschuld,0
+20230701,1,Investeringen,-180000
+20230701,1,Opname termijnlening,0
+20230701,1,Aflossing termijnlening,0
+20230701,1,Mutatie RCF,-1861361.40
+20230701,1,Dividend,0
+20230701,1,Kapitaalstorting,0
+20230801,1,Nettowinst,-42850.77
+20230801,1,Afschrijvingen,324523.81
+20230801,1,Mutatie debiteuren,1366939.59
+20230801,1,Mutatie voorraden,2822572.29
+20230801,1,Mutatie crediteuren,-1394420.83
+20230801,1,Mutatie belastingschuld,0
+20230801,1,Investeringen,-180000
+20230801,1,Opname termijnlening,0
+20230801,1,Aflossing termijnlening,0
+20230801,1,Mutatie RCF,-2896764.09
+20230801,1,Dividend,0
+20230801,1,Kapitaalstorting,0
+20230901,1,Nettowinst,101481.42
+20230901,1,Afschrijvingen,326666.67
+20230901,1,Mutatie debiteuren,-22237.13
+20230901,1,Mutatie voorraden,1711206.49
+20230901,1,Mutatie crediteuren,-689335.61
+20230901,1,Mutatie belastingschuld,0
+20230901,1,Investeringen,-180000
+20230901,1,Opname termijnlening,0
+20230901,1,Aflossing termijnlening,0
+20230901,1,Mutatie RCF,-1205710.66
+20230901,1,Dividend,0
+20230901,1,Kapitaalstorting,0
+20231001,1,Nettowinst,29566.45
+20231001,1,Afschrijvingen,328809.52
+20231001,1,Mutatie debiteuren,544999.26
+20231001,1,Mutatie voorraden,1458379.99
+20231001,1,Mutatie crediteuren,-270923.42
+20231001,1,Mutatie belastingschuld,0
+20231001,1,Investeringen,-180000
+20231001,1,Opname termijnlening,0
+20231001,1,Aflossing termijnlening,0
+20231001,1,Mutatie RCF,0
+20231001,1,Dividend,0
+20231001,1,Kapitaalstorting,0
+20231101,1,Nettowinst,-216139.75
+20231101,1,Afschrijvingen,330952.38
+20231101,1,Mutatie debiteuren,487706.49
+20231101,1,Mutatie voorraden,582730.66
+20231101,1,Mutatie crediteuren,-103565.19
+20231101,1,Mutatie belastingschuld,0
+20231101,1,Investeringen,-180000
+20231101,1,Opname termijnlening,0
+20231101,1,Aflossing termijnlening,0
+20231101,1,Mutatie RCF,0
+20231101,1,Dividend,0
+20231101,1,Kapitaalstorting,0
+20231201,1,Nettowinst,-55469.72
+20231201,1,Afschrijvingen,333095.24
+20231201,1,Mutatie debiteuren,1147403.89
+20231201,1,Mutatie voorraden,1482190.14
+20231201,1,Mutatie crediteuren,-813465.07
+20231201,1,Mutatie belastingschuld,0
+20231201,1,Investeringen,-180000
+20231201,1,Opname termijnlening,0
+20231201,1,Aflossing termijnlening,0
+20231201,1,Mutatie RCF,0
+20231201,1,Dividend,0
+20231201,1,Kapitaalstorting,0
+20240101,1,Nettowinst,-500135.07
+20240101,1,Afschrijvingen,335238.10
+20240101,1,Mutatie debiteuren,647616.87
+20240101,1,Mutatie voorraden,2257318.93
+20240101,1,Mutatie crediteuren,-863286.57
+20240101,1,Mutatie belastingschuld,0
+20240101,1,Investeringen,-1930000
+20240101,1,Opname termijnlening,20000000
+20240101,1,Aflossing termijnlening,0
+20240101,1,Mutatie RCF,0
+20240101,1,Dividend,0
+20240101,1,Kapitaalstorting,0
+20240201,1,Nettowinst,-278757.12
+20240201,1,Afschrijvingen,358214.29
+20240201,1,Mutatie debiteuren,-606450.91
+20240201,1,Mutatie voorraden,127584.37
+20240201,1,Mutatie crediteuren,-56143.86
+20240201,1,Mutatie belastingschuld,0
+20240201,1,Investeringen,-1930000
+20240201,1,Opname termijnlening,0
+20240201,1,Aflossing termijnlening,0
+20240201,1,Mutatie RCF,0
+20240201,1,Dividend,0
+20240201,1,Kapitaalstorting,0
+20240301,1,Nettowinst,315162.21
+20240301,1,Afschrijvingen,381190.48
+20240301,1,Mutatie debiteuren,-573142.75
+20240301,1,Mutatie voorraden,29318.40
+20240301,1,Mutatie crediteuren,753338.47
+20240301,1,Mutatie belastingschuld,0
+20240301,1,Investeringen,-1930000
+20240301,1,Opname termijnlening,0
+20240301,1,Aflossing termijnlening,0
+20240301,1,Mutatie RCF,0
+20240301,1,Dividend,0
+20240301,1,Kapitaalstorting,0
+20240401,1,Nettowinst,883781.34
+20240401,1,Afschrijvingen,404166.67
+20240401,1,Mutatie debiteuren,-2476611.68
+20240401,1,Mutatie voorraden,-3947862.03
+20240401,1,Mutatie crediteuren,2241805.00
+20240401,1,Mutatie belastingschuld,0
+20240401,1,Investeringen,-1930000
+20240401,1,Opname termijnlening,0
+20240401,1,Aflossing termijnlening,0
+20240401,1,Mutatie RCF,0
+20240401,1,Dividend,0
+20240401,1,Kapitaalstorting,0
+20240501,1,Nettowinst,1096542.00
+20240501,1,Afschrijvingen,427142.86
+20240501,1,Mutatie debiteuren,-3463807.39
+20240501,1,Mutatie voorraden,-3139354.24
+20240501,1,Mutatie crediteuren,1955741.61
+20240501,1,Mutatie belastingschuld,28635.73
+20240501,1,Investeringen,-1930000
+20240501,1,Opname termijnlening,0
+20240501,1,Aflossing termijnlening,0
+20240501,1,Mutatie RCF,0
+20240501,1,Dividend,-1500000
+20240501,1,Kapitaalstorting,0
+20240601,1,Nettowinst,611940.61
+20240601,1,Afschrijvingen,450119.05
+20240601,1,Mutatie debiteuren,-527834.75
+20240601,1,Mutatie voorraden,-1088804.75
+20240601,1,Mutatie crediteuren,1016878.28
+20240601,1,Mutatie belastingschuld,-28635.73
+20240601,1,Investeringen,-1930000
+20240601,1,Opname termijnlening,0
+20240601,1,Aflossing termijnlening,0
+20240601,1,Mutatie RCF,0
+20240601,1,Dividend,0
+20240601,1,Kapitaalstorting,0
+20240701,1,Nettowinst,280618.45
+20240701,1,Afschrijvingen,473095.24
+20240701,1,Mutatie debiteuren,1090431.72
+20240701,1,Mutatie voorraden,1054315.31
+20240701,1,Mutatie crediteuren,-821456.91
+20240701,1,Mutatie belastingschuld,97573.53
+20240701,1,Investeringen,-1930000
+20240701,1,Opname termijnlening,0
+20240701,1,Aflossing termijnlening,0
+20240701,1,Mutatie RCF,0
+20240701,1,Dividend,0
+20240701,1,Kapitaalstorting,0
+20240801,1,Nettowinst,161587.46
+20240801,1,Afschrijvingen,496071.43
+20240801,1,Mutatie debiteuren,2156981.49
+20240801,1,Mutatie voorraden,1661040.75
+20240801,1,Mutatie crediteuren,-992350.31
+20240801,1,Mutatie belastingschuld,56185.40
+20240801,1,Investeringen,-1930000
+20240801,1,Opname termijnlening,0
+20240801,1,Aflossing termijnlening,0
+20240801,1,Mutatie RCF,0
+20240801,1,Dividend,0
+20240801,1,Kapitaalstorting,0
+20240901,1,Nettowinst,298898.63
+20240901,1,Afschrijvingen,519047.62
+20240901,1,Mutatie debiteuren,-178650.03
+20240901,1,Mutatie voorraden,887975.03
+20240901,1,Mutatie crediteuren,-233990.29
+20240901,1,Mutatie belastingschuld,-153758.93
+20240901,1,Investeringen,-180000
+20240901,1,Opname termijnlening,0
+20240901,1,Aflossing termijnlening,0
+20240901,1,Mutatie RCF,0
+20240901,1,Dividend,0
+20240901,1,Kapitaalstorting,0
+20241001,1,Nettowinst,110660.52
+20241001,1,Afschrijvingen,521190.48
+20241001,1,Mutatie debiteuren,517422.31
+20241001,1,Mutatie voorraden,1182519.23
+20241001,1,Mutatie crediteuren,-588823.94
+20241001,1,Mutatie belastingschuld,38477.65
+20241001,1,Investeringen,-180000
+20241001,1,Opname termijnlening,0
+20241001,1,Aflossing termijnlening,0
+20241001,1,Mutatie RCF,0
+20241001,1,Dividend,0
+20241001,1,Kapitaalstorting,0
+20241101,1,Nettowinst,-164391.99
+20241101,1,Afschrijvingen,523333.33
+20241101,1,Mutatie debiteuren,1134640.16
+20241101,1,Mutatie voorraden,669017.17
+20241101,1,Mutatie crediteuren,-691780.67
+20241101,1,Mutatie belastingschuld,0
+20241101,1,Investeringen,-180000
+20241101,1,Opname termijnlening,0
+20241101,1,Aflossing termijnlening,0
+20241101,1,Mutatie RCF,0
+20241101,1,Dividend,0
+20241101,1,Kapitaalstorting,0
+20241201,1,Nettowinst,9477.30
+20241201,1,Afschrijvingen,525476.19
+20241201,1,Mutatie debiteuren,-29838.49
+20241201,1,Mutatie voorraden,1148659.45
+20241201,1,Mutatie crediteuren,-434749.12
+20241201,1,Mutatie belastingschuld,-38477.65
+20241201,1,Investeringen,-180000
+20241201,1,Opname termijnlening,0
+20241201,1,Aflossing termijnlening,0
+20241201,1,Mutatie RCF,0
+20241201,1,Dividend,0
+20241201,1,Kapitaalstorting,0
+20250101,1,Nettowinst,-497955.89
+20250101,1,Afschrijvingen,527619.05
+20250101,1,Mutatie debiteuren,956142.76
+20250101,1,Mutatie voorraden,494119.39
+20250101,1,Mutatie crediteuren,-1084967.98
+20250101,1,Mutatie belastingschuld,0
+20250101,1,Investeringen,-180000
+20250101,1,Opname termijnlening,0
+20250101,1,Aflossing termijnlening,0
+20250101,1,Mutatie RCF,0
+20250101,1,Dividend,0
+20250101,1,Kapitaalstorting,0
+20250201,1,Nettowinst,-1488398.26
+20250201,1,Afschrijvingen,529761.90
+20250201,1,Mutatie debiteuren,1013622.15
+20250201,1,Mutatie voorraden,212917.09
+20250201,1,Mutatie crediteuren,144272.27
+20250201,1,Mutatie belastingschuld,0
+20250201,1,Investeringen,-180000
+20250201,1,Opname termijnlening,0
+20250201,1,Aflossing termijnlening,-333333.33
+20250201,1,Mutatie RCF,0
+20250201,1,Dividend,0
+20250201,1,Kapitaalstorting,0
+20250301,1,Nettowinst,-60280.84
+20250301,1,Afschrijvingen,531904.76
+20250301,1,Mutatie debiteuren,-826040.67
+20250301,1,Mutatie voorraden,-1688451.86
+20250301,1,Mutatie crediteuren,1169425.02
+20250301,1,Mutatie belastingschuld,0
+20250301,1,Investeringen,-180000
+20250301,1,Opname termijnlening,0
+20250301,1,Aflossing termijnlening,-333333.33
+20250301,1,Mutatie RCF,0
+20250301,1,Dividend,0
+20250301,1,Kapitaalstorting,0
+20250401,1,Nettowinst,1223445.48
+20250401,1,Afschrijvingen,534047.62
+20250401,1,Mutatie debiteuren,-4035683.38
+20250401,1,Mutatie voorraden,-2788343.83
+20250401,1,Mutatie crediteuren,2564323.01
+20250401,1,Mutatie belastingschuld,0
+20250401,1,Investeringen,-180000
+20250401,1,Opname termijnlening,0
+20250401,1,Aflossing termijnlening,-333333.33
+20250401,1,Mutatie RCF,0
+20250401,1,Dividend,0
+20250401,1,Kapitaalstorting,0
+20250501,1,Nettowinst,1389080.87
+20250501,1,Afschrijvingen,536190.48
+20250501,1,Mutatie debiteuren,-2837388.17
+20250501,1,Mutatie voorraden,-4223091.13
+20250501,1,Mutatie crediteuren,2380779.34
+20250501,1,Mutatie belastingschuld,142900.24
+20250501,1,Investeringen,-180000
+20250501,1,Opname termijnlening,0
+20250501,1,Aflossing termijnlening,-333333.33
+20250501,1,Mutatie RCF,0
+20250501,1,Dividend,-2000000
+20250501,1,Kapitaalstorting,0
+20250601,1,Nettowinst,875385.93
+20250601,1,Afschrijvingen,538333.33
+20250601,1,Mutatie debiteuren,-747973.54
+20250601,1,Mutatie voorraden,-903542.57
+20250601,1,Mutatie crediteuren,128772.09
+20250601,1,Mutatie belastingschuld,-142900.24
+20250601,1,Investeringen,-180000
+20250601,1,Opname termijnlening,0
+20250601,1,Aflossing termijnlening,-333333.33
+20250601,1,Mutatie RCF,0
+20250601,1,Dividend,0
+20250601,1,Kapitaalstorting,0
+20250701,1,Nettowinst,164061.88
+20250701,1,Afschrijvingen,540476.19
+20250701,1,Mutatie debiteuren,1085276.69
+20250701,1,Mutatie voorraden,-244960.97
+20250701,1,Mutatie crediteuren,-888931.09
+20250701,1,Mutatie belastingschuld,57045.78
+20250701,1,Investeringen,-180000
+20250701,1,Opname termijnlening,0
+20250701,1,Aflossing termijnlening,-333333.33
+20250701,1,Mutatie RCF,0
+20250701,1,Dividend,0
+20250701,1,Kapitaalstorting,0
+20250801,1,Nettowinst,26553.42
+20250801,1,Afschrijvingen,542619.05
+20250801,1,Mutatie debiteuren,689736.54
+20250801,1,Mutatie voorraden,3186732.95
+20250801,1,Mutatie crediteuren,-224578.44
+20250801,1,Mutatie belastingschuld,9232.86
+20250801,1,Investeringen,-180000
+20250801,1,Opname termijnlening,0
+20250801,1,Aflossing termijnlening,-333333.33
+20250801,1,Mutatie RCF,0
+20250801,1,Dividend,0
+20250801,1,Kapitaalstorting,0
+20250901,1,Nettowinst,161888.94
+20250901,1,Afschrijvingen,544761.90
+20250901,1,Mutatie debiteuren,-229270.53
+20250901,1,Mutatie voorraden,-969559.31
+20250901,1,Mutatie crediteuren,-452655.94
+20250901,1,Mutatie belastingschuld,-66278.64
+20250901,1,Investeringen,-180000
+20250901,1,Opname termijnlening,0
+20250901,1,Aflossing termijnlening,-333333.33
+20250901,1,Mutatie RCF,0
+20250901,1,Dividend,0
+20250901,1,Kapitaalstorting,0
+20251001,1,Nettowinst,227344.27
+20251001,1,Afschrijvingen,546904.76
+20251001,1,Mutatie debiteuren,1453768.33
+20251001,1,Mutatie voorraden,1166300.67
+20251001,1,Mutatie crediteuren,-615762.25
+20251001,1,Mutatie belastingschuld,79049.62
+20251001,1,Investeringen,-180000
+20251001,1,Opname termijnlening,0
+20251001,1,Aflossing termijnlening,-333333.33
+20251001,1,Mutatie RCF,0
+20251001,1,Dividend,0
+20251001,1,Kapitaalstorting,0
+20251101,1,Nettowinst,-157284.46
+20251101,1,Afschrijvingen,549047.62
+20251101,1,Mutatie debiteuren,-317479.86
+20251101,1,Mutatie voorraden,1801165.42
+20251101,1,Mutatie crediteuren,-914740.67
+20251101,1,Mutatie belastingschuld,0
+20251101,1,Investeringen,-180000
+20251101,1,Opname termijnlening,0
+20251101,1,Aflossing termijnlening,-333333.33
+20251101,1,Mutatie RCF,0
+20251101,1,Dividend,0
+20251101,1,Kapitaalstorting,0
+20251201,1,Nettowinst,43357.42
+20251201,1,Afschrijvingen,551190.48
+20251201,1,Mutatie debiteuren,1334516.30
+20251201,1,Mutatie voorraden,1932951.07
+20251201,1,Mutatie crediteuren,-998935.83
+20251201,1,Mutatie belastingschuld,-79049.62
+20251201,1,Investeringen,-180000
+20251201,1,Opname termijnlening,0
+20251201,1,Aflossing termijnlening,-333333.33
+20251201,1,Mutatie RCF,0
+20251201,1,Dividend,0
+20251201,1,Kapitaalstorting,0
+20260101,1,Nettowinst,-569249.27
+20260101,1,Afschrijvingen,553333.33
+20260101,1,Mutatie debiteuren,1499093.02
+20260101,1,Mutatie voorraden,1222563.16
+20260101,1,Mutatie crediteuren,-694340.05
+20260101,1,Mutatie belastingschuld,0
+20260101,1,Investeringen,-180000
+20260101,1,Opname termijnlening,0
+20260101,1,Aflossing termijnlening,-333333.33
+20260101,1,Mutatie RCF,0
+20260101,1,Dividend,0
+20260101,1,Kapitaalstorting,0
+20260201,1,Nettowinst,-208947.53
+20260201,1,Afschrijvingen,555476.19
+20260201,1,Mutatie debiteuren,-435559.42
+20260201,1,Mutatie voorraden,525174.78
+20260201,1,Mutatie crediteuren,-455947.03
+20260201,1,Mutatie belastingschuld,0
+20260201,1,Investeringen,-180000
+20260201,1,Opname termijnlening,0
+20260201,1,Aflossing termijnlening,-333333.33
+20260201,1,Mutatie RCF,0
+20260201,1,Dividend,0
+20260201,1,Kapitaalstorting,0
+20260301,1,Nettowinst,735983.00
+20260301,1,Afschrijvingen,557619.05
+20260301,1,Mutatie debiteuren,-1020752.72
+20260301,1,Mutatie voorraden,-1850481.67
+20260301,1,Mutatie crediteuren,1005588.37
+20260301,1,Mutatie belastingschuld,0
+20260301,1,Investeringen,-180000
+20260301,1,Opname termijnlening,0
+20260301,1,Aflossing termijnlening,-333333.33
+20260301,1,Mutatie RCF,0
+20260301,1,Dividend,0
+20260301,1,Kapitaalstorting,0
+20260401,1,Nettowinst,1317178.42
+20260401,1,Afschrijvingen,559761.90
+20260401,1,Mutatie debiteuren,-4047197.74
+20260401,1,Mutatie voorraden,-4362577.18
+20260401,1,Mutatie crediteuren,3092118.39
+20260401,1,Mutatie belastingschuld,403703.10
+20260401,1,Investeringen,-180000
+20260401,1,Opname termijnlening,0
+20260401,1,Aflossing termijnlening,-333333.33
+20260401,1,Mutatie RCF,0
+20260401,1,Dividend,0
+20260401,1,Kapitaalstorting,0
+20260501,1,Nettowinst,1320629.27
+20260501,1,Afschrijvingen,561904.76
+20260501,1,Mutatie debiteuren,-3410475.35
+20260501,1,Mutatie voorraden,-4481041.13
+20260501,1,Mutatie crediteuren,1514444.69
+20260501,1,Mutatie belastingschuld,459194.54
+20260501,1,Investeringen,-180000
+20260501,1,Opname termijnlening,0
+20260501,1,Aflossing termijnlening,-333333.33
+20260501,1,Mutatie RCF,0
+20260501,1,Dividend,-2400000
+20260501,1,Kapitaalstorting,0
+20260601,1,Nettowinst,840076.07
+20260601,1,Afschrijvingen,564047.62
+20260601,1,Mutatie debiteuren,-3005924.20
+20260601,1,Mutatie voorraden,-728533.98
+20260601,1,Mutatie crediteuren,1640497.21
+20260601,1,Mutatie belastingschuld,-862897.64
+20260601,1,Investeringen,-180000
+20260601,1,Opname termijnlening,0
+20260601,1,Aflossing termijnlening,-333333.33
+20260601,1,Mutatie RCF,244007.77
+20260601,1,Dividend,0
+20260601,1,Kapitaalstorting,0
+20260701,1,Nettowinst,518572.10
+20260701,1,Afschrijvingen,566190.48
+20260701,1,Mutatie debiteuren,2318706.71
+20260701,1,Mutatie voorraden,870592.93
+20260701,1,Mutatie crediteuren,-767.55
+20260701,1,Mutatie belastingschuld,180312.13
+20260701,1,Investeringen,-180000
+20260701,1,Opname termijnlening,0
+20260701,1,Aflossing termijnlening,-333333.33
+20260701,1,Mutatie RCF,-244007.77
+20260701,1,Dividend,0
+20260701,1,Kapitaalstorting,0
+20260801,1,Nettowinst,375620.19
+20260801,1,Afschrijvingen,568333.33
+20260801,1,Mutatie debiteuren,2611007.30
+20260801,1,Mutatie voorraden,3369541.85
+20260801,1,Mutatie crediteuren,-2565207.54
+20260801,1,Mutatie belastingschuld,130606.48
+20260801,1,Investeringen,-180000
+20260801,1,Opname termijnlening,0
+20260801,1,Aflossing termijnlening,-333333.33
+20260801,1,Mutatie RCF,0
+20260801,1,Dividend,0
+20260801,1,Kapitaalstorting,0
+20260901,1,Nettowinst,456423.29
+20260901,1,Afschrijvingen,570476.19
+20260901,1,Mutatie debiteuren,1528539.25
+20260901,1,Mutatie voorraden,1416482.11
+20260901,1,Mutatie crediteuren,-885463.59
+20260901,1,Mutatie belastingschuld,-310918.61
+20260901,1,Investeringen,-180000
+20260901,1,Opname termijnlening,0
+20260901,1,Aflossing termijnlening,-333333.33
+20260901,1,Mutatie RCF,0
+20260901,1,Dividend,0
+20260901,1,Kapitaalstorting,0
+20261001,3,Nettowinst,193280.77
+20261001,3,Afschrijvingen,572619.05
+20261001,3,Mutatie debiteuren,2171528.52
+20261001,3,Mutatie voorraden,918914.85
+20261001,3,Mutatie crediteuren,-520236.50
+20261001,3,Mutatie belastingschuld,67205.44
+20261001,3,Investeringen,-458333.33
+20261001,3,Opname termijnlening,0
+20261001,3,Aflossing termijnlening,-333333.33
+20261001,3,Mutatie RCF,0
+20261001,3,Dividend,0
+20261001,3,Kapitaalstorting,0
+20261101,3,Nettowinst,-164480.84
+20261101,3,Afschrijvingen,578075.40
+20261101,3,Mutatie debiteuren,1165125.48
+20261101,3,Mutatie voorraden,1436080.25
+20261101,3,Mutatie crediteuren,-917269.87
+20261101,3,Mutatie belastingschuld,0
+20261101,3,Investeringen,-458333.33
+20261101,3,Opname termijnlening,0
+20261101,3,Aflossing termijnlening,-333333.33
+20261101,3,Mutatie RCF,0
+20261101,3,Dividend,0
+20261101,3,Kapitaalstorting,0
+20261201,3,Nettowinst,79399.84
+20261201,3,Afschrijvingen,583531.75
+20261201,3,Mutatie debiteuren,866305.23
+20261201,3,Mutatie voorraden,1053844.28
+20261201,3,Mutatie crediteuren,-673932.00
+20261201,3,Mutatie belastingschuld,-67205.44
+20261201,3,Investeringen,-458333.33
+20261201,3,Opname termijnlening,0
+20261201,3,Aflossing termijnlening,-333333.33
+20261201,3,Mutatie RCF,0
+20261201,3,Dividend,0
+20261201,3,Kapitaalstorting,0
+20270101,3,Nettowinst,-526781.18
+20270101,3,Afschrijvingen,588988.10
+20270101,3,Mutatie debiteuren,1307979.05
+20270101,3,Mutatie voorraden,1613143.74
+20270101,3,Mutatie crediteuren,-1023306.82
+20270101,3,Mutatie belastingschuld,0
+20270101,3,Investeringen,-458333.33
+20270101,3,Opname termijnlening,0
+20270101,3,Aflossing termijnlening,-333333.33
+20270101,3,Mutatie RCF,0
+20270101,3,Dividend,0
+20270101,3,Kapitaalstorting,0
+20270201,3,Nettowinst,-229930.97
+20270201,3,Afschrijvingen,594444.44
+20270201,3,Mutatie debiteuren,37592.35
+20270201,3,Mutatie voorraden,50433.42
+20270201,3,Mutatie crediteuren,-28874.41
+20270201,3,Mutatie belastingschuld,0
+20270201,3,Investeringen,-458333.33
+20270201,3,Opname termijnlening,0
+20270201,3,Aflossing termijnlening,-333333.33
+20270201,3,Mutatie RCF,0
+20270201,3,Dividend,0
+20270201,3,Kapitaalstorting,0
+20270301,3,Nettowinst,832977.17
+20270301,3,Afschrijvingen,599900.79
+20270301,3,Mutatie debiteuren,-1381052.89
+20270301,3,Mutatie voorraden,-1681326.96
+20270301,3,Mutatie crediteuren,1073789.81
+20270301,3,Mutatie belastingschuld,0
+20270301,3,Investeringen,-458333.33
+20270301,3,Opname termijnlening,0
+20270301,3,Aflossing termijnlening,-333333.33
+20270301,3,Mutatie RCF,0
+20270301,3,Dividend,0
+20270301,3,Kapitaalstorting,0
+20270401,3,Nettowinst,1384407.37
+20270401,3,Afschrijvingen,605357.14
+20270401,3,Mutatie debiteuren,-4238772.09
+20270401,3,Mutatie voorraden,-5186088.79
+20270401,3,Mutatie crediteuren,3304552.60
+20270401,3,Mutatie belastingschuld,478305.36
+20270401,3,Investeringen,-458333.33
+20270401,3,Opname termijnlening,0
+20270401,3,Aflossing termijnlening,-333333.33
+20270401,3,Mutatie RCF,0
+20270401,3,Dividend,0
+20270401,3,Kapitaalstorting,0
+20270501,3,Nettowinst,1589200.80
+20270501,3,Afschrijvingen,610813.49
+20270501,3,Mutatie debiteuren,-4207390.22
+20270501,3,Mutatie voorraden,-5137396.23
+20270501,3,Mutatie crediteuren,3274079.35
+20270501,3,Mutatie belastingschuld,552579.25
+20270501,3,Investeringen,-458333.33
+20270501,3,Opname termijnlening,0
+20270501,3,Aflossing termijnlening,-333333.33
+20270501,3,Mutatie RCF,0
+20270501,3,Dividend,-1957794.13
+20270501,3,Kapitaalstorting,0
+20270601,3,Nettowinst,1351778.50
+20270601,3,Afschrijvingen,616269.84
+20270601,3,Mutatie debiteuren,-1827416.32
+20270601,3,Mutatie voorraden,-2225598.85
+20270601,3,Mutatie crediteuren,1420411.16
+20270601,3,Mutatie belastingschuld,-1030884.61
+20270601,3,Investeringen,-458333.33
+20270601,3,Opname termijnlening,0
+20270601,3,Aflossing termijnlening,-333333.33
+20270601,3,Mutatie RCF,0
+20270601,3,Dividend,0
+20270601,3,Kapitaalstorting,0
+20270701,3,Nettowinst,811067.27
+20270701,3,Afschrijvingen,621726.19
+20270701,3,Mutatie debiteuren,1222846.90
+20270701,3,Mutatie voorraden,1509861.79
+20270701,3,Mutatie crediteuren,-957431.57
+20270701,3,Mutatie belastingschuld,282015.30
+20270701,3,Investeringen,-458333.33
+20270701,3,Opname termijnlening,0
+20270701,3,Aflossing termijnlening,-333333.33
+20270701,3,Mutatie RCF,0
+20270701,3,Dividend,0
+20270701,3,Kapitaalstorting,0
+20270801,3,Nettowinst,644637.00
+20270801,3,Afschrijvingen,627182.54
+20270801,3,Mutatie debiteuren,2111774.07
+20270801,3,Mutatie voorraden,2595335.06
+20270801,3,Mutatie crediteuren,-1648545.69
+20270801,3,Mutatie belastingschuld,224146.02
+20270801,3,Investeringen,-458333.33
+20270801,3,Opname termijnlening,0
+20270801,3,Aflossing termijnlening,-333333.33
+20270801,3,Mutatie RCF,0
+20270801,3,Dividend,0
+20270801,3,Kapitaalstorting,0
+20270901,3,Nettowinst,832141.72
+20270901,3,Afschrijvingen,632638.89
+20270901,3,Mutatie debiteuren,1154911.25
+20270901,3,Mutatie voorraden,1429465.02
+20270901,3,Mutatie crediteuren,-906087.36
+20270901,3,Mutatie belastingschuld,-506161.32
+20270901,3,Investeringen,-458333.33
+20270901,3,Opname termijnlening,0
+20270901,3,Aflossing termijnlening,-333333.33
+20270901,3,Mutatie RCF,0
+20270901,3,Dividend,0
+20270901,3,Kapitaalstorting,0
+20271001,3,Nettowinst,393559.76
+20271001,3,Afschrijvingen,638095.24
+20271001,3,Mutatie debiteuren,911378.70
+20271001,3,Mutatie voorraden,1121648.30
+20271001,3,Mutatie crediteuren,-710603.76
+20271001,3,Mutatie belastingschuld,136844.23
+20271001,3,Investeringen,-458333.33
+20271001,3,Opname termijnlening,0
+20271001,3,Aflossing termijnlening,-333333.33
+20271001,3,Mutatie RCF,0
+20271001,3,Dividend,0
+20271001,3,Kapitaalstorting,0
+20271101,3,Nettowinst,18807.18
+20271101,3,Afschrijvingen,643551.59
+20271101,3,Mutatie debiteuren,1385679.49
+20271101,3,Mutatie voorraden,1696774.82
+20271101,3,Mutatie crediteuren,-1076977.76
+20271101,3,Mutatie belastingschuld,6539.42
+20271101,3,Investeringen,-458333.33
+20271101,3,Opname termijnlening,0
+20271101,3,Aflossing termijnlening,-333333.33
+20271101,3,Mutatie RCF,0
+20271101,3,Dividend,0
+20271101,3,Kapitaalstorting,0
+20271201,3,Nettowinst,237886.74
+20271201,3,Afschrijvingen,649007.94
+20271201,3,Mutatie debiteuren,1297361.89
+20271201,3,Mutatie voorraden,1583782.14
+20271201,3,Mutatie crediteuren,-1005276.58
+20271201,3,Mutatie belastingschuld,-143383.65
+20271201,3,Investeringen,-458333.33
+20271201,3,Opname termijnlening,0
+20271201,3,Aflossing termijnlening,-333333.33
+20271201,3,Mutatie RCF,0
+20271201,3,Dividend,0
+20271201,3,Kapitaalstorting,0
+20280101,3,Nettowinst,-398395.35
+20280101,3,Afschrijvingen,654464.29
+20280101,3,Mutatie debiteuren,1531800.23
+20280101,3,Mutatie voorraden,1878572.49
+20280101,3,Mutatie crediteuren,-1192533.64
+20280101,3,Mutatie belastingschuld,0
+20280101,3,Investeringen,-458333.33
+20280101,3,Opname termijnlening,0
+20280101,3,Aflossing termijnlening,-333333.33
+20280101,3,Mutatie RCF,0
+20280101,3,Dividend,0
+20280101,3,Kapitaalstorting,0
+20280201,3,Nettowinst,-39633.01
+20280201,3,Afschrijvingen,659920.63
+20280201,3,Mutatie debiteuren,34635.52
+20280201,3,Mutatie voorraden,47456.61
+20280201,3,Mutatie crediteuren,-26781.23
+20280201,3,Mutatie belastingschuld,0
+20280201,3,Investeringen,-458333.33
+20280201,3,Opname termijnlening,0
+20280201,3,Aflossing termijnlening,-333333.33
+20280201,3,Mutatie RCF,0
+20280201,3,Dividend,0
+20280201,3,Kapitaalstorting,0
+20280301,3,Nettowinst,1030015.44
+20280301,3,Afschrijvingen,665376.98
+20280301,3,Mutatie debiteuren,-1642902.36
+20280301,3,Mutatie voorraden,-1988325.46
+20280301,3,Mutatie crediteuren,1270059.08
+20280301,3,Mutatie belastingschuld,0
+20280301,3,Investeringen,-458333.33
+20280301,3,Opname termijnlening,0
+20280301,3,Aflossing termijnlening,-333333.33
+20280301,3,Mutatie RCF,0
+20280301,3,Dividend,0
+20280301,3,Kapitaalstorting,0
+20280401,3,Nettowinst,1835228.38
+20280401,3,Afschrijvingen,670833.33
+20280401,3,Mutatie debiteuren,-5020733.97
+20280401,3,Mutatie voorraden,-6106868.05
+20280401,3,Mutatie crediteuren,3892682.17
+20280401,3,Mutatie belastingschuld,638125.23
+20280401,3,Investeringen,-458333.33
+20280401,3,Opname termijnlening,0
+20280401,3,Aflossing termijnlening,-333333.33
+20280401,3,Mutatie RCF,0
+20280401,3,Dividend,0
+20280401,3,Kapitaalstorting,0
+20280501,3,Nettowinst,2088077.40
+20280501,3,Afschrijvingen,676289.68
+20280501,3,Mutatie debiteuren,-4988586.93
+20280501,3,Mutatie voorraden,-6055328.42
+20280501,3,Mutatie crediteuren,3860492.19
+20280501,3,Mutatie belastingschuld,726043.08
+20280501,3,Investeringen,-458333.33
+20280501,3,Opname termijnlening,0
+20280501,3,Aflossing termijnlening,-333333.33
+20280501,3,Mutatie RCF,0
+20280501,3,Dividend,-2936051.02
+20280501,3,Kapitaalstorting,0
+20280601,3,Nettowinst,1807870.60
+20280601,3,Afschrijvingen,681746.03
+20280601,3,Mutatie debiteuren,-2178815.13
+20280601,3,Mutatie voorraden,-2637692.05
+20280601,3,Mutatie crediteuren,1683809.14
+20280601,3,Mutatie belastingschuld,-1364168.32
+20280601,3,Investeringen,-458333.33
+20280601,3,Opname termijnlening,0
+20280601,3,Aflossing termijnlening,-333333.33
+20280601,3,Mutatie RCF,0
+20280601,3,Dividend,0
+20280601,3,Kapitaalstorting,0
+20280701,3,Nettowinst,1163855.39
+20280701,3,Afschrijvingen,687202.38
+20280701,3,Mutatie debiteuren,1429691.74
+20280701,3,Mutatie voorraden,1755658.78
+20280701,3,Mutatie crediteuren,-1114098.96
+20280701,3,Mutatie belastingschuld,404682.87
+20280701,3,Investeringen,-458333.33
+20280701,3,Opname termijnlening,0
+20280701,3,Aflossing termijnlening,-333333.33
+20280701,3,Mutatie RCF,0
+20280701,3,Dividend,0
+20280701,3,Kapitaalstorting,0
+20280801,3,Nettowinst,968388.27
+20280801,3,Afschrijvingen,692658.73
+20280801,3,Mutatie debiteuren,2483363.70
+20280801,3,Mutatie voorraden,3034651.68
+20280801,3,Mutatie crediteuren,-1928808.07
+20280801,3,Mutatie belastingschuld,336717.21
+20280801,3,Investeringen,-458333.33
+20280801,3,Opname termijnlening,0
+20280801,3,Aflossing termijnlening,-333333.33
+20280801,3,Mutatie RCF,0
+20280801,3,Dividend,0
+20280801,3,Kapitaalstorting,0
+20280901,3,Nettowinst,1197835.30
+20280901,3,Afschrijvingen,698115.08
+20280901,3,Mutatie debiteuren,1350773.54
+20280901,3,Mutatie voorraden,1662875.82
+20280901,3,Mutatie crediteuren,-1054815.66
+20280901,3,Mutatie belastingschuld,-741400.09
+20280901,3,Investeringen,-458333.33
+20280901,3,Opname termijnlening,0
+20280901,3,Aflossing termijnlening,-333333.33
+20280901,3,Mutatie RCF,0
+20280901,3,Dividend,0
+20280901,3,Kapitaalstorting,0
+20281001,3,Nettowinst,674727.09
+20281001,3,Afschrijvingen,703571.43
+20281001,3,Mutatie debiteuren,1065628.93
+20281001,3,Mutatie voorraden,1304193.34
+20281001,3,Mutatie crediteuren,-826947.26
+20281001,3,Mutatie belastingschuld,234608.61
+20281001,3,Investeringen,-458333.33
+20281001,3,Opname termijnlening,0
+20281001,3,Aflossing termijnlening,-333333.33
+20281001,3,Mutatie RCF,0
+20281001,3,Dividend,0
+20281001,3,Kapitaalstorting,0
+20281101,3,Nettowinst,227906.15
+20281101,3,Afschrijvingen,709027.78
+20281101,3,Mutatie debiteuren,1631151.31
+20281101,3,Mutatie voorraden,1985788.40
+20281101,3,Mutatie crediteuren,-1261354.49
+20281101,3,Mutatie belastingschuld,79245.00
+20281101,3,Investeringen,-458333.33
+20281101,3,Opname termijnlening,0
+20281101,3,Aflossing termijnlening,-333333.33
+20281101,3,Mutatie RCF,0
+20281101,3,Dividend,0
+20281101,3,Kapitaalstorting,0
+20281201,3,Nettowinst,495544.39
+20281201,3,Afschrijvingen,714484.13
+20281201,3,Mutatie debiteuren,1525945.37
+20281201,3,Mutatie voorraden,1851919.12
+20281201,3,Mutatie crediteuren,-1176372.80
+20281201,3,Mutatie belastingschuld,-313853.61
+20281201,3,Investeringen,-458333.33
+20281201,3,Opname termijnlening,0
+20281201,3,Aflossing termijnlening,-333333.33
+20281201,3,Mutatie RCF,0
+20281201,3,Dividend,0
+20281201,3,Kapitaalstorting,0
+20290101,3,Nettowinst,-193675.66
+20290101,3,Afschrijvingen,719940.48
+20290101,3,Mutatie debiteuren,1809025.11
+20290101,3,Mutatie voorraden,2205714.00
+20290101,3,Mutatie crediteuren,-1401217.03
+20290101,3,Mutatie belastingschuld,0
+20290101,3,Investeringen,-458333.33
+20290101,3,Opname termijnlening,0
+20290101,3,Aflossing termijnlening,-333333.33
+20290101,3,Mutatie RCF,0
+20290101,3,Dividend,0
+20290101,3,Kapitaalstorting,0
+20290201,3,Nettowinst,231013.95
+20290201,3,Afschrijvingen,725396.83
+20290201,3,Mutatie debiteuren,28599.05
+20290201,3,Mutatie voorraden,41005.76
+20290201,3,Mutatie crediteuren,-22451.38
+20290201,3,Mutatie belastingschuld,12982.85
+20290201,3,Investeringen,-458333.33
+20290201,3,Opname termijnlening,0
+20290201,3,Aflossing termijnlening,-333333.33
+20290201,3,Mutatie RCF,0
+20290201,3,Dividend,0
+20290201,3,Kapitaalstorting,0
+20290301,3,Nettowinst,1327522.14
+20290301,3,Afschrijvingen,730853.17
+20290301,3,Mutatie debiteuren,-1973692.78
+20290301,3,Mutatie voorraden,-2374217.78
+20290301,3,Mutatie crediteuren,1516834.28
+20290301,3,Mutatie belastingschuld,-12982.85
+20290301,3,Investeringen,-458333.33
+20290301,3,Opname termijnlening,0
+20290301,3,Aflossing termijnlening,-333333.33
+20290301,3,Mutatie RCF,0
+20290301,3,Dividend,0
+20290301,3,Kapitaalstorting,0
+20290401,3,Nettowinst,2441655.26
+20290401,3,Afschrijvingen,736309.52
+20290401,3,Mutatie debiteuren,-6003605.24
+20290401,3,Mutatie voorraden,-7258420.43
+20290401,3,Mutatie crediteuren,4628481.37
+20290401,3,Mutatie belastingschuld,848985.25
+20290401,3,Investeringen,-458333.33
+20290401,3,Opname termijnlening,0
+20290401,3,Aflossing termijnlening,-333333.33
+20290401,3,Mutatie RCF,0
+20290401,3,Dividend,0
+20290401,3,Kapitaalstorting,0
+20290501,3,Nettowinst,2753453.55
+20290501,3,Afschrijvingen,741765.87
+20290501,3,Mutatie debiteuren,-5971702.94
+20290501,3,Mutatie voorraden,-7204700.73
+20290501,3,Mutatie crediteuren,4595027.55
+20290501,3,Mutatie belastingschuld,957400.29
+20290501,3,Investeringen,-458333.33
+20290501,3,Opname termijnlening,0
+20290501,3,Aflossing termijnlening,-333333.33
+20290501,3,Mutatie RCF,0
+20290501,3,Dividend,-4431037.18
+20290501,3,Kapitaalstorting,0
+20290601,3,Nettowinst,2419670.79
+20290601,3,Afschrijvingen,747222.22
+20290601,3,Mutatie debiteuren,-2623897.94
+20290601,3,Mutatie voorraden,-3157017.41
+20290601,3,Mutatie crediteuren,2015849.73
+20290601,3,Mutatie belastingschuld,-1806385.54
+20290601,3,Investeringen,-458333.33
+20290601,3,Opname termijnlening,0
+20290601,3,Aflossing termijnlening,-333333.33
+20290601,3,Mutatie RCF,0
+20290601,3,Dividend,0
+20290601,3,Kapitaalstorting,0
+20290701,3,Nettowinst,1645413.60
+20290701,3,Afschrijvingen,752678.57
+20290701,3,Mutatie debiteuren,1685221.09
+20290701,3,Mutatie voorraden,2057871.96
+20290701,3,Mutatie crediteuren,-1306827.03
+20290701,3,Mutatie belastingschuld,572124.94
+20290701,3,Investeringen,-458333.33
+20290701,3,Opname termijnlening,0
+20290701,3,Aflossing termijnlening,-333333.33
+20290701,3,Mutatie RCF,0
+20290701,3,Dividend,0
+20290701,3,Kapitaalstorting,0
+20290801,3,Nettowinst,1413870.82
+20290801,3,Afschrijvingen,758134.92
+20290801,3,Mutatie debiteuren,2946143.31
+20290801,3,Mutatie voorraden,3579078.61
+20290801,3,Mutatie crediteuren,-2276294.60
+20290801,3,Mutatie belastingschuld,491615.46
+20290801,3,Investeringen,-458333.33
+20290801,3,Opname termijnlening,0
+20290801,3,Aflossing termijnlening,-333333.33
+20290801,3,Mutatie RCF,0
+20290801,3,Dividend,0
+20290801,3,Kapitaalstorting,0
+20290901,3,Nettowinst,1697441.70
+20290901,3,Afschrijvingen,763591.27
+20290901,3,Mutatie debiteuren,1592844.89
+20290901,3,Mutatie voorraden,1950012.64
+20290901,3,Mutatie crediteuren,-1237875.13
+20290901,3,Mutatie belastingschuld,-1063740.41
+20290901,3,Investeringen,-458333.33
+20290901,3,Opname termijnlening,0
+20290901,3,Aflossing termijnlening,-333333.33
+20290901,3,Mutatie RCF,0
+20290901,3,Dividend,0
+20290901,3,Kapitaalstorting,0
+20291001,3,Nettowinst,1067535.10
+20291001,3,Afschrijvingen,769047.62
+20291001,3,Mutatie debiteuren,1256187.44
+20291001,3,Mutatie voorraden,1528611.66
+20291001,3,Mutatie crediteuren,-970063.35
+20291001,3,Mutatie belastingschuld,371191.45
+20291001,3,Investeringen,-458333.33
+20291001,3,Opname termijnlening,0
+20291001,3,Aflossing termijnlening,-333333.33
+20291001,3,Mutatie RCF,0
+20291001,3,Dividend,0
+20291001,3,Kapitaalstorting,0
+20291101,3,Nettowinst,529644.51
+20291101,3,Afschrijvingen,774503.97
+20291101,3,Mutatie debiteuren,1937258.16
+20291101,3,Mutatie voorraden,2344381.23
+20291101,3,Mutatie crediteuren,-1490243.81
+20291101,3,Mutatie belastingschuld,184162.11
+20291101,3,Investeringen,-458333.33
+20291101,3,Opname termijnlening,0
+20291101,3,Aflossing termijnlening,-333333.33
+20291101,3,Mutatie RCF,0
+20291101,3,Dividend,0
+20291101,3,Kapitaalstorting,0
+20291201,3,Nettowinst,859884.96
+20291201,3,Afschrijvingen,779960.32
+20291201,3,Mutatie debiteuren,1810677.22
+20291201,3,Mutatie voorraden,2184214.60
+20291201,3,Mutatie crediteuren,-1388527.23
+20291201,3,Mutatie belastingschuld,-555353.56
+20291201,3,Investeringen,-458333.33
+20291201,3,Opname termijnlening,0
+20291201,3,Aflossing termijnlening,-333333.33
+20291201,3,Mutatie RCF,0
+20291201,3,Dividend,0
+20291201,3,Kapitaalstorting,0

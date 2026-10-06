@@ -1,0 +1,20 @@
+RekeningKey,Rekening,Rekeninggroep,Niveau1,Teken,Volgorde
+4000,Netto-omzet,Omzet,Omzet,1,10
+5000,Materiaalkosten,Kostprijs omzet,Brutomarge,-1,20
+5100,Directe arbeid,Kostprijs omzet,Brutomarge,-1,21
+5200,Inkomende vracht,Kostprijs omzet,Brutomarge,-1,22
+5300,Garantiekosten,Kostprijs omzet,Brutomarge,-1,23
+5900,Eenmalige kostprijsposten,Kostprijs omzet,Brutomarge,-1,24
+6000,Personeel R&D,Personeelskosten,Operationele kosten,-1,30
+6010,Personeel Sales & Marketing,Personeelskosten,Operationele kosten,-1,31
+6020,Personeel Operations,Personeelskosten,Operationele kosten,-1,32
+6030,Personeel G&A,Personeelskosten,Operationele kosten,-1,33
+6100,Marketing,Overige bedrijfskosten,Operationele kosten,-1,40
+6200,Huisvesting,Overige bedrijfskosten,Operationele kosten,-1,41
+6300,IT & software,Overige bedrijfskosten,Operationele kosten,-1,42
+6400,Overige kosten,Overige bedrijfskosten,Operationele kosten,-1,43
+6900,Eenmalige bedrijfskosten,Overige bedrijfskosten,Operationele kosten,-1,44
+7000,Afschrijvingen,Afschrijvingen,Afschrijvingen,-1,50
+8000,Rentelasten,Financiële baten en lasten,Financieel,-1,60
+8010,Rentebaten,Financiële baten en lasten,Financieel,1,61
+9000,Vennootschapsbelasting,Belastingen,Belastingen,-1,70

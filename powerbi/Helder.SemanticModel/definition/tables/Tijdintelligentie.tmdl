@@ -1,0 +1,48 @@
+/// Calculation group: pas tijdintelligentie toe op elke maat (Actueel, YTD, Vorig jaar, Verschil vs vorig jaar).
+table Tijdintelligentie
+	lineageTag: dada7e33-0467-4f53-9aea-754cd871ad4d
+
+	calculationGroup
+		precedence: 10
+
+		/// De maat zoals hij is.
+		calculationItem Actueel = SELECTEDMEASURE()
+
+		/// Cumulatief vanaf 1 januari.
+		calculationItem YTD = CALCULATE(SELECTEDMEASURE(), DATESYTD(DimDatum[Datum]))
+			ordinal: 1
+
+		/// Dezelfde periode een jaar eerder.
+		calculationItem 'Vorig jaar' = CALCULATE(SELECTEDMEASURE(), SAMEPERIODLASTYEAR(DimDatum[Datum]))
+			ordinal: 2
+
+		/// Absoluut verschil met dezelfde periode vorig jaar.
+		calculationItem 'Verschil vs vorig jaar' = SELECTEDMEASURE() - CALCULATE(SELECTEDMEASURE(), SAMEPERIODLASTYEAR(DimDatum[Datum]))
+			ordinal: 3
+
+		/// Procentueel verschil met dezelfde periode vorig jaar.
+		calculationItem 'Verschil % vs vorig jaar' = DIVIDE(SELECTEDMEASURE() - CALCULATE(SELECTEDMEASURE(), SAMEPERIODLASTYEAR(DimDatum[Datum])), CALCULATE(SELECTEDMEASURE(), SAMEPERIODLASTYEAR(DimDatum[Datum])))
+			formatStringDefinition = "0.0%"
+			ordinal: 4
+
+	column Tijdberekening
+		dataType: string
+		lineageTag: 67c1071a-f460-4930-a11f-90b37d316633
+		summarizeBy: none
+		sourceColumn: Name
+		sortByColumn: Ordinal
+
+		annotation SummarizationSetBy = User
+
+	column Ordinal
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 66c1fa1e-937e-461d-a5b4-80b87e60fef4
+		summarizeBy: none
+		sourceColumn: Ordinal
+
+		annotation SummarizationSetBy = User
+
+	partition Tijdintelligentie = calculationGroup
+		mode: import

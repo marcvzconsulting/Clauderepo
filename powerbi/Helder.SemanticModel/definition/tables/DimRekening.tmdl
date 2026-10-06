@@ -1,0 +1,68 @@
+/// Rekeningschema van de W&V. Teken (+1 opbrengst, -1 kosten) bepaalt de bijdrage aan het resultaat.
+table DimRekening
+	lineageTag: 1ea8a1ad-70c4-499a-9d5a-caf6bf5075b6
+
+	column RekeningKey
+		dataType: int64
+		isHidden
+		lineageTag: b04feb74-3f6b-456f-a357-9dd0918fd050
+		summarizeBy: none
+		sourceColumn: RekeningKey
+
+		annotation SummarizationSetBy = User
+
+	column Rekening
+		dataType: string
+		lineageTag: da2f7214-5015-46a0-81fd-74e19c6041fe
+		summarizeBy: none
+		sourceColumn: Rekening
+		sortByColumn: Volgorde
+
+		annotation SummarizationSetBy = User
+
+	column Rekeninggroep
+		dataType: string
+		lineageTag: 3069f646-93b6-464d-914f-318a70010df7
+		summarizeBy: none
+		sourceColumn: Rekeninggroep
+
+		annotation SummarizationSetBy = User
+
+	column Niveau1
+		dataType: string
+		lineageTag: d8ed2d30-ed61-4de2-9890-aff80273105b
+		summarizeBy: none
+		sourceColumn: Niveau1
+
+		annotation SummarizationSetBy = User
+
+	column Teken
+		dataType: int64
+		formatString: 0
+		lineageTag: 00e78353-48ab-4776-ace8-0315948c4389
+		summarizeBy: none
+		sourceColumn: Teken
+
+		annotation SummarizationSetBy = User
+
+	column Volgorde
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 09c9fe94-dbd2-40e1-b586-d0fea7f907a8
+		summarizeBy: none
+		sourceColumn: Volgorde
+
+		annotation SummarizationSetBy = User
+
+	partition DimRekening = m
+		mode: import
+		source =
+			let
+			    Bron = Csv.Document(File.Contents(CsvMap & "DimRekening.csv"), [Delimiter=",", Columns=6, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+			    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
+			    Typen = Table.TransformColumnTypes(Kop, {{"RekeningKey", Int64.Type}, {"Rekening", type text}, {"Rekeninggroep", type text}, {"Niveau1", type text}, {"Teken", Int64.Type}, {"Volgorde", Int64.Type}}, "en-US")
+			in
+			    Typen
+
+	annotation PBI_ResultType = Table

@@ -1,0 +1,35 @@
+model Model
+	culture: nl-NL
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: nl-NL
+	discourageImplicitMeasures
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBIDesktopVersion = 2.137.1102.0 (24.10)
+
+annotation PBI_QueryOrder = ["CsvMap","DimDatum","DimScenario","DimProductlijn","DimKanaal","DimLand","DimAfdeling","DimRekening","FactVerkoop","FactWinstVerlies","FactBalans","FactKasstroom","FactKPI","FactFTE","Gebeurtenissen","_Maten","Tijdintelligentie"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table DimDatum
+ref table DimScenario
+ref table DimProductlijn
+ref table DimKanaal
+ref table DimLand
+ref table DimAfdeling
+ref table DimRekening
+ref table FactVerkoop
+ref table FactWinstVerlies
+ref table FactBalans
+ref table FactKasstroom
+ref table FactKPI
+ref table FactFTE
+ref table Gebeurtenissen
+ref table _Maten
+ref table Tijdintelligentie
+
+ref cultureInfo nl-NL
