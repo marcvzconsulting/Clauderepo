@@ -2,15 +2,18 @@
 table DimAfdeling
 	lineageTag: 4fe97bd3-63ca-4153-97ee-608d1e64336a
 
+	/// Sleutel naar DimAfdeling.
 	column AfdelingKey
 		dataType: int64
 		isHidden
+		isAvailableInMdx: false
 		lineageTag: c5ef634d-2469-4091-8339-b0ccef3ac7ad
 		summarizeBy: none
 		sourceColumn: AfdelingKey
 
 		annotation SummarizationSetBy = User
 
+	/// Korte afdelingscode.
 	column AfdelingCode
 		dataType: string
 		lineageTag: 8b577bf3-0015-44e7-8b0d-4207b0bc9463
@@ -19,6 +22,7 @@ table DimAfdeling
 
 		annotation SummarizationSetBy = User
 
+	/// Afdelingsnaam.
 	column Afdeling
 		dataType: string
 		lineageTag: c028551b-b69f-4e35-b2fe-1695955d00c9
@@ -30,11 +34,11 @@ table DimAfdeling
 	partition DimAfdeling = m
 		mode: import
 		source =
-			let
-			    Bron = Csv.Document(File.Contents(CsvMap & "DimAfdeling.csv"), [Delimiter=",", Columns=3, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
-			    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
-			    Typen = Table.TransformColumnTypes(Kop, {{"AfdelingKey", Int64.Type}, {"AfdelingCode", type text}, {"Afdeling", type text}}, "en-US")
-			in
-			    Typen
+				let
+				    Bron = Csv.Document(File.Contents(CsvMap & "DimAfdeling.csv"), [Delimiter=",", Columns=3, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
+				    Typen = Table.TransformColumnTypes(Kop, {{"AfdelingKey", Int64.Type}, {"AfdelingCode", type text}, {"Afdeling", type text}}, "en-US")
+				in
+				    Typen
 
 	annotation PBI_ResultType = Table

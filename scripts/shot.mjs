@@ -37,11 +37,14 @@ for (const tab of tabs) {
     for (const scheme of ['light', 'dark']) {
       const ctx = await browser.newContext({ viewport: vp, colorScheme: scheme, deviceScaleFactor: 1 });
       const page = await ctx.newPage();
-      page.on('console', m => { if (m.type() === 'error' || m.type() === 'warning') errors.push(`[${tab}/${name}/${scheme}] console.${m.type()}: ${m.text()}`); });
+      page.on('console', m => { if ((m.type() === 'error' || m.type() === 'warning') && !/favicon/.test(m.text())) errors.push(`[${tab}/${name}/${scheme}] console.${m.type()}: ${m.text()}`); });
       page.on('pageerror', e => errors.push(`[${tab}/${name}/${scheme}] pageerror: ${e.message}`));
       page.on('requestfailed', r => { if (!r.url().includes('fonts.g')) errors.push(`[${tab}/${name}/${scheme}] requestfailed: ${r.url()}`); });
       await page.goto(`http://127.0.0.1:${port}/index.html#${tab}`, { waitUntil: 'load' });
       await page.waitForTimeout(900);
+      // tabs die asynchroon werken (bijv. Monte Carlo) zetten data-busy="true" op een element tot ze klaar zijn
+      try { await page.waitForFunction(() => !document.querySelector('[data-busy="true"]'), null, { timeout: 20000 }); } catch (e) { errors.push(`[${tab}/${name}/${scheme}] data-busy bleef staan (>20 s)`); }
+      await page.waitForTimeout(150);
       const overflow = await page.evaluate(() => ({ scrollW: document.documentElement.scrollWidth, clientW: document.documentElement.clientWidth, h: document.documentElement.scrollHeight }));
       if (overflow.scrollW > overflow.clientW + 1) errors.push(`[${tab}/${name}/${scheme}] horizontale overflow: ${overflow.scrollW} > ${overflow.clientW}`);
       await page.screenshot({ path: join(OUT, `${tab}-${name}-${scheme}.png`), fullPage: true });

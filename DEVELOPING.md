@@ -86,6 +86,18 @@ Engine-helpers: `E.LINES, E.CHANNELS, E.COUNTRIES, E.DEPTS, E.DEPT_LABELS, E.agg
 - Download: `await H.download(filename, stringOrBlob)` (werkt in artifact via downloads-capability en als gewone download). Kopiëren: `await H.copyText(text)`.
 - Capabilities (alleen in het Claude-artifact): `ctx.caps` = `{ isArtifact, ready, sample, downloads, onReady(fn) }`.
 
+## Toevoegingen na de eerste bouwronde
+
+- `model.prevRange(range, {yoy})` → `{from, to, months, mode:'yoy'|'prev', label, agg}`: vergelijkingsbasis (≤ 12 maanden: dezelfde maanden een jaar eerder; anders het even lange blok ervoor; `null` vóór de modelstart). Gebruik dit voor KPI-delta's.
+- `model.datasetForWorker()` → JSON-veilige dataset voor een Web Worker.
+- `kpi.ltmMonths` en `kpi.covenantTestable` (LTM pas toetsbaar bij 12 maanden historie); `E.aggregate(months,'M')` geeft nu ook `months:[m]` en `partial:false`.
+- `E.monteCarlo` geeft extra `breachLeverage`, `breachIcr`, `breachBoth`, `breachUndefined`, `rcfDrawn` en `breachFlags` (Uint8Array per run: 8 = EBITDA ≤ 0, 4 = beide, 2 = leverage, 1 = ICR).
+- `charts.line`: `referenceLines:[{value,label}]` (neutrale stippellijn zonder legenda), eindlabels krijgen eigen rechtermarge, laatste x-label wordt altijd getoond.
+- `charts.waterfall`: `labels:'none'|'auto'`. `charts.bar` (horizontaal) en `charts.tornado` dunnen x-ticks uit; `charts.tornado` laat items zonder effect weg (`skipZero:false` om te tonen). `charts.histogram` plaatst markerlabels botsingsvrij op twee rijen.
+- `ui.table`: `caption` staat nu als blok boven de scrollende tabel; `maxHeight` (px) maakt de tabel verticaal scrollbaar; kolom-`class` komt ook op de `<th>`. Rijklasse `mean` voor een samenvattingsrij. `ui.figure({initial:'table'})` opent in tabelweergave.
+- CSS: `.span-5`, `.span-7`, `.statement tr.section`, `.statement tr.check`, `.table-wrap.scroll`, `th .forecast`; `<figure>` heeft geen UA-marge meer; `.card-head` wrapt op smalle schermen; favicon aanwezig.
+- `scripts/shot.mjs` wacht (max. 20 s) tot er geen element met `data-busy="true"` meer is: zet dat attribuut tijdens asynchroon werk (bijv. een simulatie) en haal het weg als de weergave definitief is.
+
 ## Regels
 
 1. **Nederlands** in alle UI-tekst (sentence case; "Netto-omzet", "Brutomarge", "Eigen vermogen", "Kasstroom uit operationele activiteiten"). Getallen via `fmt`, nooit `toFixed` of `toLocaleString` direct.

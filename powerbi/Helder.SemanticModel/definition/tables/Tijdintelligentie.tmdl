@@ -16,13 +16,14 @@ table Tijdintelligentie
 		calculationItem 'Vorig jaar' = CALCULATE(SELECTEDMEASURE(), SAMEPERIODLASTYEAR(DimDatum[Datum]))
 			ordinal: 2
 
-		/// Absoluut verschil met dezelfde periode vorig jaar.
-		calculationItem 'Verschil vs vorig jaar' = SELECTEDMEASURE() - CALCULATE(SELECTEDMEASURE(), SAMEPERIODLASTYEAR(DimDatum[Datum]))
+		/// Absoluut verschil met dezelfde periode vorig jaar; tekstmaten (Covenantstatus, Gebeurtenis) worden ongewijzigd doorgegeven.
+		calculationItem 'Verschil vs vorig jaar' = IF(ISSELECTEDMEASURE([Covenantstatus], [Gebeurtenis]), SELECTEDMEASURE(), SELECTEDMEASURE() - CALCULATE(SELECTEDMEASURE(), SAMEPERIODLASTYEAR(DimDatum[Datum])))
+			formatStringDefinition = SELECTEDMEASUREFORMATSTRING()
 			ordinal: 3
 
-		/// Procentueel verschil met dezelfde periode vorig jaar.
-		calculationItem 'Verschil % vs vorig jaar' = DIVIDE(SELECTEDMEASURE() - CALCULATE(SELECTEDMEASURE(), SAMEPERIODLASTYEAR(DimDatum[Datum])), CALCULATE(SELECTEDMEASURE(), SAMEPERIODLASTYEAR(DimDatum[Datum])))
-			formatStringDefinition = "0.0%"
+		/// Procentueel verschil met dezelfde periode vorig jaar; tekstmaten worden ongewijzigd doorgegeven.
+		calculationItem 'Verschil % vs vorig jaar' = IF(ISSELECTEDMEASURE([Covenantstatus], [Gebeurtenis]), SELECTEDMEASURE(), DIVIDE(SELECTEDMEASURE() - CALCULATE(SELECTEDMEASURE(), SAMEPERIODLASTYEAR(DimDatum[Datum])), CALCULATE(SELECTEDMEASURE(), SAMEPERIODLASTYEAR(DimDatum[Datum]))))
+			formatStringDefinition = IF(ISSELECTEDMEASURE([Covenantstatus], [Gebeurtenis]), SELECTEDMEASUREFORMATSTRING(), "0.0%")
 			ordinal: 4
 
 	column Tijdberekening

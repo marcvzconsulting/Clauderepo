@@ -244,10 +244,10 @@ function pushMonth(m, scenarioKey, cells) {
 for (let i = 0; i < base.months.length; i++) { const m = base.months[i]; pushMonth(m, i < N_ACT ? 1 : 3, m.cells); }
 for (const m of budget2026) pushMonth(m, 2, m.cells);
 
-// datumtabel 2023-01-01 .. 2028-12-31 (maandniveau volstaat voor de feiten; dagniveau voor Power BI-tijdintelligentie)
+// datumtabel 2023-01-01 .. 2029-12-31 (maandniveau volstaat voor de feiten; dagniveau voor Power BI-tijdintelligentie)
 const dateRows = [];
 const NL_MONTHS = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
-for (let d = new Date(Date.UTC(2023, 0, 1)); d <= new Date(Date.UTC(2028, 11, 31)); d.setUTCDate(d.getUTCDate() + 1)) {
+for (let d = new Date(Date.UTC(2023, 0, 1)); d <= new Date(Date.UTC(2029, 11, 31)); d.setUTCDate(d.getUTCDate() + 1)) {
   const y = d.getUTCFullYear(), mo = d.getUTCMonth() + 1, da = d.getUTCDate();
   dateRows.push({ DatumKey: Number(`${y}${String(mo).padStart(2, '0')}${String(da).padStart(2, '0')}`), Datum: `${y}-${String(mo).padStart(2, '0')}-${String(da).padStart(2, '0')}`, Jaar: y, Kwartaal: 'Q' + Math.ceil(mo / 3), JaarKwartaal: `${y}-Q${Math.ceil(mo / 3)}`, Maandnummer: mo, Maand: NL_MONTHS[mo - 1], MaandKort: NL_MONTHS[mo - 1].slice(0, 3), JaarMaand: `${y}-${String(mo).padStart(2, '0')}`, JaarMaandSort: y * 100 + mo, IsActual: `${y}-${String(mo).padStart(2, '0')}` <= config.actualsUntil ? 1 : 0 });
 }

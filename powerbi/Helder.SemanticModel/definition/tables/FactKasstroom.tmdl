@@ -2,24 +2,29 @@
 table FactKasstroom
 	lineageTag: 6469083d-c2c0-4984-bed0-e2a77ba0dcac
 
+	/// Sleutel naar DimDatum (yyyymmdd, eerste dag van de maand).
 	column DatumKey
 		dataType: int64
 		isHidden
+		isAvailableInMdx: false
 		lineageTag: e32ecfff-67c2-4a17-bbb2-ef9b8c62f5f3
 		summarizeBy: none
 		sourceColumn: DatumKey
 
 		annotation SummarizationSetBy = User
 
+	/// Sleutel naar DimScenario (1 Actual, 2 Budget, 3 Forecast).
 	column ScenarioKey
 		dataType: int64
 		isHidden
+		isAvailableInMdx: false
 		lineageTag: 236f92b2-84c1-4c6b-aa17-13b400dc64c7
 		summarizeBy: none
 		sourceColumn: ScenarioKey
 
 		annotation SummarizationSetBy = User
 
+	/// Post van het kasstroomoverzicht (indirecte methode).
 	column Kasstroompost
 		dataType: string
 		lineageTag: 20eb7ccb-51e6-4168-a304-ead6b76a8be2
@@ -28,6 +33,7 @@ table FactKasstroom
 
 		annotation SummarizationSetBy = User
 
+	/// Kasmutatie in euro (instroom +, uitstroom -).
 	column Bedrag
 		dataType: double
 		formatString: #,0
@@ -40,11 +46,12 @@ table FactKasstroom
 	partition FactKasstroom = m
 		mode: import
 		source =
-			let
-			    Bron = Csv.Document(File.Contents(CsvMap & "FactKasstroom.csv"), [Delimiter=",", Columns=4, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
-			    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
-			    Typen = Table.TransformColumnTypes(Kop, {{"DatumKey", Int64.Type}, {"ScenarioKey", Int64.Type}, {"Kasstroompost", type text}, {"Bedrag", type number}}, "en-US")
-			in
-			    Typen
+				let
+				    Bron = Csv.Document(File.Contents(CsvMap & "FactKasstroom.csv"), [Delimiter=",", Columns=4, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
+				    Typen = Table.TransformColumnTypes(Kop, {{"DatumKey", Int64.Type}, {"ScenarioKey", Int64.Type}, {"Kasstroompost", type text}, {"Bedrag", type number}}, "en-US"),
+				    Binnen = Table.SelectRows(Typen, each [DatumKey] >= 20230101 and [DatumKey] <= 20291231)
+				in
+				    Binnen
 
 	annotation PBI_ResultType = Table

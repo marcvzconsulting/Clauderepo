@@ -83,17 +83,26 @@
           "y": 160,
           "z": 0,
           "width": 308,
-          "height": 160,
-          "config": "{\"name\":\"s0007\",\"layouts\":[{\"id\":0,\"position\":{\"x\":948,\"y\":160,\"z\":0,\"width\":308,\"height\":160,\"tabOrder\":11}}],\"singleVisual\":{\"visualType\":\"slicer\",\"projections\":{\"Values\":[{\"queryRef\":\"DimScenario.Scenario\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"DimScenario\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Scenario\"},\"Name\":\"DimScenario.Scenario\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Scenario'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
+          "height": 136,
+          "config": "{\"name\":\"s0007\",\"layouts\":[{\"id\":0,\"position\":{\"x\":948,\"y\":160,\"z\":0,\"width\":308,\"height\":136,\"tabOrder\":11}}],\"singleVisual\":{\"visualType\":\"slicer\",\"projections\":{\"Values\":[{\"queryRef\":\"DimScenario.Scenario\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"DimScenario\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Scenario\"},\"Name\":\"DimScenario.Scenario\"}]},\"objects\":{\"data\":[{\"properties\":{\"mode\":{\"expr\":{\"Literal\":{\"Value\":\"'Basic'\"}}}}}],\"selection\":[{\"properties\":{\"singleSelect\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}],\"general\":[{\"properties\":{\"filter\":{\"filter\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"DimScenario\",\"Type\":0}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Scenario\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Actual'\"}}]]}}}]}}}}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Scenario'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
           "filters": "[]"
         },
         {
           "x": 948,
-          "y": 336,
+          "y": 312,
           "z": 0,
           "width": 308,
-          "height": 344,
-          "config": "{\"name\":\"s0008\",\"layouts\":[{\"id\":0,\"position\":{\"x\":948,\"y\":336,\"z\":0,\"width\":308,\"height\":344,\"tabOrder\":12}}],\"singleVisual\":{\"visualType\":\"slicer\",\"projections\":{\"Values\":[{\"queryRef\":\"DimDatum.Jaar\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"DimDatum\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Jaar\"},\"Name\":\"DimDatum.Jaar\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Jaar'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
+          "height": 176,
+          "config": "{\"name\":\"s0008\",\"layouts\":[{\"id\":0,\"position\":{\"x\":948,\"y\":312,\"z\":0,\"width\":308,\"height\":176,\"tabOrder\":12}}],\"singleVisual\":{\"visualType\":\"slicer\",\"projections\":{\"Values\":[{\"queryRef\":\"DimDatum.Jaar\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"DimDatum\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Jaar\"},\"Name\":\"DimDatum.Jaar\"}]},\"objects\":{\"data\":[{\"properties\":{\"mode\":{\"expr\":{\"Literal\":{\"Value\":\"'Basic'\"}}}}}],\"general\":[{\"properties\":{\"filter\":{\"filter\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"DimDatum\",\"Type\":0}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Jaar\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"2026L\"}}]]}}}]}}}}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Jaar'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
+          "filters": "[]"
+        },
+        {
+          "x": 948,
+          "y": 504,
+          "z": 0,
+          "width": 308,
+          "height": 176,
+          "config": "{\"name\":\"s0009\",\"layouts\":[{\"id\":0,\"position\":{\"x\":948,\"y\":504,\"z\":0,\"width\":308,\"height\":176,\"tabOrder\":13}}],\"singleVisual\":{\"visualType\":\"slicer\",\"projections\":{\"Values\":[{\"queryRef\":\"Tijdintelligentie.Tijdberekening\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"Tijdintelligentie\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Tijdberekening\"},\"Name\":\"Tijdintelligentie.Tijdberekening\"}]},\"objects\":{\"data\":[{\"properties\":{\"mode\":{\"expr\":{\"Literal\":{\"Value\":\"'Basic'\"}}}}}],\"selection\":[{\"properties\":{\"singleSelect\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}],\"general\":[{\"properties\":{\"filter\":{\"filter\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"Tijdintelligentie\",\"Type\":0}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Tijdberekening\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Actueel'\"}}]]}}}]}}}}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Tijdberekening (calculation group)'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
           "filters": "[]"
         }
       ],
@@ -114,7 +123,7 @@
           "z": 0,
           "width": 236,
           "height": 110,
-          "config": "{\"name\":\"c0009\",\"layouts\":[{\"id\":0,\"position\":{\"x\":24,\"y\":24,\"z\":0,\"width\":236,\"height\":110,\"tabOrder\":0}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"_Maten.Netto-omzet\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Netto-omzet\"},\"Name\":\"_Maten.Netto-omzet\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Netto-omzet'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
+          "config": "{\"name\":\"c0010\",\"layouts\":[{\"id\":0,\"position\":{\"x\":24,\"y\":24,\"z\":0,\"width\":236,\"height\":110,\"tabOrder\":0}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"_Maten.Netto-omzet\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Netto-omzet\"},\"Name\":\"_Maten.Netto-omzet\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Netto-omzet'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
           "filters": "[]"
         },
         {
@@ -123,7 +132,7 @@
           "z": 0,
           "width": 236,
           "height": 110,
-          "config": "{\"name\":\"c0010\",\"layouts\":[{\"id\":0,\"position\":{\"x\":276,\"y\":24,\"z\":0,\"width\":236,\"height\":110,\"tabOrder\":1}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"_Maten.Brutomarge % (W&V)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Brutomarge % (W&V)\"},\"Name\":\"_Maten.Brutomarge % (W&V)\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Brutomarge % (W&V)'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
+          "config": "{\"name\":\"c0011\",\"layouts\":[{\"id\":0,\"position\":{\"x\":276,\"y\":24,\"z\":0,\"width\":236,\"height\":110,\"tabOrder\":1}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"_Maten.Brutomarge % (W&V)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Brutomarge % (W&V)\"},\"Name\":\"_Maten.Brutomarge % (W&V)\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Brutomarge % (W&V)'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
           "filters": "[]"
         },
         {
@@ -132,7 +141,7 @@
           "z": 0,
           "width": 236,
           "height": 110,
-          "config": "{\"name\":\"c0011\",\"layouts\":[{\"id\":0,\"position\":{\"x\":528,\"y\":24,\"z\":0,\"width\":236,\"height\":110,\"tabOrder\":2}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"_Maten.Operationele kosten\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Operationele kosten\"},\"Name\":\"_Maten.Operationele kosten\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Operationele kosten'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
+          "config": "{\"name\":\"c0012\",\"layouts\":[{\"id\":0,\"position\":{\"x\":528,\"y\":24,\"z\":0,\"width\":236,\"height\":110,\"tabOrder\":2}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"_Maten.Operationele kosten\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Operationele kosten\"},\"Name\":\"_Maten.Operationele kosten\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Operationele kosten'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
           "filters": "[]"
         },
         {
@@ -141,7 +150,7 @@
           "z": 0,
           "width": 236,
           "height": 110,
-          "config": "{\"name\":\"c0012\",\"layouts\":[{\"id\":0,\"position\":{\"x\":780,\"y\":24,\"z\":0,\"width\":236,\"height\":110,\"tabOrder\":3}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"_Maten.EBITDA\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"EBITDA\"},\"Name\":\"_Maten.EBITDA\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'EBITDA'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
+          "config": "{\"name\":\"c0013\",\"layouts\":[{\"id\":0,\"position\":{\"x\":780,\"y\":24,\"z\":0,\"width\":236,\"height\":110,\"tabOrder\":3}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"_Maten.EBITDA\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"EBITDA\"},\"Name\":\"_Maten.EBITDA\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'EBITDA'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
           "filters": "[]"
         },
         {
@@ -150,7 +159,7 @@
           "z": 0,
           "width": 236,
           "height": 110,
-          "config": "{\"name\":\"c0013\",\"layouts\":[{\"id\":0,\"position\":{\"x\":1032,\"y\":24,\"z\":0,\"width\":236,\"height\":110,\"tabOrder\":4}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"_Maten.Afwijking EBITDA vs budget (€)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Afwijking EBITDA vs budget (€)\"},\"Name\":\"_Maten.Afwijking EBITDA vs budget (€)\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Afwijking EBITDA vs budget (€)'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
+          "config": "{\"name\":\"c0014\",\"layouts\":[{\"id\":0,\"position\":{\"x\":1032,\"y\":24,\"z\":0,\"width\":236,\"height\":110,\"tabOrder\":4}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"_Maten.Afwijking EBITDA vs budget (€)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Afwijking EBITDA vs budget (€)\"},\"Name\":\"_Maten.Afwijking EBITDA vs budget (€)\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Afwijking EBITDA vs budget (€)'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
           "filters": "[]"
         },
         {
@@ -159,7 +168,7 @@
           "z": 0,
           "width": 620,
           "height": 520,
-          "config": "{\"name\":\"m0014\",\"layouts\":[{\"id\":0,\"position\":{\"x\":24,\"y\":160,\"z\":0,\"width\":620,\"height\":520,\"tabOrder\":10}}],\"singleVisual\":{\"visualType\":\"pivotTable\",\"projections\":{\"Rows\":[{\"queryRef\":\"DimRekening.Rekening\"}],\"Values\":[{\"queryRef\":\"_Maten.W&V bedrag\"},{\"queryRef\":\"_Maten.W&V bedrag Budget\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"r\",\"Entity\":\"DimRekening\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"r\"}},\"Property\":\"Rekening\"},\"Name\":\"DimRekening.Rekening\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"W&V bedrag\"},\"Name\":\"_Maten.W&V bedrag\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"W&V bedrag Budget\"},\"Name\":\"_Maten.W&V bedrag Budget\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Winst- en verliesrekening'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
+          "config": "{\"name\":\"m0015\",\"layouts\":[{\"id\":0,\"position\":{\"x\":24,\"y\":160,\"z\":0,\"width\":620,\"height\":520,\"tabOrder\":10}}],\"singleVisual\":{\"visualType\":\"pivotTable\",\"projections\":{\"Rows\":[{\"queryRef\":\"DimRekening.Rekeninggroep\"},{\"queryRef\":\"DimRekening.Rekening\"}],\"Values\":[{\"queryRef\":\"_Maten.W&V bedrag\"},{\"queryRef\":\"_Maten.W&V bedrag Budget (t/m realisatie)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"r\",\"Entity\":\"DimRekening\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"r\"}},\"Property\":\"Rekeninggroep\"},\"Name\":\"DimRekening.Rekeninggroep\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"r\"}},\"Property\":\"Rekening\"},\"Name\":\"DimRekening.Rekening\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"W&V bedrag\"},\"Name\":\"_Maten.W&V bedrag\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"W&V bedrag Budget (t/m realisatie)\"},\"Name\":\"_Maten.W&V bedrag Budget (t/m realisatie)\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Winst- en verliesrekening (uitklapbaar)'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
           "filters": "[]"
         },
         {
@@ -168,7 +177,7 @@
           "z": 0,
           "width": 588,
           "height": 344,
-          "config": "{\"name\":\"v0015\",\"layouts\":[{\"id\":0,\"position\":{\"x\":668,\"y\":160,\"z\":0,\"width\":588,\"height\":344,\"tabOrder\":11}}],\"singleVisual\":{\"visualType\":\"clusteredColumnChart\",\"projections\":{\"Category\":[{\"queryRef\":\"DimDatum.JaarMaand\"}],\"Y\":[{\"queryRef\":\"_Maten.EBITDA\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"d\",\"Entity\":\"DimDatum\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"JaarMaand\"},\"Name\":\"DimDatum.JaarMaand\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"EBITDA\"},\"Name\":\"_Maten.EBITDA\"}],\"OrderBy\":[{\"Direction\":1,\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"JaarMaand\"}}}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'EBITDA per maand'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
+          "config": "{\"name\":\"v0016\",\"layouts\":[{\"id\":0,\"position\":{\"x\":668,\"y\":160,\"z\":0,\"width\":588,\"height\":344,\"tabOrder\":11}}],\"singleVisual\":{\"visualType\":\"clusteredColumnChart\",\"projections\":{\"Category\":[{\"queryRef\":\"DimDatum.JaarMaand\"}],\"Y\":[{\"queryRef\":\"_Maten.EBITDA\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"d\",\"Entity\":\"DimDatum\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"JaarMaand\"},\"Name\":\"DimDatum.JaarMaand\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"EBITDA\"},\"Name\":\"_Maten.EBITDA\"}],\"OrderBy\":[{\"Direction\":1,\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"JaarMaand\"}}}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'EBITDA per maand'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
           "filters": "[]"
         },
         {
@@ -177,7 +186,7 @@
           "z": 0,
           "width": 280,
           "height": 160,
-          "config": "{\"name\":\"s0016\",\"layouts\":[{\"id\":0,\"position\":{\"x\":668,\"y\":520,\"z\":0,\"width\":280,\"height\":160,\"tabOrder\":12}}],\"singleVisual\":{\"visualType\":\"slicer\",\"projections\":{\"Values\":[{\"queryRef\":\"DimScenario.Scenario\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"DimScenario\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Scenario\"},\"Name\":\"DimScenario.Scenario\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Scenario'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
+          "config": "{\"name\":\"s0017\",\"layouts\":[{\"id\":0,\"position\":{\"x\":668,\"y\":520,\"z\":0,\"width\":280,\"height\":160,\"tabOrder\":12}}],\"singleVisual\":{\"visualType\":\"slicer\",\"projections\":{\"Values\":[{\"queryRef\":\"DimScenario.Scenario\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"DimScenario\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Scenario\"},\"Name\":\"DimScenario.Scenario\"}]},\"objects\":{\"data\":[{\"properties\":{\"mode\":{\"expr\":{\"Literal\":{\"Value\":\"'Basic'\"}}}}}],\"selection\":[{\"properties\":{\"singleSelect\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}],\"general\":[{\"properties\":{\"filter\":{\"filter\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"DimScenario\",\"Type\":0}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Scenario\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Actual'\"}}]]}}}]}}}}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Scenario'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
           "filters": "[]"
         },
         {
@@ -186,7 +195,7 @@
           "z": 0,
           "width": 284,
           "height": 160,
-          "config": "{\"name\":\"s0017\",\"layouts\":[{\"id\":0,\"position\":{\"x\":972,\"y\":520,\"z\":0,\"width\":284,\"height\":160,\"tabOrder\":13}}],\"singleVisual\":{\"visualType\":\"slicer\",\"projections\":{\"Values\":[{\"queryRef\":\"DimDatum.Jaar\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"DimDatum\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Jaar\"},\"Name\":\"DimDatum.Jaar\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Jaar'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
+          "config": "{\"name\":\"s0018\",\"layouts\":[{\"id\":0,\"position\":{\"x\":972,\"y\":520,\"z\":0,\"width\":284,\"height\":160,\"tabOrder\":13}}],\"singleVisual\":{\"visualType\":\"slicer\",\"projections\":{\"Values\":[{\"queryRef\":\"DimDatum.Jaar\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"DimDatum\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Jaar\"},\"Name\":\"DimDatum.Jaar\"}]},\"objects\":{\"data\":[{\"properties\":{\"mode\":{\"expr\":{\"Literal\":{\"Value\":\"'Basic'\"}}}}}],\"general\":[{\"properties\":{\"filter\":{\"filter\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"DimDatum\",\"Type\":0}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Jaar\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"2026L\"}}]]}}}]}}}}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Jaar'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
           "filters": "[]"
         }
       ],
@@ -207,7 +216,7 @@
           "z": 0,
           "width": 236,
           "height": 110,
-          "config": "{\"name\":\"c0018\",\"layouts\":[{\"id\":0,\"position\":{\"x\":24,\"y\":24,\"z\":0,\"width\":236,\"height\":110,\"tabOrder\":0}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"_Maten.Totaal activa\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Totaal activa\"},\"Name\":\"_Maten.Totaal activa\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Totaal activa'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
+          "config": "{\"name\":\"c0019\",\"layouts\":[{\"id\":0,\"position\":{\"x\":24,\"y\":24,\"z\":0,\"width\":236,\"height\":110,\"tabOrder\":0}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"_Maten.Totaal activa\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Totaal activa\"},\"Name\":\"_Maten.Totaal activa\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Totaal activa'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
           "filters": "[]"
         },
         {
@@ -216,7 +225,7 @@
           "z": 0,
           "width": 236,
           "height": 110,
-          "config": "{\"name\":\"c0019\",\"layouts\":[{\"id\":0,\"position\":{\"x\":276,\"y\":24,\"z\":0,\"width\":236,\"height\":110,\"tabOrder\":1}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"_Maten.Eigen vermogen\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Eigen vermogen\"},\"Name\":\"_Maten.Eigen vermogen\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Eigen vermogen'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
+          "config": "{\"name\":\"c0020\",\"layouts\":[{\"id\":0,\"position\":{\"x\":276,\"y\":24,\"z\":0,\"width\":236,\"height\":110,\"tabOrder\":1}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"_Maten.Eigen vermogen\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Eigen vermogen\"},\"Name\":\"_Maten.Eigen vermogen\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Eigen vermogen'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
           "filters": "[]"
         },
         {
@@ -225,7 +234,7 @@
           "z": 0,
           "width": 236,
           "height": 110,
-          "config": "{\"name\":\"c0020\",\"layouts\":[{\"id\":0,\"position\":{\"x\":528,\"y\":24,\"z\":0,\"width\":236,\"height\":110,\"tabOrder\":2}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"_Maten.Netto schuld\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Netto schuld\"},\"Name\":\"_Maten.Netto schuld\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Netto schuld'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
+          "config": "{\"name\":\"c0021\",\"layouts\":[{\"id\":0,\"position\":{\"x\":528,\"y\":24,\"z\":0,\"width\":236,\"height\":110,\"tabOrder\":2}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"_Maten.Netto schuld\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Netto schuld\"},\"Name\":\"_Maten.Netto schuld\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Netto schuld'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
           "filters": "[]"
         },
         {
@@ -234,7 +243,7 @@
           "z": 0,
           "width": 236,
           "height": 110,
-          "config": "{\"name\":\"c0021\",\"layouts\":[{\"id\":0,\"position\":{\"x\":780,\"y\":24,\"z\":0,\"width\":236,\"height\":110,\"tabOrder\":3}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"_Maten.Leverage\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Leverage\"},\"Name\":\"_Maten.Leverage\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Leverage'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
+          "config": "{\"name\":\"c0022\",\"layouts\":[{\"id\":0,\"position\":{\"x\":780,\"y\":24,\"z\":0,\"width\":236,\"height\":110,\"tabOrder\":3}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"_Maten.Leverage\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Leverage\"},\"Name\":\"_Maten.Leverage\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Leverage'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
           "filters": "[]"
         },
         {
@@ -243,7 +252,7 @@
           "z": 0,
           "width": 236,
           "height": 110,
-          "config": "{\"name\":\"c0022\",\"layouts\":[{\"id\":0,\"position\":{\"x\":1032,\"y\":24,\"z\":0,\"width\":236,\"height\":110,\"tabOrder\":4}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"_Maten.Covenantstatus\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Covenantstatus\"},\"Name\":\"_Maten.Covenantstatus\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Covenantstatus'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
+          "config": "{\"name\":\"c0023\",\"layouts\":[{\"id\":0,\"position\":{\"x\":1032,\"y\":24,\"z\":0,\"width\":236,\"height\":110,\"tabOrder\":4}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"_Maten.Covenantstatus\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Covenantstatus\"},\"Name\":\"_Maten.Covenantstatus\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Covenantstatus'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
           "filters": "[]"
         },
         {
@@ -252,7 +261,7 @@
           "z": 0,
           "width": 620,
           "height": 520,
-          "config": "{\"name\":\"m0023\",\"layouts\":[{\"id\":0,\"position\":{\"x\":24,\"y\":160,\"z\":0,\"width\":620,\"height\":520,\"tabOrder\":10}}],\"singleVisual\":{\"visualType\":\"pivotTable\",\"projections\":{\"Rows\":[{\"queryRef\":\"FactBalans.Balanspost\"}],\"Values\":[{\"queryRef\":\"_Maten.Balans laatste stand\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"b\",\"Entity\":\"FactBalans\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"b\"}},\"Property\":\"Balanspost\"},\"Name\":\"FactBalans.Balanspost\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Balans laatste stand\"},\"Name\":\"_Maten.Balans laatste stand\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Balans (laatste stand in de periode)'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
+          "config": "{\"name\":\"m0024\",\"layouts\":[{\"id\":0,\"position\":{\"x\":24,\"y\":160,\"z\":0,\"width\":620,\"height\":520,\"tabOrder\":10}}],\"singleVisual\":{\"visualType\":\"pivotTable\",\"projections\":{\"Rows\":[{\"queryRef\":\"DimBalanspost.Zijde\"},{\"queryRef\":\"DimBalanspost.Balanspost\"}],\"Values\":[{\"queryRef\":\"_Maten.Balansstand (gepresenteerd)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"r\",\"Entity\":\"DimBalanspost\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"r\"}},\"Property\":\"Zijde\"},\"Name\":\"DimBalanspost.Zijde\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"r\"}},\"Property\":\"Balanspost\"},\"Name\":\"DimBalanspost.Balanspost\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Balansstand (gepresenteerd)\"},\"Name\":\"_Maten.Balansstand (gepresenteerd)\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Balans (laatste stand in de periode)'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
           "filters": "[]"
         },
         {
@@ -260,26 +269,35 @@
           "y": 160,
           "z": 0,
           "width": 588,
-          "height": 344,
-          "config": "{\"name\":\"v0024\",\"layouts\":[{\"id\":0,\"position\":{\"x\":668,\"y\":160,\"z\":0,\"width\":588,\"height\":344,\"tabOrder\":11}}],\"singleVisual\":{\"visualType\":\"clusteredColumnChart\",\"projections\":{\"Category\":[{\"queryRef\":\"DimDatum.JaarMaand\"}],\"Y\":[{\"queryRef\":\"_Maten.Vrije kasstroom\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"d\",\"Entity\":\"DimDatum\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"JaarMaand\"},\"Name\":\"DimDatum.JaarMaand\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Vrije kasstroom\"},\"Name\":\"_Maten.Vrije kasstroom\"}],\"OrderBy\":[{\"Direction\":1,\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"JaarMaand\"}}}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Vrije kasstroom per maand'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
+          "height": 176,
+          "config": "{\"name\":\"v0025\",\"layouts\":[{\"id\":0,\"position\":{\"x\":668,\"y\":160,\"z\":0,\"width\":588,\"height\":176,\"tabOrder\":11}}],\"singleVisual\":{\"visualType\":\"lineChart\",\"projections\":{\"Category\":[{\"queryRef\":\"DimDatum.JaarMaand\"}],\"Y\":[{\"queryRef\":\"_Maten.Leverage\"},{\"queryRef\":\"_Maten.Covenant leverage max\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"d\",\"Entity\":\"DimDatum\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"JaarMaand\"},\"Name\":\"DimDatum.JaarMaand\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Leverage\"},\"Name\":\"_Maten.Leverage\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Covenant leverage max\"},\"Name\":\"_Maten.Covenant leverage max\"}],\"OrderBy\":[{\"Direction\":1,\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"JaarMaand\"}}}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Leverage vs covenant (max 3,0x)'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
           "filters": "[]"
         },
         {
           "x": 668,
-          "y": 520,
+          "y": 352,
+          "z": 0,
+          "width": 588,
+          "height": 176,
+          "config": "{\"name\":\"v0026\",\"layouts\":[{\"id\":0,\"position\":{\"x\":668,\"y\":352,\"z\":0,\"width\":588,\"height\":176,\"tabOrder\":12}}],\"singleVisual\":{\"visualType\":\"clusteredColumnChart\",\"projections\":{\"Category\":[{\"queryRef\":\"DimDatum.JaarMaand\"}],\"Y\":[{\"queryRef\":\"_Maten.Vrije kasstroom\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"d\",\"Entity\":\"DimDatum\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"JaarMaand\"},\"Name\":\"DimDatum.JaarMaand\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Vrije kasstroom\"},\"Name\":\"_Maten.Vrije kasstroom\"}],\"OrderBy\":[{\"Direction\":1,\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"JaarMaand\"}}}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Vrije kasstroom per maand'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
+          "filters": "[]"
+        },
+        {
+          "x": 668,
+          "y": 544,
           "z": 0,
           "width": 280,
-          "height": 160,
-          "config": "{\"name\":\"s0025\",\"layouts\":[{\"id\":0,\"position\":{\"x\":668,\"y\":520,\"z\":0,\"width\":280,\"height\":160,\"tabOrder\":12}}],\"singleVisual\":{\"visualType\":\"slicer\",\"projections\":{\"Values\":[{\"queryRef\":\"DimScenario.Scenario\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"DimScenario\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Scenario\"},\"Name\":\"DimScenario.Scenario\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Scenario'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
+          "height": 136,
+          "config": "{\"name\":\"s0027\",\"layouts\":[{\"id\":0,\"position\":{\"x\":668,\"y\":544,\"z\":0,\"width\":280,\"height\":136,\"tabOrder\":13}}],\"singleVisual\":{\"visualType\":\"slicer\",\"projections\":{\"Values\":[{\"queryRef\":\"DimScenario.Scenario\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"DimScenario\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Scenario\"},\"Name\":\"DimScenario.Scenario\"}]},\"objects\":{\"data\":[{\"properties\":{\"mode\":{\"expr\":{\"Literal\":{\"Value\":\"'Basic'\"}}}}}],\"selection\":[{\"properties\":{\"singleSelect\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}],\"general\":[{\"properties\":{\"filter\":{\"filter\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"DimScenario\",\"Type\":0}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Scenario\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Actual'\"}}]]}}}]}}}}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Scenario'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
           "filters": "[]"
         },
         {
           "x": 972,
-          "y": 520,
+          "y": 544,
           "z": 0,
           "width": 284,
-          "height": 160,
-          "config": "{\"name\":\"s0026\",\"layouts\":[{\"id\":0,\"position\":{\"x\":972,\"y\":520,\"z\":0,\"width\":284,\"height\":160,\"tabOrder\":13}}],\"singleVisual\":{\"visualType\":\"slicer\",\"projections\":{\"Values\":[{\"queryRef\":\"DimDatum.Jaar\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"DimDatum\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Jaar\"},\"Name\":\"DimDatum.Jaar\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Jaar'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
+          "height": 136,
+          "config": "{\"name\":\"s0028\",\"layouts\":[{\"id\":0,\"position\":{\"x\":972,\"y\":544,\"z\":0,\"width\":284,\"height\":136,\"tabOrder\":14}}],\"singleVisual\":{\"visualType\":\"slicer\",\"projections\":{\"Values\":[{\"queryRef\":\"DimDatum.Jaar\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"DimDatum\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Jaar\"},\"Name\":\"DimDatum.Jaar\"}]},\"objects\":{\"data\":[{\"properties\":{\"mode\":{\"expr\":{\"Literal\":{\"Value\":\"'Basic'\"}}}}}],\"general\":[{\"properties\":{\"filter\":{\"filter\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"DimDatum\",\"Type\":0}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Jaar\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"2026L\"}}]]}}}]}}}}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Jaar'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
           "filters": "[]"
         }
       ],

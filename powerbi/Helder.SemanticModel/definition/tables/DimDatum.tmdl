@@ -1,17 +1,20 @@
-/// Datumtabel op dagniveau (2023-2028). Feiten staan op de eerste dag van de maand.
+/// Datumtabel op dagniveau (2023-2029). Feiten staan op de eerste dag van de maand; feitrijen buiten dit bereik worden bij het laden weggefilterd.
 table DimDatum
 	lineageTag: e9c031bf-1672-4df5-9634-b685e17d16fd
 	dataCategory: Time
 
+	/// Datumsleutel yyyymmdd; relaties vanuit de feiten komen hier binnen.
 	column DatumKey
 		dataType: int64
 		isHidden
+		isAvailableInMdx: false
 		lineageTag: 87ac79de-3edf-45ef-aa76-14fc859d003d
 		summarizeBy: none
 		sourceColumn: DatumKey
 
 		annotation SummarizationSetBy = User
 
+	/// Kalenderdatum (sleutel van de datumtabel).
 	column Datum
 		dataType: dateTime
 		isKey
@@ -22,6 +25,7 @@ table DimDatum
 
 		annotation SummarizationSetBy = User
 
+	/// Kalenderjaar.
 	column Jaar
 		dataType: int64
 		formatString: 0
@@ -31,6 +35,7 @@ table DimDatum
 
 		annotation SummarizationSetBy = User
 
+	/// Kwartaal (Q1-Q4).
 	column Kwartaal
 		dataType: string
 		lineageTag: 05e59ef8-39a7-478c-80c8-65004cf047e3
@@ -39,6 +44,7 @@ table DimDatum
 
 		annotation SummarizationSetBy = User
 
+	/// Jaar en kwartaal, bijvoorbeeld 2026-Q3.
 	column JaarKwartaal
 		dataType: string
 		lineageTag: 28e8a488-8e85-4820-bf19-2168d3e38d5d
@@ -47,8 +53,10 @@ table DimDatum
 
 		annotation SummarizationSetBy = User
 
+	/// Maandnummer 1-12 (sorteerkolom voor Maand en MaandKort).
 	column Maandnummer
 		dataType: int64
+		isHidden
 		formatString: 0
 		lineageTag: 3bc1546f-d273-43b8-8ae0-0414252583e4
 		summarizeBy: none
@@ -56,6 +64,7 @@ table DimDatum
 
 		annotation SummarizationSetBy = User
 
+	/// Maandnaam (Nederlands).
 	column Maand
 		dataType: string
 		lineageTag: f38f4ca9-5851-4c57-8d80-b9dde8031a83
@@ -65,6 +74,7 @@ table DimDatum
 
 		annotation SummarizationSetBy = User
 
+	/// Maandnaam afgekort tot drie letters.
 	column MaandKort
 		dataType: string
 		lineageTag: 654e0097-e3e1-4882-a02a-96930dcd96e4
@@ -74,6 +84,7 @@ table DimDatum
 
 		annotation SummarizationSetBy = User
 
+	/// Jaar en maand als yyyy-mm; de korrel van alle feiten.
 	column JaarMaand
 		dataType: string
 		lineageTag: 3f9c65b3-6e0c-4eb0-a952-d1a256101818
@@ -83,6 +94,7 @@ table DimDatum
 
 		annotation SummarizationSetBy = User
 
+	/// Sorteerkolom voor JaarMaand (yyyymm).
 	column JaarMaandSort
 		dataType: int64
 		isHidden
@@ -93,8 +105,10 @@ table DimDatum
 
 		annotation SummarizationSetBy = User
 
+	/// 1 voor maanden tot en met de laatste gerealiseerde maand (2026-09), anders 0. Gebruikt door de A+F-maten.
 	column IsActual
 		dataType: int64
+		isHidden
 		formatString: 0
 		lineageTag: 6be26d3a-a19b-4171-8113-b46367aa27d4
 		summarizeBy: none
@@ -102,14 +116,29 @@ table DimDatum
 
 		annotation SummarizationSetBy = User
 
+	hierarchy Kalender
+		lineageTag: d896dbe0-6f0d-4c0e-bb9a-b665cc73e9ec
+
+		level Jaar
+			lineageTag: 025bfcf9-ada4-4d5a-945a-66f8af1bf794
+			column: Jaar
+
+		level Kwartaal
+			lineageTag: ed757574-b50e-4de8-aab1-0d6d03ae3a05
+			column: JaarKwartaal
+
+		level Maand
+			lineageTag: 7264eacd-482f-4c65-8cd4-fd9737de9960
+			column: JaarMaand
+
 	partition DimDatum = m
 		mode: import
 		source =
-			let
-			    Bron = Csv.Document(File.Contents(CsvMap & "DimDatum.csv"), [Delimiter=",", Columns=11, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
-			    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
-			    Typen = Table.TransformColumnTypes(Kop, {{"DatumKey", Int64.Type}, {"Datum", type date}, {"Jaar", Int64.Type}, {"Kwartaal", type text}, {"JaarKwartaal", type text}, {"Maandnummer", Int64.Type}, {"Maand", type text}, {"MaandKort", type text}, {"JaarMaand", type text}, {"JaarMaandSort", Int64.Type}, {"IsActual", Int64.Type}}, "en-US")
-			in
-			    Typen
+				let
+				    Bron = Csv.Document(File.Contents(CsvMap & "DimDatum.csv"), [Delimiter=",", Columns=11, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
+				    Typen = Table.TransformColumnTypes(Kop, {{"DatumKey", Int64.Type}, {"Datum", type date}, {"Jaar", Int64.Type}, {"Kwartaal", type text}, {"JaarKwartaal", type text}, {"Maandnummer", Int64.Type}, {"Maand", type text}, {"MaandKort", type text}, {"JaarMaand", type text}, {"JaarMaandSort", Int64.Type}, {"IsActual", Int64.Type}}, "en-US")
+				in
+				    Typen
 
 	annotation PBI_ResultType = Table

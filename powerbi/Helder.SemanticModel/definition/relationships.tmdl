@@ -38,6 +38,10 @@ relationship 50fd447a-c2a8-4efe-aa96-578c7d424b23
 	fromColumn: FactBalans.ScenarioKey
 	toColumn: DimScenario.ScenarioKey
 
+relationship b6908ddb-7213-499c-8e1e-63e64f994944
+	fromColumn: FactBalans.Balanspost
+	toColumn: DimBalanspost.Balanspost
+
 relationship bf05cd22-bb3d-4b1f-9f4d-9e40dc4fdf94
 	fromColumn: FactKasstroom.DatumKey
 	toColumn: DimDatum.DatumKey

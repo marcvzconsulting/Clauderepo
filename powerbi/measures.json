@@ -4,7 +4,7 @@
     "group": "Verkoop",
     "description": "Omzet uit FactVerkoop (productlijn × kanaal × land). Volgt het scenariofilter; zonder scenariofilter worden Actual, Budget en Forecast opgeteld.",
     "dax": "SUM(FactVerkoop[Omzet])",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Aantal",
@@ -18,21 +18,21 @@
     "group": "Verkoop",
     "description": "Gemiddelde verkoopprijs per fiets (omzet / aantal).",
     "dax": "DIVIDE([Omzet], [Aantal])",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Kostprijs",
     "group": "Verkoop",
     "description": "Directe kostprijs van de verkochte fietsen (materiaal, arbeid, vracht).",
     "dax": "SUM(FactVerkoop[Kostprijs])",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Brutowinst",
     "group": "Verkoop",
     "description": "Omzet minus kostprijs uit de verkoopfeiten.",
     "dax": "[Omzet] - [Kostprijs]",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Brutomarge %",
@@ -46,63 +46,56 @@
     "group": "Verkoop",
     "description": "Omzet in het scenario Actual, ongeacht het scenariofilter.",
     "dax": "CALCULATE([Omzet], DimScenario[Scenario] = \"Actual\")",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Omzet Budget",
     "group": "Verkoop",
     "description": "Omzet in het scenario Budget (alleen 2026).",
     "dax": "CALCULATE([Omzet], DimScenario[Scenario] = \"Budget\")",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Omzet Forecast",
     "group": "Verkoop",
     "description": "Omzet in het scenario Forecast (vanaf 2026-10).",
     "dax": "CALCULATE([Omzet], DimScenario[Scenario] = \"Forecast\")",
-    "formatString": "#,0"
-  },
-  {
-    "name": "Omzet A+F",
-    "group": "Verkoop",
-    "description": "Actual tot en met de laatste gerealiseerde maand (DimDatum[IsActual] = 1), daarna Forecast. Handig voor doorlopende tijdreeksen.",
-    "dax": "CALCULATE([Omzet Actual], DimDatum[IsActual] = 1) + CALCULATE([Omzet Forecast], DimDatum[IsActual] = 0)",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Omzet per fiets Actual",
     "group": "Verkoop",
     "description": "Gerealiseerde gemiddelde verkoopprijs per fiets.",
     "dax": "CALCULATE([Gemiddelde prijs], DimScenario[Scenario] = \"Actual\")",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "W&V bedrag",
     "group": "Winst & verlies",
-    "description": "Bedrag per rekening met teken (opbrengst +, kosten −). In een matrix op DimRekening[Rekening] levert dit de volledige winst- en verliesrekening; het totaal is de nettowinst.",
-    "dax": "SUMX(FactWinstVerlies, FactWinstVerlies[Bedrag] * RELATED(DimRekening[Teken]))",
-    "formatString": "#,0"
+    "description": "Bedrag per rekening met teken (opbrengst +, kosten −). In een matrix op DimRekening levert dit de volledige winst- en verliesrekening; het totaal is de nettowinst. Twee storage-engine-scans (één per teken), geen rij-voor-rij RELATED.",
+    "dax": "SUMX(VALUES(DimRekening[Teken]), DimRekening[Teken] * CALCULATE(SUM(FactWinstVerlies[Bedrag])))",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Netto-omzet",
     "group": "Winst & verlies",
     "description": "Netto-omzet volgens de W&V (rekening 4000). Gelijk aan [Omzet] uit de verkoopfeiten.",
     "dax": "CALCULATE([W&V bedrag], REMOVEFILTERS(DimRekening), DimRekening[Rekeninggroep] = \"Omzet\")",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Kostprijs omzet",
     "group": "Winst & verlies",
     "description": "Kostprijs van de omzet (materiaal, directe arbeid, vracht, garantie, eenmalige posten) als positief bedrag.",
     "dax": "CALCULATE(SUM(FactWinstVerlies[Bedrag]), REMOVEFILTERS(DimRekening), DimRekening[Rekeninggroep] = \"Kostprijs omzet\")",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Brutowinst (W&V)",
     "group": "Winst & verlies",
     "description": "Netto-omzet minus kostprijs omzet.",
     "dax": "CALCULATE([W&V bedrag], REMOVEFILTERS(DimRekening), DimRekening[Niveau1] IN {\"Omzet\", \"Brutomarge\"})",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Brutomarge % (W&V)",
@@ -116,35 +109,35 @@
     "group": "Winst & verlies",
     "description": "Personeelskosten van alle afdelingen (R&D, Sales & Marketing, Operations, G&A) als positief bedrag.",
     "dax": "CALCULATE(SUM(FactWinstVerlies[Bedrag]), REMOVEFILTERS(DimRekening), DimRekening[Rekeninggroep] = \"Personeelskosten\")",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Marketing",
     "group": "Winst & verlies",
     "description": "Marketingkosten als positief bedrag.",
     "dax": "CALCULATE(SUM(FactWinstVerlies[Bedrag]), REMOVEFILTERS(DimRekening), DimRekening[Rekening] = \"Marketing\")",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Operationele kosten",
     "group": "Winst & verlies",
     "description": "Alle operationele kosten (personeel en overige bedrijfskosten) als positief bedrag.",
     "dax": "CALCULATE(SUM(FactWinstVerlies[Bedrag]), REMOVEFILTERS(DimRekening), DimRekening[Niveau1] = \"Operationele kosten\")",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Eenmalige posten",
     "group": "Winst & verlies",
     "description": "Eenmalige kosten (terugroepactie, ERP-migratie) als positief bedrag.",
     "dax": "CALCULATE(SUM(FactWinstVerlies[Bedrag]), REMOVEFILTERS(DimRekening), DimRekening[Rekening] IN {\"Eenmalige kostprijsposten\", \"Eenmalige bedrijfskosten\"})",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "EBITDA",
     "group": "Winst & verlies",
     "description": "Resultaat vóór rente, belasting en afschrijvingen: netto-omzet − kostprijs omzet − operationele kosten.",
     "dax": "CALCULATE([W&V bedrag], REMOVEFILTERS(DimRekening), DimRekening[Niveau1] IN {\"Omzet\", \"Brutomarge\", \"Operationele kosten\"})",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "EBITDA %",
@@ -158,49 +151,49 @@
     "group": "Winst & verlies",
     "description": "EBITDA gecorrigeerd voor eenmalige posten.",
     "dax": "[EBITDA] + [Eenmalige posten]",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Afschrijvingen",
     "group": "Winst & verlies",
     "description": "Afschrijvingen op materiële vaste activa als positief bedrag.",
     "dax": "CALCULATE(SUM(FactWinstVerlies[Bedrag]), REMOVEFILTERS(DimRekening), DimRekening[Rekeninggroep] = \"Afschrijvingen\")",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "EBIT",
     "group": "Winst & verlies",
     "description": "Bedrijfsresultaat: EBITDA minus afschrijvingen.",
     "dax": "[EBITDA] - [Afschrijvingen]",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Rentelasten",
     "group": "Winst & verlies",
     "description": "Rentelasten op termijnlening en rekening-courantkrediet als positief bedrag.",
     "dax": "CALCULATE(SUM(FactWinstVerlies[Bedrag]), REMOVEFILTERS(DimRekening), DimRekening[Rekening] = \"Rentelasten\")",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Financieel resultaat",
     "group": "Winst & verlies",
     "description": "Rentebaten minus rentelasten (met teken).",
     "dax": "CALCULATE([W&V bedrag], REMOVEFILTERS(DimRekening), DimRekening[Niveau1] = \"Financieel\")",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Belastingen",
     "group": "Winst & verlies",
     "description": "Vennootschapsbelasting als positief bedrag.",
     "dax": "CALCULATE(SUM(FactWinstVerlies[Bedrag]), REMOVEFILTERS(DimRekening), DimRekening[Rekeninggroep] = \"Belastingen\")",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Nettowinst",
     "group": "Winst & verlies",
     "description": "Nettowinst: som van alle rekeningen met teken.",
     "dax": "CALCULATE([W&V bedrag], REMOVEFILTERS(DimRekening))",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Nettomarge %",
@@ -210,199 +203,283 @@
     "formatString": "0.0%"
   },
   {
+    "name": "Omzet A+F",
+    "group": "Actual + Forecast",
+    "description": "Omzet: Actual tot en met de laatste gerealiseerde maand (DimDatum[IsActual] = 1), daarna Forecast. Handig voor doorlopende tijdreeksen.",
+    "dax": "CALCULATE([Omzet Actual], DimDatum[IsActual] = 1) + CALCULATE([Omzet Forecast], DimDatum[IsActual] = 0)",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
+  },
+  {
+    "name": "EBITDA A+F",
+    "group": "Actual + Forecast",
+    "description": "EBITDA: Actual tot en met de laatste gerealiseerde maand, daarna Forecast.",
+    "dax": "CALCULATE([EBITDA Actual], DimDatum[IsActual] = 1) + CALCULATE([EBITDA Forecast], DimDatum[IsActual] = 0)",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
+  },
+  {
+    "name": "Rentelasten Actual",
+    "group": "Actual + Forecast",
+    "description": "Rentelasten in het scenario Actual.",
+    "dax": "CALCULATE([Rentelasten], DimScenario[Scenario] = \"Actual\")",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
+  },
+  {
+    "name": "Rentelasten Forecast",
+    "group": "Actual + Forecast",
+    "description": "Rentelasten in het scenario Forecast.",
+    "dax": "CALCULATE([Rentelasten], DimScenario[Scenario] = \"Forecast\")",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
+  },
+  {
+    "name": "Rentelasten A+F",
+    "group": "Actual + Forecast",
+    "description": "Rentelasten: Actual tot en met de laatste gerealiseerde maand, daarna Forecast.",
+    "dax": "CALCULATE([Rentelasten Actual], DimDatum[IsActual] = 1) + CALCULATE([Rentelasten Forecast], DimDatum[IsActual] = 0)",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
+  },
+  {
     "name": "W&V bedrag Budget",
     "group": "Budget",
     "description": "W&V bedrag in het scenario Budget (alleen 2026).",
     "dax": "CALCULATE([W&V bedrag], DimScenario[Scenario] = \"Budget\")",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
+  },
+  {
+    "name": "W&V bedrag Budget (t/m realisatie)",
+    "group": "Budget",
+    "description": "W&V bedrag Budget voor de maanden die al gerealiseerd zijn (DimDatum[IsActual] = 1), naast [W&V bedrag] Actual in dezelfde matrix. Vergeleken over de gerealiseerde maanden van het budgetjaar (Actual en Budget beide januari t/m de laatste gerealiseerde maand).",
+    "dax": "CALCULATE([W&V bedrag Budget], KEEPFILTERS(DimDatum[IsActual] = 1))",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Netto-omzet Actual",
     "group": "Budget",
     "description": "Netto-omzet in het scenario Actual.",
     "dax": "CALCULATE([Netto-omzet], DimScenario[Scenario] = \"Actual\")",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Netto-omzet Budget",
     "group": "Budget",
-    "description": "Netto-omzet in het scenario Budget.",
+    "description": "Netto-omzet in het scenario Budget (twaalf maanden 2026).",
     "dax": "CALCULATE([Netto-omzet], DimScenario[Scenario] = \"Budget\")",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
+  },
+  {
+    "name": "Netto-omzet Budget (t/m realisatie)",
+    "group": "Budget",
+    "description": "Netto-omzet Budget voor de maanden die al gerealiseerd zijn (DimDatum[IsActual] = 1). Vergeleken over de gerealiseerde maanden van het budgetjaar (Actual en Budget beide januari t/m de laatste gerealiseerde maand).",
+    "dax": "CALCULATE([Netto-omzet Budget], KEEPFILTERS(DimDatum[IsActual] = 1))",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
+  },
+  {
+    "name": "Netto-omzet Actual (budgetmaanden)",
+    "group": "Budget",
+    "description": "Netto-omzet Actual, beperkt tot de gerealiseerde maanden waarvoor een budget bestaat (2026-01 t/m 2026-09). Leeg buiten het budgetjaar.",
+    "dax": "CALCULATE([Netto-omzet Actual], TREATAS(CALCULATETABLE(VALUES(FactWinstVerlies[DatumKey]), DimScenario[Scenario] = \"Budget\", KEEPFILTERS(DimDatum[IsActual] = 1)), DimDatum[DatumKey]))",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "EBITDA Actual",
     "group": "Budget",
     "description": "EBITDA in het scenario Actual.",
     "dax": "CALCULATE([EBITDA], DimScenario[Scenario] = \"Actual\")",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "EBITDA Budget",
     "group": "Budget",
-    "description": "EBITDA in het scenario Budget.",
+    "description": "EBITDA in het scenario Budget (twaalf maanden 2026).",
     "dax": "CALCULATE([EBITDA], DimScenario[Scenario] = \"Budget\")",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
+  },
+  {
+    "name": "EBITDA Budget (t/m realisatie)",
+    "group": "Budget",
+    "description": "EBITDA Budget voor de maanden die al gerealiseerd zijn (DimDatum[IsActual] = 1). Vergeleken over de gerealiseerde maanden van het budgetjaar (Actual en Budget beide januari t/m de laatste gerealiseerde maand).",
+    "dax": "CALCULATE([EBITDA Budget], KEEPFILTERS(DimDatum[IsActual] = 1))",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
+  },
+  {
+    "name": "EBITDA Actual (budgetmaanden)",
+    "group": "Budget",
+    "description": "EBITDA Actual, beperkt tot de gerealiseerde maanden waarvoor een budget bestaat. Leeg buiten het budgetjaar.",
+    "dax": "CALCULATE([EBITDA Actual], TREATAS(CALCULATETABLE(VALUES(FactWinstVerlies[DatumKey]), DimScenario[Scenario] = \"Budget\", KEEPFILTERS(DimDatum[IsActual] = 1)), DimDatum[DatumKey]))",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "EBITDA Forecast",
     "group": "Budget",
     "description": "EBITDA in het scenario Forecast.",
     "dax": "CALCULATE([EBITDA], DimScenario[Scenario] = \"Forecast\")",
-    "formatString": "#,0"
-  },
-  {
-    "name": "EBITDA A+F",
-    "group": "Budget",
-    "description": "EBITDA: Actual tot en met de laatste gerealiseerde maand, daarna Forecast.",
-    "dax": "CALCULATE([EBITDA Actual], DimDatum[IsActual] = 1) + CALCULATE([EBITDA Forecast], DimDatum[IsActual] = 0)",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Operationele kosten Budget",
     "group": "Budget",
-    "description": "Operationele kosten in het scenario Budget.",
+    "description": "Operationele kosten in het scenario Budget (twaalf maanden 2026).",
     "dax": "CALCULATE([Operationele kosten], DimScenario[Scenario] = \"Budget\")",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
+  },
+  {
+    "name": "Operationele kosten Budget (t/m realisatie)",
+    "group": "Budget",
+    "description": "Operationele kosten Budget voor de maanden die al gerealiseerd zijn (DimDatum[IsActual] = 1). Vergeleken over de gerealiseerde maanden van het budgetjaar (Actual en Budget beide januari t/m de laatste gerealiseerde maand).",
+    "dax": "CALCULATE([Operationele kosten Budget], KEEPFILTERS(DimDatum[IsActual] = 1))",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Operationele kosten Actual",
     "group": "Budget",
     "description": "Operationele kosten in het scenario Actual.",
     "dax": "CALCULATE([Operationele kosten], DimScenario[Scenario] = \"Actual\")",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
+  },
+  {
+    "name": "Operationele kosten Actual (budgetmaanden)",
+    "group": "Budget",
+    "description": "Operationele kosten Actual, beperkt tot de gerealiseerde maanden waarvoor een budget bestaat. Leeg buiten het budgetjaar.",
+    "dax": "CALCULATE([Operationele kosten Actual], TREATAS(CALCULATETABLE(VALUES(FactWinstVerlies[DatumKey]), DimScenario[Scenario] = \"Budget\", KEEPFILTERS(DimDatum[IsActual] = 1)), DimDatum[DatumKey]))",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Afwijking omzet vs budget (€)",
     "group": "Budget",
-    "description": "Netto-omzet Actual minus Budget; positief = gunstig.",
-    "dax": "[Netto-omzet Actual] - [Netto-omzet Budget]",
-    "formatString": "#,0"
+    "description": "Netto-omzet Actual minus Budget; positief = gunstig. Vergeleken over de gerealiseerde maanden van het budgetjaar (Actual en Budget beide januari t/m de laatste gerealiseerde maand).",
+    "dax": "[Netto-omzet Actual (budgetmaanden)] - [Netto-omzet Budget (t/m realisatie)]",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Afwijking omzet vs budget (%)",
     "group": "Budget",
-    "description": "Omzetafwijking als percentage van het budget; positief = gunstig.",
-    "dax": "DIVIDE([Afwijking omzet vs budget (€)], [Netto-omzet Budget])",
+    "description": "Omzetafwijking als percentage van het budget; positief = gunstig. Vergeleken over de gerealiseerde maanden van het budgetjaar (Actual en Budget beide januari t/m de laatste gerealiseerde maand).",
+    "dax": "DIVIDE([Afwijking omzet vs budget (€)], [Netto-omzet Budget (t/m realisatie)])",
     "formatString": "0.0%"
   },
   {
     "name": "Afwijking EBITDA vs budget (€)",
     "group": "Budget",
-    "description": "EBITDA Actual minus Budget; positief = gunstig.",
-    "dax": "[EBITDA Actual] - [EBITDA Budget]",
-    "formatString": "#,0"
+    "description": "EBITDA Actual minus Budget; positief = gunstig. Vergeleken over de gerealiseerde maanden van het budgetjaar (Actual en Budget beide januari t/m de laatste gerealiseerde maand).",
+    "dax": "[EBITDA Actual (budgetmaanden)] - [EBITDA Budget (t/m realisatie)]",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Afwijking EBITDA vs budget (%)",
     "group": "Budget",
-    "description": "EBITDA-afwijking als percentage van het budget (noemer absoluut); positief = gunstig.",
-    "dax": "DIVIDE([Afwijking EBITDA vs budget (€)], ABS([EBITDA Budget]))",
+    "description": "EBITDA-afwijking als percentage van het budget (noemer absoluut); positief = gunstig. Vergeleken over de gerealiseerde maanden van het budgetjaar (Actual en Budget beide januari t/m de laatste gerealiseerde maand).",
+    "dax": "DIVIDE([Afwijking EBITDA vs budget (€)], ABS([EBITDA Budget (t/m realisatie)]))",
     "formatString": "0.0%"
   },
   {
     "name": "Afwijking opex vs budget (€)",
     "group": "Budget",
-    "description": "Budget minus Actual voor de operationele kosten; positief = onder budget = gunstig.",
-    "dax": "[Operationele kosten Budget] - [Operationele kosten Actual]",
-    "formatString": "#,0"
+    "description": "Budget minus Actual voor de operationele kosten; positief = onder budget = gunstig. Vergeleken over de gerealiseerde maanden van het budgetjaar (Actual en Budget beide januari t/m de laatste gerealiseerde maand).",
+    "dax": "[Operationele kosten Budget (t/m realisatie)] - [Operationele kosten Actual (budgetmaanden)]",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Balans laatste stand",
     "group": "Balans",
-    "description": "Balansbedrag op de laatste maand binnen de huidige periode (standen worden niet opgeteld over maanden). Passiva en eigen vermogen zijn negatief opgeslagen; in een matrix op FactBalans[Balanspost] telt alles op tot nul.",
+    "description": "Balansbedrag op de laatste maand binnen de huidige periode (standen worden niet opgeteld over maanden). Passiva en eigen vermogen zijn negatief opgeslagen; in een matrix op DimBalanspost[Balanspost] telt alles op tot nul. Gebruik [Balansstand (gepresenteerd)] voor een balans met beide zijden positief.",
     "dax": "VAR LaatsteKey = MAX(FactBalans[DatumKey])\nRETURN\n    CALCULATE(SUM(FactBalans[Bedrag]), FactBalans[DatumKey] = LaatsteKey)",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
+  },
+  {
+    "name": "Balansstand (gepresenteerd)",
+    "group": "Balans",
+    "description": "Balansstand met activa én passiva positief (teken uit DimBalanspost), voor een matrix met rijen DimBalanspost[Zijde] > [Balanspost] in balansvolgorde. Het eindtotaal blijft leeg: activa en passiva worden niet bij elkaar opgeteld.",
+    "dax": "IF(\n    HASONEVALUE(DimBalanspost[Zijde]),\n    SUMX(VALUES(DimBalanspost[Teken]), DimBalanspost[Teken] * [Balans laatste stand]),\n    BLANK()\n)",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Liquide middelen",
     "group": "Balans",
     "description": "Kas en banktegoeden op de laatste balansdatum in de periode.",
-    "dax": "CALCULATE([Balans laatste stand], REMOVEFILTERS(FactBalans[Balanspost]), FactBalans[Balanspost] = \"Liquide middelen\")",
-    "formatString": "#,0"
+    "dax": "CALCULATE([Balans laatste stand], REMOVEFILTERS(DimBalanspost), DimBalanspost[Balanspost] = \"Liquide middelen\")",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Debiteuren",
     "group": "Balans",
     "description": "Openstaande handelsvorderingen op de laatste balansdatum.",
-    "dax": "CALCULATE([Balans laatste stand], REMOVEFILTERS(FactBalans[Balanspost]), FactBalans[Balanspost] = \"Debiteuren\")",
-    "formatString": "#,0"
+    "dax": "CALCULATE([Balans laatste stand], REMOVEFILTERS(DimBalanspost), DimBalanspost[Balanspost] = \"Debiteuren\")",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Voorraden",
     "group": "Balans",
     "description": "Voorraad (fietsen en onderdelen) op de laatste balansdatum.",
-    "dax": "CALCULATE([Balans laatste stand], REMOVEFILTERS(FactBalans[Balanspost]), FactBalans[Balanspost] = \"Voorraden\")",
-    "formatString": "#,0"
+    "dax": "CALCULATE([Balans laatste stand], REMOVEFILTERS(DimBalanspost), DimBalanspost[Balanspost] = \"Voorraden\")",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Materiële vaste activa",
     "group": "Balans",
     "description": "Materiële vaste activa (netto, na afschrijvingen) op de laatste balansdatum.",
-    "dax": "CALCULATE([Balans laatste stand], REMOVEFILTERS(FactBalans[Balanspost]), FactBalans[Balanspost] = \"Materiële vaste activa\")",
-    "formatString": "#,0"
+    "dax": "CALCULATE([Balans laatste stand], REMOVEFILTERS(DimBalanspost), DimBalanspost[Balanspost] = \"Materiële vaste activa\")",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Crediteuren",
     "group": "Balans",
     "description": "Handelscrediteuren als positief bedrag.",
-    "dax": "-CALCULATE([Balans laatste stand], REMOVEFILTERS(FactBalans[Balanspost]), FactBalans[Balanspost] = \"Crediteuren\")",
-    "formatString": "#,0"
+    "dax": "-CALCULATE([Balans laatste stand], REMOVEFILTERS(DimBalanspost), DimBalanspost[Balanspost] = \"Crediteuren\")",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Belastingschuld",
     "group": "Balans",
     "description": "Te betalen vennootschapsbelasting als positief bedrag.",
-    "dax": "-CALCULATE([Balans laatste stand], REMOVEFILTERS(FactBalans[Balanspost]), FactBalans[Balanspost] = \"Belastingschuld\")",
-    "formatString": "#,0"
+    "dax": "-CALCULATE([Balans laatste stand], REMOVEFILTERS(DimBalanspost), DimBalanspost[Balanspost] = \"Belastingschuld\")",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Termijnlening",
     "group": "Balans",
     "description": "Uitstaande termijnlening als positief bedrag.",
-    "dax": "-CALCULATE([Balans laatste stand], REMOVEFILTERS(FactBalans[Balanspost]), FactBalans[Balanspost] = \"Termijnlening\")",
-    "formatString": "#,0"
+    "dax": "-CALCULATE([Balans laatste stand], REMOVEFILTERS(DimBalanspost), DimBalanspost[Balanspost] = \"Termijnlening\")",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Rekening-courantkrediet",
     "group": "Balans",
     "description": "Opgenomen rekening-courantkrediet (RCF) als positief bedrag.",
-    "dax": "-CALCULATE([Balans laatste stand], REMOVEFILTERS(FactBalans[Balanspost]), FactBalans[Balanspost] = \"Rekening-courantkrediet\")",
-    "formatString": "#,0"
+    "dax": "-CALCULATE([Balans laatste stand], REMOVEFILTERS(DimBalanspost), DimBalanspost[Balanspost] = \"Rekening-courantkrediet\")",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Eigen vermogen",
     "group": "Balans",
     "description": "Eigen vermogen als positief bedrag.",
-    "dax": "-CALCULATE([Balans laatste stand], REMOVEFILTERS(FactBalans[Balanspost]), FactBalans[Balanspost] = \"Eigen vermogen\")",
-    "formatString": "#,0"
+    "dax": "-CALCULATE([Balans laatste stand], REMOVEFILTERS(DimBalanspost), DimBalanspost[Balanspost] = \"Eigen vermogen\")",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Netto schuld",
     "group": "Balans",
-    "description": "Rentedragende schuld minus liquide middelen; negatief betekent netto kaspositie.",
+    "description": "Rentedragende schuld minus liquide middelen op de laatste balansdatum in de periode; negatief betekent netto kaspositie.",
     "dax": "[Termijnlening] + [Rekening-courantkrediet] - [Liquide middelen]",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Totaal activa",
     "group": "Balans",
     "description": "Som van alle activa op de laatste balansdatum.",
     "dax": "[Liquide middelen] + [Debiteuren] + [Voorraden] + [Materiële vaste activa]",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Totaal passiva",
     "group": "Balans",
     "description": "Som van schulden en eigen vermogen op de laatste balansdatum.",
     "dax": "[Crediteuren] + [Belastingschuld] + [Termijnlening] + [Rekening-courantkrediet] + [Eigen vermogen]",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Balanscontrole",
     "group": "Balans",
     "description": "Som van alle balansposten (activa positief, passiva negatief); moet nul zijn.",
-    "dax": "CALCULATE([Balans laatste stand], REMOVEFILTERS(FactBalans[Balanspost]))",
+    "dax": "CALCULATE([Balans laatste stand], REMOVEFILTERS(DimBalanspost))",
     "formatString": "#,0.00"
   },
   {
@@ -410,7 +487,7 @@
     "group": "Balans",
     "description": "Operationeel werkkapitaal: debiteuren + voorraden − crediteuren.",
     "dax": "[Debiteuren] + [Voorraden] - [Crediteuren]",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Solvabiliteit %",
@@ -424,49 +501,49 @@
     "group": "Kasstroom",
     "description": "Bedrag per kasstroompost (instroom +, uitstroom −).",
     "dax": "SUM(FactKasstroom[Bedrag])",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Operationele kasstroom",
     "group": "Kasstroom",
     "description": "Kasstroom uit operationele activiteiten (CFO): nettowinst + afschrijvingen + mutaties werkkapitaal.",
     "dax": "CALCULATE(SUM(FactKasstroom[Bedrag]), REMOVEFILTERS(FactKasstroom[Kasstroompost]), FactKasstroom[Kasstroompost] IN {\"Nettowinst\", \"Afschrijvingen\", \"Mutatie debiteuren\", \"Mutatie voorraden\", \"Mutatie crediteuren\", \"Mutatie belastingschuld\"})",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Investeringen",
     "group": "Kasstroom",
     "description": "Investeringskasstroom (capex), negatief.",
     "dax": "CALCULATE(SUM(FactKasstroom[Bedrag]), REMOVEFILTERS(FactKasstroom[Kasstroompost]), FactKasstroom[Kasstroompost] IN {\"Investeringen\"})",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Vrije kasstroom",
     "group": "Kasstroom",
     "description": "Vrije kasstroom (FCF): operationele kasstroom plus investeringen.",
     "dax": "[Operationele kasstroom] + [Investeringen]",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Financieringskasstroom",
     "group": "Kasstroom",
     "description": "Kasstroom uit financieringsactiviteiten (CFF).",
     "dax": "CALCULATE(SUM(FactKasstroom[Bedrag]), REMOVEFILTERS(FactKasstroom[Kasstroompost]), FactKasstroom[Kasstroompost] IN {\"Opname termijnlening\", \"Aflossing termijnlening\", \"Mutatie RCF\", \"Dividend\", \"Kapitaalstorting\"})",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Netto kasmutatie",
     "group": "Kasstroom",
     "description": "Totale mutatie van de liquide middelen in de periode.",
     "dax": "[Vrije kasstroom] + [Financieringskasstroom]",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Dividend",
     "group": "Kasstroom",
     "description": "Uitgekeerd dividend als positief bedrag.",
     "dax": "-CALCULATE(SUM(FactKasstroom[Bedrag]), REMOVEFILTERS(FactKasstroom[Kasstroompost]), FactKasstroom[Kasstroompost] IN {\"Dividend\"})",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Kasconversie %",
@@ -506,22 +583,22 @@
   {
     "name": "LTM EBITDA",
     "group": "Covenants",
-    "description": "EBITDA over de laatste twaalf maanden tot en met de laatste datum in de periode (Actual + Forecast).",
-    "dax": "CALCULATE([EBITDA A+F], DATESINPERIOD(DimDatum[Datum], MAX(DimDatum[Datum]), -12, MONTH))",
-    "formatString": "#,0"
+    "description": "EBITDA over de twaalf maanden tot en met de laatste maand mét W&V-gegevens in de periode (Actual + Forecast); dezelfde maand als [Netto schuld], ook bij een jaar- of kwartaalfilter. Minder dan twaalf beschikbare maanden (begin 2023) geannualiseerd, zoals FactKPI[LTMEBITDA].",
+    "dax": "VAR LaatsteKey = MAX(FactWinstVerlies[DatumKey])\nVAR Einde = EOMONTH(LOOKUPVALUE(DimDatum[Datum], DimDatum[DatumKey], LaatsteKey), 0)\nVAR Periode = DATESINPERIOD(DimDatum[Datum], Einde, -12, MONTH)\nVAR Maanden = CALCULATE(DISTINCTCOUNT(FactWinstVerlies[DatumKey]), Periode, REMOVEFILTERS(DimScenario))\nRETURN\n    DIVIDE(CALCULATE([EBITDA A+F], Periode) * 12, Maanden)",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "LTM rentelasten",
     "group": "Covenants",
-    "description": "Rentelasten over de laatste twaalf maanden (Actual + Forecast).",
-    "dax": "CALCULATE(CALCULATE([Rentelasten], DimScenario[Scenario] = \"Actual\", DimDatum[IsActual] = 1) + CALCULATE([Rentelasten], DimScenario[Scenario] = \"Forecast\", DimDatum[IsActual] = 0), DATESINPERIOD(DimDatum[Datum], MAX(DimDatum[Datum]), -12, MONTH))",
-    "formatString": "#,0"
+    "description": "Rentelasten over de twaalf maanden tot en met de laatste maand mét W&V-gegevens in de periode (Actual + Forecast); minder dan twaalf beschikbare maanden geannualiseerd.",
+    "dax": "VAR LaatsteKey = MAX(FactWinstVerlies[DatumKey])\nVAR Einde = EOMONTH(LOOKUPVALUE(DimDatum[Datum], DimDatum[DatumKey], LaatsteKey), 0)\nVAR Periode = DATESINPERIOD(DimDatum[Datum], Einde, -12, MONTH)\nVAR Maanden = CALCULATE(DISTINCTCOUNT(FactWinstVerlies[DatumKey]), Periode, REMOVEFILTERS(DimScenario))\nRETURN\n    DIVIDE(CALCULATE([Rentelasten A+F], Periode) * 12, Maanden)",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Leverage",
     "group": "Covenants",
-    "description": "Netto schuld / LTM EBITDA. Covenant: maximaal 3,0x.",
-    "dax": "DIVIDE([Netto schuld], [LTM EBITDA])",
+    "description": "Netto schuld / LTM EBITDA op de laatste maand in de periode, volgens dezelfde conventie als FactKPI[Leverage]: bij LTM EBITDA ≤ 0 geldt 99 (schuld) of 0 (netto kas); een netto kaspositie geeft een negatieve ratio. Covenant: maximaal 3,0x.",
+    "dax": "VAR Schuld = [Netto schuld]\nVAR E = [LTM EBITDA]\nRETURN\n    IF(\n        ISBLANK(Schuld) || ISBLANK(E),\n        BLANK(),\n        IF(E > 0, DIVIDE(Schuld, E), IF(Schuld > 0, 99, 0))\n    )",
     "formatString": "0.00"
   },
   {
@@ -548,8 +625,8 @@
   {
     "name": "Covenantstatus",
     "group": "Covenants",
-    "description": "Tekst \"OK\" of \"Breuk\": leverage ≤ 3,0x én ICR ≥ 4,0x op de laatste datum in de periode.",
-    "dax": "VAR Lev = [Leverage]\nVAR Icr = [ICR]\nRETURN\n    IF(\n        ISBLANK(Lev) || ISBLANK(Icr),\n        BLANK(),\n        IF(Lev <= [Covenant leverage max] && Icr >= [Covenant ICR min], \"OK\", \"Breuk\")\n    )",
+    "description": "Tekst \"OK\" of \"Overschrijding\": leverage ≤ 3,0x én ICR ≥ 4,0x op de laatste maand in de periode. Bij LTM EBITDA ≤ 0 met netto schuld is de leverage 99 en dus een overschrijding.",
+    "dax": "VAR Lev = [Leverage]\nVAR Icr = [ICR]\nRETURN\n    IF(\n        ISBLANK(Lev) || ISBLANK(Icr),\n        BLANK(),\n        IF(Lev <= [Covenant leverage max] && Icr >= [Covenant ICR min], \"OK\", \"Overschrijding\")\n    )",
     "formatString": null
   },
   {
@@ -571,21 +648,21 @@
     "group": "Covenants",
     "description": "LTM EBITDA zoals gerapporteerd in FactKPI, laatste maand in de periode.",
     "dax": "VAR LaatsteKey = MAX(FactKPI[DatumKey])\nRETURN\n    CALCULATE(MAX(FactKPI[LTMEBITDA]), FactKPI[DatumKey] = LaatsteKey)",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "RCF headroom",
     "group": "Covenants",
     "description": "Onbenutte ruimte onder de rekening-courantfaciliteit (limiet € 15 mln), laatste maand in de periode.",
     "dax": "VAR LaatsteKey = MAX(FactKPI[DatumKey])\nRETURN\n    CALCULATE(MAX(FactKPI[RCFHeadroom]), FactKPI[DatumKey] = LaatsteKey)",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Omzet vorig jaar",
     "group": "Tijd",
     "description": "Omzet in dezelfde periode een jaar eerder.",
     "dax": "CALCULATE([Omzet], SAMEPERIODLASTYEAR(DimDatum[Datum]))",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Omzet groei %",
@@ -599,14 +676,14 @@
     "group": "Tijd",
     "description": "Omzet cumulatief vanaf 1 januari tot en met de periode.",
     "dax": "TOTALYTD([Omzet], DimDatum[Datum])",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Netto-omzet vorig jaar",
     "group": "Tijd",
     "description": "Netto-omzet (W&V) in dezelfde periode een jaar eerder.",
     "dax": "CALCULATE([Netto-omzet], SAMEPERIODLASTYEAR(DimDatum[Datum]))",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Netto-omzet groei %",
@@ -620,21 +697,21 @@
     "group": "Tijd",
     "description": "EBITDA in dezelfde periode een jaar eerder.",
     "dax": "CALCULATE([EBITDA], SAMEPERIODLASTYEAR(DimDatum[Datum]))",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "EBITDA YTD",
     "group": "Tijd",
     "description": "EBITDA cumulatief vanaf 1 januari tot en met de periode.",
     "dax": "TOTALYTD([EBITDA], DimDatum[Datum])",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Omzet LTM",
     "group": "Tijd",
-    "description": "Omzet over de laatste twaalf maanden (Actual + Forecast).",
-    "dax": "CALCULATE([Omzet A+F], DATESINPERIOD(DimDatum[Datum], MAX(DimDatum[Datum]), -12, MONTH))",
-    "formatString": "#,0"
+    "description": "Omzet over de twaalf maanden tot en met de laatste maand mét verkoopgegevens in de periode (Actual + Forecast); minder dan twaalf beschikbare maanden geannualiseerd.",
+    "dax": "VAR LaatsteKey = MAX(FactVerkoop[DatumKey])\nVAR Einde = EOMONTH(LOOKUPVALUE(DimDatum[Datum], DimDatum[DatumKey], LaatsteKey), 0)\nVAR Periode = DATESINPERIOD(DimDatum[Datum], Einde, -12, MONTH)\nVAR Maanden = CALCULATE(DISTINCTCOUNT(FactVerkoop[DatumKey]), Periode, REMOVEFILTERS(DimScenario))\nRETURN\n    DIVIDE(CALCULATE([Omzet A+F], Periode) * 12, Maanden)",
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "FTE",
@@ -648,14 +725,14 @@
     "group": "FTE",
     "description": "Netto-omzet per gemiddelde FTE in de periode.",
     "dax": "DIVIDE([Netto-omzet], [FTE])",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Personeelskosten per FTE",
     "group": "FTE",
     "description": "Personeelskosten per gemiddelde FTE in de periode.",
     "dax": "DIVIDE([Personeelskosten], [FTE])",
-    "formatString": "#,0"
+    "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
     "name": "Aantal gebeurtenissen",
@@ -667,8 +744,8 @@
   {
     "name": "Gebeurtenis",
     "group": "Gebeurtenissen",
-    "description": "Titels van de gebeurtenissen in de periode, gescheiden door puntkomma.",
-    "dax": "CONCATENATEX(Gebeurtenissen, Gebeurtenissen[Titel], \"; \")",
+    "description": "Titels van de gebeurtenissen in de periode, chronologisch, gescheiden door puntkomma.",
+    "dax": "CONCATENATEX(Gebeurtenissen, Gebeurtenissen[Titel], \"; \", Gebeurtenissen[DatumKey], ASC)",
     "formatString": null
   }
 ]

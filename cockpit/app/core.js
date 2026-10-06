@@ -24,6 +24,7 @@
     eur(v, opts) {
       opts = opts || {};
       if (v == null || !isFinite(v)) return '–';
+      if (Math.abs(v) < 0.5) v = 0;
       const neg = v < 0; const a = Math.abs(v);
       let s;
       if (opts.full) s = nf0.format(Math.round(a));
@@ -34,9 +35,9 @@
       else s = nf0.format(a);
       return (neg ? MINUS : '') + '€ ' + s;
     },
-    eurM(v, d) { if (v == null || !isFinite(v)) return '–'; const neg = v < 0; return (neg ? MINUS : '') + '€ ' + (d === 0 ? nf0 : nf1).format(Math.abs(v) / 1e6) + 'M'; },
+    eurM(v, d) { if (v == null || !isFinite(v)) return '–'; if (Math.abs(v) < (d === 0 ? 5e5 : 5e4)) v = 0; const neg = v < 0; return (neg ? MINUS : '') + '€ ' + (d === 0 ? nf0 : nf1).format(Math.abs(v) / 1e6) + 'M'; },
     eurK(v) { if (v == null || !isFinite(v)) return '–'; const neg = v < 0; return (neg ? MINUS : '') + '€ ' + nf0.format(Math.abs(v) / 1e3) + 'k'; },
-    pct(v, d) { if (v == null || !isFinite(v)) return '–'; return fixMinus((d === 0 ? nf0 : nf1).format(v * 100)) + '%'; },
+    pct(v, d) { if (v == null || !isFinite(v)) return '–'; return fixMinus((d === 0 ? nf0 : d === 2 ? nf2 : nf1).format(v * 100)) + '%'; },
     pp(v, d) { if (v == null || !isFinite(v)) return '–'; const s = (d === 0 ? nf0 : nf1).format(Math.abs(v) * 100); return (v > 0 ? '+' : v < 0 ? MINUS : '±') + s + ' pp'; },
     x(v, d) { if (v == null || !isFinite(v)) return '–'; if (v > 50) return '> 50x'; return fixMinus((d === 2 ? nf2 : nf1).format(v)) + 'x'; },
     days(v) { if (v == null || !isFinite(v)) return '–'; return nf0.format(Math.round(v)) + ' dgn'; },
@@ -170,6 +171,20 @@
     forecastMonths(a) { return this.run(a).months.slice(this.actualCount); },
     lastActual() { return this.actRun.months[this.actualCount - 1]; },
     inRange(m, range) { range = range || HC.state.range(); return m.period >= range.from && m.period <= range.to; },
+    /** vergelijkingsbasis voor een bereik: ≤ 12 maanden → dezelfde maanden een jaar eerder (seizoensecht); anders het even lange blok ervoor. null als dat vóór de modelstart ligt. */
+    prevRange(range, opts) {
+      range = range || HC.state.range(); opts = opts || {};
+      const len = E.monthDiff(range.from, range.to) + 1;
+      const yoy = opts.yoy != null ? opts.yoy : len <= 12;
+      const from = E.addMonths(range.from, yoy ? -12 : -len), to = E.addMonths(range.to, yoy ? -12 : -len);
+      if (from < this.config.start) return null;
+      const ms = this.months().filter(m => m.period >= from && m.period <= to);
+      if (ms.length !== len) return null;
+      const label = yoy ? (len === 1 ? fmt.month(from) : fmt.month(from) + ' – ' + fmt.month(to)) : 'periode ervoor (' + fmt.month(from) + ' – ' + fmt.month(to) + ')';
+      return { from, to, months: ms, mode: yoy ? 'yoy' : 'prev', label, agg: this.sumMonths(ms, label) };
+    },
+    /** JSON-veilige dataset voor Web Workers (zonder gememoizede runs) */
+    datasetForWorker() { const d = this.dataset; return { meta: d.meta, config: d.config, dims: d.dims, actualDrivers: d.actualDrivers, budgetDrivers: d.budgetDrivers, events: d.events, scenarios: d.scenarios }; },
     /** aggregatie per korrel binnen het gekozen bereik */
     series(grain, a, range) { grain = grain || HC.state.get().grain; const ms = this.months(a).filter(m => this.inRange(m, range)); return E.aggregate(ms, grain); },
     seriesAll(grain, a) { return E.aggregate(this.months(a), grain || HC.state.get().grain); },
@@ -203,8 +218,8 @@
       const lines = [];
       lines.push(`Bedrijf: ${this.dataset.meta.company}, ${this.dataset.meta.city}, opgericht ${this.dataset.meta.founded}. Fictieve demo-data. Actuals t/m ${fmt.monthLong(this.lastActualPeriod)}; daarna forecast volgens scenario "${(this.scenarios[HC.state.get().scenarioKey] || this.scenarios.basis).label}".`);
       lines.push('Aannames forecast: ' + JSON.stringify(this.assumptions()));
-      lines.push('Covenants: netto schuld/EBITDA ≤ ' + this.config.covenantLeverageMax + 'x, rentedekking ≥ ' + this.config.covenantIcrMin + 'x; RCF-limiet ' + fmt.eur(this.config.rcfLimit) + ', minimumkas ' + fmt.eur(this.config.minCash) + ', VPB ' + fmt.pct(this.config.taxRate));
-      lines.push('\nJAREN (A=actual, F=forecast, P=deels actual): jaar | omzet | eenheden | ASP | brutomarge% | opex | EBITDA | EBITDA% | afschr | rente | nettowinst | CFO | capex | FCF | kas eind | netto schuld | leverage | ICR | DSO/DIO/DPO | FTE');
+      lines.push('Covenants: nettoschuld/EBITDA ≤ ' + this.config.covenantLeverageMax + 'x, rentedekking ≥ ' + this.config.covenantIcrMin + 'x; RCF-limiet ' + fmt.eur(this.config.rcfLimit) + ', minimumkas ' + fmt.eur(this.config.minCash) + ', VPB ' + fmt.pct(this.config.taxRate));
+      lines.push('\nJAREN (A=actual, F=forecast, P=deels actual): jaar | omzet | eenheden | ASP | brutomarge% | opex | EBITDA | EBITDA% | afschr | rente | nettowinst | CFO | capex | FCF | kas eind | nettoschuld | leverage | ICR | DSO/DIO/DPO | FTE');
       for (const y of years) lines.push(`${y.key}${y.isActual ? 'A' : (y.months.some(m => m.isActual) ? 'P' : 'F')} | ${fmt.eurM(y.pl.revenue)} | ${fmt.int(y.kpi.units)} | ${fmt.eur(y.kpi.asp, { full: true })} | ${fmt.pct(y.kpi.grossMarginPct)} | ${fmt.eurM(y.pl.opex)} | ${fmt.eurM(y.pl.ebitda)} | ${fmt.pct(y.kpi.ebitdaPct)} | ${fmt.eurM(y.pl.dep)} | ${fmt.eurM(y.pl.netInterest)} | ${fmt.eurM(y.pl.netIncome)} | ${fmt.eurM(y.cf.cfo)} | ${fmt.eurM(-y.cf.capex)} | ${fmt.eurM(y.cf.fcf)} | ${fmt.eurM(y.bs.cash)} | ${fmt.eurM(y.kpi.netDebt)} | ${fmt.x(y.kpi.leverage)} | ${fmt.x(y.kpi.icr)} | ${Math.round(y.kpi.dso)}/${Math.round(y.kpi.dio)}/${Math.round(y.kpi.dpo)} | ${Math.round(y.kpi.fte)}`);
       lines.push('\nKWARTALEN (actual): kwartaal | omzet | brutomarge% | EBITDA | EBITDA% | nettowinst | kas | eenmalig');
       for (const q of E.aggregate(this.actualMonths(), 'Q')) lines.push(`${q.key} | ${fmt.eurM(q.pl.revenue)} | ${fmt.pct(q.kpi.grossMarginPct)} | ${fmt.eurM(q.pl.ebitda)} | ${fmt.pct(q.kpi.ebitdaPct)} | ${fmt.eurM(q.pl.netIncome)} | ${fmt.eurM(q.bs.cash)} | ${q.months.map(m => m.kpi.oneOffLabel).filter(Boolean).join('; ') || '-'}`);
@@ -290,8 +305,7 @@
   /** tabel: {columns:[{key,label,align:'num'|'text',format,class}], rows:[obj], caption, rowClass(row), footer: row} */
   ui.table = function (o) {
     const table = h('table', { class: 'data ' + (o.class || '') });
-    if (o.caption) table.appendChild(h('caption', null, o.caption));
-    table.appendChild(h('thead', null, h('tr', null, o.columns.map(c => h('th', { class: c.align === 'num' ? 'num' : '', scope: 'col' }, c.label)))));
+    table.appendChild(h('thead', null, h('tr', null, o.columns.map(c => h('th', { class: (c.align === 'num' ? 'num ' : '') + (c.class || ''), scope: 'col' }, c.label)))));
     const tbody = h('tbody');
     const renderRow = (row, extraClass) => {
       const tr = h('tr', { class: ((o.rowClass && o.rowClass(row)) || '') + ' ' + (extraClass || '') });
@@ -307,7 +321,10 @@
     for (const row of o.rows) tbody.appendChild(renderRow(row));
     if (o.footer) tbody.appendChild(renderRow(o.footer, 'total'));
     table.appendChild(tbody);
-    return h('div', { class: 'table-wrap' }, table);
+    const wrap = h('div', { class: 'table-wrap' + (o.maxHeight ? ' scroll' : ''), style: o.maxHeight ? { maxHeight: typeof o.maxHeight === 'number' ? o.maxHeight + 'px' : o.maxHeight } : null }, table);
+    if (!o.caption) return wrap;
+    const cap = h('div', { class: 'table-caption' }, o.caption);
+    return h('div', { class: 'table-block' }, cap, wrap);
   };
 
   /** figuur met chart/tabel-wissel: {title, subtitle, chart:{el, table()}, legend, note} */
@@ -316,13 +333,9 @@
     const chartEl = o.chart.el || o.chart;
     body.appendChild(chartEl);
     let tableEl = null, showingTable = false;
-    const toggle = o.chart.table ? ui.button('Tabel', () => {
-      showingTable = !showingTable;
-      if (showingTable && !tableEl) tableEl = o.chart.table();
-      HC.clear(body); body.appendChild(showingTable ? tableEl : chartEl);
-      toggle.lastChild.textContent = showingTable ? 'Grafiek' : 'Tabel';
-      toggle.setAttribute('aria-pressed', String(showingTable));
-    }, { sm: true, ghost: true, icon: 'table' }) : null;
+    const swap = () => { if (showingTable && !tableEl) tableEl = o.chart.table(); HC.clear(body); body.appendChild(showingTable ? tableEl : chartEl); if (toggle) { toggle.lastChild.textContent = showingTable ? 'Grafiek' : 'Tabel'; toggle.setAttribute('aria-pressed', String(showingTable)); toggle.setAttribute('aria-label', (showingTable ? 'Toon grafiek' : 'Toon tabel') + (o.title ? ': ' + o.title : '')); } };
+    const toggle = o.chart.table ? ui.button('Tabel', () => { showingTable = !showingTable; swap(); }, { sm: true, ghost: true, icon: 'table', title: 'Wissel tussen grafiek en tabel' }) : null;
+    if (toggle && o.initial === 'table') { showingTable = true; swap(); }
     const legend = o.legend || (o.chart.legend ? o.chart.legend : null);
     return h('figure', { class: 'figure' },
       (o.title || toggle || legend) ? h('div', { class: 'figure-head' }, h('div', null, o.title ? h('div', { class: 'figure-title' }, o.title) : null, o.subtitle ? h('div', { class: 'figure-sub' }, o.subtitle) : null), h('div', { style: { display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' } }, legend, toggle)) : null,

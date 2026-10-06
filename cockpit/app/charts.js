@@ -78,6 +78,11 @@
       const allVals = series.flatMap(s => s.values).filter(v => v != null && isFinite(v));
       let vmin = Math.min(o.yMin != null ? o.yMin : Infinity, ...allVals), vmax = Math.max(o.yMax != null ? o.yMax : -Infinity, ...allVals);
       if (o.baseline != null) { vmin = Math.min(vmin, o.baseline); vmax = Math.max(vmax, o.baseline); }
+      const refLines = (o.referenceLines || []).filter(r => r && isFinite(r.value));
+      for (const r of refLines) { vmin = Math.min(vmin, r.value); vmax = Math.max(vmax, r.value); }
+      const wantEndLabels = series.length <= 3 && o.endLabels !== false;
+      if (wantEndLabels) { let w = 0; for (const s of series) { let i = s.values.length - 1; while (i >= 0 && s.values[i] == null) i--; if (i >= 0) w = Math.max(w, measure((s.format || o.yFormat || fmt.eur)(s.values[i]))); } pad.r = Math.max(pad.r, w + 12); }
+      if (refLines.length) pad.r = Math.max(pad.r, Math.max(...refLines.map(r => measure(r.label || ''))) + 12);
       if (vmin > 0 && o.zero !== false) vmin = 0;
       if (vmax < 0 && o.zero !== false) vmax = 0;
       const t = niceTicks(vmin, vmax, 5);
@@ -100,7 +105,10 @@
       const labels = o.labels || o.x;
       const maxLabels = Math.max(2, Math.floor((x1 - x0) / 56));
       const every = Math.ceil(n / maxLabels);
-      for (let i = 0; i < n; i += every) root.appendChild(svg('text', { class: 'axis-label', x: sx(i), y: Hh - 8, 'text-anchor': i === 0 ? 'start' : (i >= n - every ? 'end' : 'middle') }, labels[i]));
+      const labelIdx = []; for (let i = 0; i < n; i += every) labelIdx.push(i);
+      if (n > 1 && labelIdx[labelIdx.length - 1] !== n - 1) { if (n - 1 - labelIdx[labelIdx.length - 1] < Math.max(1, every / 2)) labelIdx.pop(); labelIdx.push(n - 1); }
+      for (const i of labelIdx) root.appendChild(svg('text', { class: 'axis-label', x: sx(i), y: Hh - 8, 'text-anchor': i === 0 ? 'start' : (i === n - 1 ? 'end' : 'middle') }, labels[i]));
+      for (const r of refLines) { root.appendChild(svg('line', { x1: x0, x2: x1, y1: sy(r.value), y2: sy(r.value), stroke: 'var(--ink-2)', 'stroke-width': 1, 'stroke-dasharray': '4 3' })); if (r.label) root.appendChild(svg('text', { class: 'dlabel', x: x1 + 4, y: sy(r.value) + 4 }, r.label)); }
       const anns = (o.annotations || []).filter(a => a.i >= 0 && a.i < n);
       anns.forEach((a, k) => { root.appendChild(svg('line', { class: 'ann-line', x1: sx(a.i), x2: sx(a.i), y1: y0 + 10, y2: y1 })); root.appendChild(svg('circle', { cx: sx(a.i), cy: y0 + 2, r: 7.5, fill: 'var(--surface)', stroke: 'var(--ink-2)', 'stroke-width': 1 })); root.appendChild(svg('text', { x: sx(a.i), y: y0 + 5.5, 'text-anchor': 'middle', style: 'font-size:9.5px;font-weight:600', fill: 'var(--ink)' }, String(a.n != null ? a.n : k + 1))); });
       // reeksen
@@ -117,9 +125,9 @@
         if (o.markersAt) for (const i of o.markersAt) if (pts[i]) root.appendChild(svg('circle', { cx: pts[i][0], cy: pts[i][1], r: 4, fill: color, stroke: 'var(--surface)', 'stroke-width': 2 }));
       });
       // eindlabels (selectief): alleen bij ≤ 3 reeksen
-      if (series.length <= 3 && o.endLabels !== false) {
-        const used = [];
-        series.forEach((s, si) => { let i = n - 1; while (i >= 0 && (s.values[i] == null)) i--; if (i < 0) return; const y = sy(s.values[i]); if (used.some(u => Math.abs(u - y) < 12)) return; used.push(y); const txt = yFmt(s.values[i]); const tw = measure(txt); const x = Math.min(sx(i) + 7, x1 - tw); root.appendChild(svg('text', { class: 'dlabel', x, y: y + 4 }, txt)); });
+      if (wantEndLabels) {
+        const used = refLines.map(r => sy(r.value));
+        series.forEach((s, si) => { let i = n - 1; while (i >= 0 && (s.values[i] == null)) i--; if (i < 0) return; const y = sy(s.values[i]); if (used.some(u => Math.abs(u - y) < 12)) return; used.push(y); const txt = (s.format || yFmt)(s.values[i]); root.appendChild(svg('text', { class: 'dlabel', x: sx(i) + 8, y: y + 4 }, txt)); });
       }
       // crosshair + tooltip
       const hair = svg('line', { class: 'hair', x1: 0, x2: 0, y1: y0, y2: y1, visibility: 'hidden' });
@@ -173,10 +181,11 @@
       const inner = Math.min(stacked || ns === 1 ? 24 : 14, bw * (stacked || ns === 1 ? 0.6 : 0.7 / ns));
       const gap = 2;
       const grid = svg('g', { class: 'grid' });
-      for (const v of t.ticks) {
-        if (horizontal) { grid.appendChild(svg('line', { x1: val(v), x2: val(v), y1: y0, y2: y1 })); root.appendChild(svg('text', { class: 'axis-label', x: val(v), y: Hh - 6, 'text-anchor': 'middle' }, yFmt(v))); }
+      const tickW = Math.max(...t.ticks.map(v => measure(yFmt(v)))) + 12; const tickEvery = horizontal ? Math.max(1, Math.ceil(t.ticks.length / Math.max(2, Math.floor((x1 - x0) / tickW)))) : 1;
+      t.ticks.forEach((v, ti) => {
+        if (horizontal) { grid.appendChild(svg('line', { x1: val(v), x2: val(v), y1: y0, y2: y1 })); if (ti % tickEvery === 0) root.appendChild(svg('text', { class: 'axis-label', x: val(v), y: Hh - 6, 'text-anchor': 'middle' }, yFmt(v))); }
         else { grid.appendChild(svg('line', { x1: x0, x2: x1, y1: val(v), y2: val(v) })); root.appendChild(svg('text', { x: x0 - 6, y: val(v) + 4, 'text-anchor': 'end' }, yFmt(v))); }
-      }
+      });
       root.appendChild(grid);
       // basislijn
       if (horizontal) root.appendChild(svg('line', { class: 'baseline', x1: val(0), x2: val(0), y1: y0, y2: y1 })); else root.appendChild(svg('line', { class: 'baseline', x1: x0, x2: x1, y1: val(0), y2: val(0) }));
@@ -259,7 +268,8 @@
         mark(p); hoverable(p, e => tip(e, i), e => tip(e, i), () => ui.tooltip.hide()); root.appendChild(p);
         if (i < n - 1) root.appendChild(svg('line', { x1: cx + inner / 2, x2: band(i + 1.5) - inner / 2, y1: sy(r.b), y2: sy(r.b), stroke: 'var(--line-2)', 'stroke-width': 1 }));
         const lbl = (s.type === 'total' ? yFmt(s.value) : fmt.signed(s.value, yFmt));
-        root.appendChild(svg('text', { class: 'dlabel' + (s.type === 'total' ? ' strong' : ''), x: cx, y: top - 5, 'text-anchor': 'middle' }, lbl));
+        const showLbl = o.labels === 'none' ? false : (o.labels === 'auto' ? measure(lbl) + 4 <= bw : true);
+        if (showLbl) root.appendChild(svg('text', { class: 'dlabel' + (s.type === 'total' ? ' strong' : ''), x: cx, y: top - 5, 'text-anchor': 'middle' }, lbl));
         // categorielabel, zo nodig over twee regels
         const words = s.label.split(' '); const lines = []; let cur = '';
         for (const w of words) { if (measure(cur + ' ' + w) > bw - 4 && cur) { lines.push(cur); cur = w; } else cur = cur ? cur + ' ' + w : w; } lines.push(cur);
@@ -280,7 +290,7 @@
     const el = h('div', { class: 'chart' });
     responsive(el, width => {
       const maxShare = Math.max(...bins.map(b => b.share)); const t = niceTicks(0, maxShare, 4);
-      const pad = { l: Math.max(...t.ticks.map(v => measure(fmt.pct(v, 0)))) + 10, r: 8, t: 22, b: 26 };
+      const pad = { l: Math.max(...t.ticks.map(v => measure(fmt.pct(v, 0)))) + 10, r: 8, t: 34, b: 26 };
       const W = width, Hh = o.height || 220, x0 = pad.l, x1 = W - pad.r, y0 = pad.t, y1 = Hh - pad.b;
       const lo = bins[0].x0, hi = bins[n - 1].x1; const sx = linear(lo, hi, x0, x1), sy = linear(0, t.hi, y1, y0);
       const root = svg('svg', { viewBox: `0 0 ${W} ${Hh}`, width: W, height: Hh, role: 'img', 'aria-label': o.ariaLabel || 'Histogram' });
@@ -293,7 +303,19 @@
         const p = svg('path', { d: roundedBarPath(xa, top, Math.max(1, xb - xa), Math.max(0, y1 - top), 2, 'up'), fill: color }); mark(p);
         hoverable(p, e => tip(e, i), e => tip(e, i), () => ui.tooltip.hide()); root.appendChild(p);
       });
-      if (o.markers) for (const m of o.markers) { if (m.x < lo || m.x > hi) continue; const x = sx(m.x); root.appendChild(svg('line', { x1: x, x2: x, y1: y0 - 2, y2: y1, stroke: m.color || 'var(--ink)', 'stroke-width': m.strong ? 2 : 1, 'stroke-dasharray': m.dashed ? '4 3' : null })); root.appendChild(svg('text', { class: 'ann-text', x: x + 3, y: y0 - 6, 'text-anchor': m.anchor || 'start', fill: 'var(--ink-2)' }, m.label)); }
+      if (o.markers) {
+        const ms = o.markers.filter(m => m.x >= lo && m.x <= hi).map(m => Object.assign({}, m, { px: sx(m.x), w: measure(m.label || '') })).sort((a, b) => a.px - b.px);
+        const rows = [-Infinity, -Infinity];
+        for (const m of ms) {
+          root.appendChild(svg('line', { x1: m.px, x2: m.px, y1: y0 - 2, y2: y1, stroke: m.color || 'var(--ink)', 'stroke-width': m.strong ? 2 : 1, 'stroke-dasharray': m.dashed ? '4 3' : null }));
+          if (!m.label) continue;
+          let anchor = m.anchor || 'start'; let start = anchor === 'end' ? m.px - 3 - m.w : m.px + 3;
+          if (start + m.w > x1) { anchor = 'end'; start = m.px - 3 - m.w; }
+          let row = 0; if (start < rows[0] + 6) { row = 1; if (start < rows[1] + 6) { row = 0; } }
+          rows[row] = start + m.w;
+          root.appendChild(svg('text', { class: 'ann-text', x: anchor === 'end' ? m.px - 3 : m.px + 3, y: y0 - 6 - row * 11, 'text-anchor': anchor, fill: 'var(--ink-2)' }, m.label));
+        }
+      }
       function tip(e, i) { const b = bins[i]; ui.tooltip.show(e.clientX, e.clientY, ui.tooltip.content({ title: xFmt(b.x0) + ' – ' + xFmt(b.x1), rows: [{ label: 'Aandeel', value: fmt.pct(b.share, 1) }, { label: 'Simulaties', value: fmt.int(b.count) }] })); }
       return root;
     });
@@ -305,7 +327,8 @@
   // =====================================================================
   /** C.tornado({ items:[{label, low, high, base}], xFormat, height }) — low/high = resultaat bij lage/hoge driverwaarde */
   C.tornado = function (o) {
-    const items = o.items; const n = items.length; const xFmt = o.xFormat || fmt.eur;
+    const base0 = o.base != null ? o.base : 0;
+    const items = o.skipZero === false ? o.items : o.items.filter(it => Math.abs(it.low - base0) > 1e-9 || Math.abs(it.high - base0) > 1e-9); const n = items.length; const xFmt = o.xFormat || fmt.eur;
     const el = h('div', { class: 'chart' });
     responsive(el, width => {
       const base = o.base != null ? o.base : 0;
@@ -316,7 +339,8 @@
       const W = width, Hh = pad.t + pad.b + n * rowH, x0 = pad.l, x1 = W - pad.r, y0 = pad.t, y1 = Hh - pad.b;
       const sx = linear(t.lo, t.hi, x0, x1), band = linear(0, n, y0, y1);
       const root = svg('svg', { viewBox: `0 0 ${W} ${Hh}`, width: W, height: Hh, role: 'img', 'aria-label': 'Tornadodiagram' });
-      const grid = svg('g', { class: 'grid' }); for (const v of t.ticks) { grid.appendChild(svg('line', { x1: sx(v), x2: sx(v), y1: y0, y2: y1 })); root.appendChild(svg('text', { class: 'axis-label', x: sx(v), y: Hh - 6, 'text-anchor': 'middle' }, fmt.signed(v, xFmt))); } root.appendChild(grid);
+      const grid = svg('g', { class: 'grid' }); const tw = Math.max(...t.ticks.map(v => measure(fmt.signed(v, xFmt)))) + 12; const tEvery = Math.max(1, Math.ceil(t.ticks.length / Math.max(2, Math.floor((x1 - x0) / tw))));
+      t.ticks.forEach((v, ti) => { grid.appendChild(svg('line', { x1: sx(v), x2: sx(v), y1: y0, y2: y1 })); if (ti % tEvery === 0) root.appendChild(svg('text', { class: 'axis-label', x: sx(v), y: Hh - 6, 'text-anchor': 'middle' }, Math.abs(v) < 1e-9 ? xFmt(0) : fmt.signed(v, xFmt))); }); root.appendChild(grid);
       root.appendChild(svg('line', { class: 'baseline', x1: sx(0), x2: sx(0), y1: y0, y2: y1 }));
       items.forEach((it, i) => {
         const cy = band(i + 0.5); root.appendChild(svg('text', { class: 'axis-label', x: x0 - 6, y: cy + 4, 'text-anchor': 'end' }, it.label));

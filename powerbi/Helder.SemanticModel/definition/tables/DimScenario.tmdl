@@ -1,16 +1,19 @@
-/// Scenario: Actual (t/m 2026-09), Budget (alleen 2026, W&V en verkoop) en Forecast (vanaf 2026-10).
+/// Scenario: Actual (t/m 2026-09), Budget (alleen 2026: verkoop, W&V en FTE) en Forecast (vanaf 2026-10).
 table DimScenario
 	lineageTag: 3059f6bf-71b6-40a1-b058-867903273512
 
+	/// Sleutel naar DimScenario (1 Actual, 2 Budget, 3 Forecast).
 	column ScenarioKey
 		dataType: int64
 		isHidden
+		isAvailableInMdx: false
 		lineageTag: 8aa67d6e-c9c2-4867-95ce-bdf8fffd341e
 		summarizeBy: none
 		sourceColumn: ScenarioKey
 
 		annotation SummarizationSetBy = User
 
+	/// Actual, Budget of Forecast.
 	column Scenario
 		dataType: string
 		lineageTag: 7a26d971-b8d7-46b3-9815-d9992f0c41ca
@@ -20,6 +23,7 @@ table DimScenario
 
 		annotation SummarizationSetBy = User
 
+	/// Sorteervolgorde voor de weergave.
 	column Volgorde
 		dataType: int64
 		isHidden
@@ -33,11 +37,11 @@ table DimScenario
 	partition DimScenario = m
 		mode: import
 		source =
-			let
-			    Bron = Csv.Document(File.Contents(CsvMap & "DimScenario.csv"), [Delimiter=",", Columns=3, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
-			    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
-			    Typen = Table.TransformColumnTypes(Kop, {{"ScenarioKey", Int64.Type}, {"Scenario", type text}, {"Volgorde", Int64.Type}}, "en-US")
-			in
-			    Typen
+				let
+				    Bron = Csv.Document(File.Contents(CsvMap & "DimScenario.csv"), [Delimiter=",", Columns=3, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
+				    Typen = Table.TransformColumnTypes(Kop, {{"ScenarioKey", Int64.Type}, {"Scenario", type text}, {"Volgorde", Int64.Type}}, "en-US")
+				in
+				    Typen
 
 	annotation PBI_ResultType = Table

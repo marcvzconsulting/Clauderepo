@@ -4,7 +4,7 @@ table _Maten
 
 	/// Omzet uit FactVerkoop (productlijn × kanaal × land). Volgt het scenariofilter; zonder scenariofilter worden Actual, Budget en Forecast opgeteld.
 	measure Omzet = SUM(FactVerkoop[Omzet])
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Verkoop
 		lineageTag: a67d580d-cec4-4c88-9002-0c114f9d7cfd
 
@@ -16,19 +16,19 @@ table _Maten
 
 	/// Gemiddelde verkoopprijs per fiets (omzet / aantal).
 	measure 'Gemiddelde prijs' = DIVIDE([Omzet], [Aantal])
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Verkoop
 		lineageTag: e00acc36-754c-4273-b2cb-68c92a004ea2
 
 	/// Directe kostprijs van de verkochte fietsen (materiaal, arbeid, vracht).
 	measure Kostprijs = SUM(FactVerkoop[Kostprijs])
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Verkoop
 		lineageTag: 9c4b5d48-4fb5-4681-8470-d395f9237858
 
 	/// Omzet minus kostprijs uit de verkoopfeiten.
 	measure Brutowinst = [Omzet] - [Kostprijs]
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Verkoop
 		lineageTag: dfad6d96-75f1-432f-a085-0a3844e51e90
 
@@ -40,55 +40,49 @@ table _Maten
 
 	/// Omzet in het scenario Actual, ongeacht het scenariofilter.
 	measure 'Omzet Actual' = CALCULATE([Omzet], DimScenario[Scenario] = "Actual")
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Verkoop
 		lineageTag: bd95e718-a3a0-4f3d-b0e6-6044043481fb
 
 	/// Omzet in het scenario Budget (alleen 2026).
 	measure 'Omzet Budget' = CALCULATE([Omzet], DimScenario[Scenario] = "Budget")
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Verkoop
 		lineageTag: a4c5bc23-3287-4595-94f0-5696a3a17b78
 
 	/// Omzet in het scenario Forecast (vanaf 2026-10).
 	measure 'Omzet Forecast' = CALCULATE([Omzet], DimScenario[Scenario] = "Forecast")
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Verkoop
 		lineageTag: 6f9c573d-ece8-4fe8-800d-ef7987ddde21
 
-	/// Actual tot en met de laatste gerealiseerde maand (DimDatum[IsActual] = 1), daarna Forecast. Handig voor doorlopende tijdreeksen.
-	measure 'Omzet A+F' = CALCULATE([Omzet Actual], DimDatum[IsActual] = 1) + CALCULATE([Omzet Forecast], DimDatum[IsActual] = 0)
-		formatString: #,0
-		displayFolder: Verkoop
-		lineageTag: 4fa68faf-883c-4a05-b559-949f2e24e7ff
-
 	/// Gerealiseerde gemiddelde verkoopprijs per fiets.
 	measure 'Omzet per fiets Actual' = CALCULATE([Gemiddelde prijs], DimScenario[Scenario] = "Actual")
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Verkoop
 		lineageTag: 9cb3fe3f-0626-4d15-8094-6c2c2795eec3
 
-	/// Bedrag per rekening met teken (opbrengst +, kosten −). In een matrix op DimRekening[Rekening] levert dit de volledige winst- en verliesrekening; het totaal is de nettowinst.
-	measure 'W&V bedrag' = SUMX(FactWinstVerlies, FactWinstVerlies[Bedrag] * RELATED(DimRekening[Teken]))
-		formatString: #,0
+	/// Bedrag per rekening met teken (opbrengst +, kosten −). In een matrix op DimRekening levert dit de volledige winst- en verliesrekening; het totaal is de nettowinst. Twee storage-engine-scans (één per teken), geen rij-voor-rij RELATED.
+	measure 'W&V bedrag' = SUMX(VALUES(DimRekening[Teken]), DimRekening[Teken] * CALCULATE(SUM(FactWinstVerlies[Bedrag])))
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Winst & verlies
 		lineageTag: 319a25db-df84-47cd-88d0-e980e6c74258
 
 	/// Netto-omzet volgens de W&V (rekening 4000). Gelijk aan [Omzet] uit de verkoopfeiten.
 	measure 'Netto-omzet' = CALCULATE([W&V bedrag], REMOVEFILTERS(DimRekening), DimRekening[Rekeninggroep] = "Omzet")
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Winst & verlies
 		lineageTag: e3ad4ca3-02de-4a68-bebd-3f3a6eecd212
 
 	/// Kostprijs van de omzet (materiaal, directe arbeid, vracht, garantie, eenmalige posten) als positief bedrag.
 	measure 'Kostprijs omzet' = CALCULATE(SUM(FactWinstVerlies[Bedrag]), REMOVEFILTERS(DimRekening), DimRekening[Rekeninggroep] = "Kostprijs omzet")
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Winst & verlies
 		lineageTag: 49558019-bb5b-4a7a-b773-c12c5bebd83d
 
 	/// Netto-omzet minus kostprijs omzet.
 	measure 'Brutowinst (W&V)' = CALCULATE([W&V bedrag], REMOVEFILTERS(DimRekening), DimRekening[Niveau1] IN {"Omzet", "Brutomarge"})
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Winst & verlies
 		lineageTag: 793117fc-499b-4caa-9fc7-7d9720b4ee23
 
@@ -100,31 +94,31 @@ table _Maten
 
 	/// Personeelskosten van alle afdelingen (R&D, Sales & Marketing, Operations, G&A) als positief bedrag.
 	measure Personeelskosten = CALCULATE(SUM(FactWinstVerlies[Bedrag]), REMOVEFILTERS(DimRekening), DimRekening[Rekeninggroep] = "Personeelskosten")
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Winst & verlies
 		lineageTag: 04014494-49d7-4dfd-8741-149c9b768007
 
 	/// Marketingkosten als positief bedrag.
 	measure Marketing = CALCULATE(SUM(FactWinstVerlies[Bedrag]), REMOVEFILTERS(DimRekening), DimRekening[Rekening] = "Marketing")
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Winst & verlies
 		lineageTag: 3ea6bb06-0b5b-47cc-a0fb-874a93da189b
 
 	/// Alle operationele kosten (personeel en overige bedrijfskosten) als positief bedrag.
 	measure 'Operationele kosten' = CALCULATE(SUM(FactWinstVerlies[Bedrag]), REMOVEFILTERS(DimRekening), DimRekening[Niveau1] = "Operationele kosten")
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Winst & verlies
 		lineageTag: a1bfd937-e012-41a4-9638-dfef058ecd63
 
 	/// Eenmalige kosten (terugroepactie, ERP-migratie) als positief bedrag.
 	measure 'Eenmalige posten' = CALCULATE(SUM(FactWinstVerlies[Bedrag]), REMOVEFILTERS(DimRekening), DimRekening[Rekening] IN {"Eenmalige kostprijsposten", "Eenmalige bedrijfskosten"})
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Winst & verlies
 		lineageTag: d4e3fb0a-b7ac-4b65-a3cf-f4f1e00d8b2d
 
 	/// Resultaat vóór rente, belasting en afschrijvingen: netto-omzet − kostprijs omzet − operationele kosten.
 	measure EBITDA = CALCULATE([W&V bedrag], REMOVEFILTERS(DimRekening), DimRekening[Niveau1] IN {"Omzet", "Brutomarge", "Operationele kosten"})
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Winst & verlies
 		lineageTag: 8c57e7fe-2045-4cf9-98cb-69e7d156ba21
 
@@ -136,43 +130,43 @@ table _Maten
 
 	/// EBITDA gecorrigeerd voor eenmalige posten.
 	measure 'EBITDA genormaliseerd' = [EBITDA] + [Eenmalige posten]
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Winst & verlies
 		lineageTag: faccd6a3-3cf0-4aae-961f-d6dfb1bee654
 
 	/// Afschrijvingen op materiële vaste activa als positief bedrag.
 	measure Afschrijvingen = CALCULATE(SUM(FactWinstVerlies[Bedrag]), REMOVEFILTERS(DimRekening), DimRekening[Rekeninggroep] = "Afschrijvingen")
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Winst & verlies
 		lineageTag: 316af9b7-7362-4eef-a806-f52820a00121
 
 	/// Bedrijfsresultaat: EBITDA minus afschrijvingen.
 	measure EBIT = [EBITDA] - [Afschrijvingen]
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Winst & verlies
 		lineageTag: 16a4dbcd-c767-480c-a5d5-392af3db1741
 
 	/// Rentelasten op termijnlening en rekening-courantkrediet als positief bedrag.
 	measure Rentelasten = CALCULATE(SUM(FactWinstVerlies[Bedrag]), REMOVEFILTERS(DimRekening), DimRekening[Rekening] = "Rentelasten")
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Winst & verlies
 		lineageTag: a7121604-7dd5-485a-aa52-9a6000bd9529
 
 	/// Rentebaten minus rentelasten (met teken).
 	measure 'Financieel resultaat' = CALCULATE([W&V bedrag], REMOVEFILTERS(DimRekening), DimRekening[Niveau1] = "Financieel")
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Winst & verlies
 		lineageTag: 391f9d1e-d724-4b55-8349-493a22484fa5
 
 	/// Vennootschapsbelasting als positief bedrag.
 	measure Belastingen = CALCULATE(SUM(FactWinstVerlies[Bedrag]), REMOVEFILTERS(DimRekening), DimRekening[Rekeninggroep] = "Belastingen")
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Winst & verlies
 		lineageTag: 958837f2-7b93-4d91-8cc7-b62e6f89be2e
 
 	/// Nettowinst: som van alle rekeningen met teken.
 	measure Nettowinst = CALCULATE([W&V bedrag], REMOVEFILTERS(DimRekening))
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Winst & verlies
 		lineageTag: 6380e63f-ce30-4776-9842-7a1b438389c5
 
@@ -182,180 +176,257 @@ table _Maten
 		displayFolder: Winst & verlies
 		lineageTag: fe756547-a61c-44b9-8904-363e42bb09d9
 
-	/// W&V bedrag in het scenario Budget (alleen 2026).
-	measure 'W&V bedrag Budget' = CALCULATE([W&V bedrag], DimScenario[Scenario] = "Budget")
-		formatString: #,0
-		displayFolder: Budget
-		lineageTag: b3bd10cc-d164-4550-a31e-6f4dc2685bfd
-
-	/// Netto-omzet in het scenario Actual.
-	measure 'Netto-omzet Actual' = CALCULATE([Netto-omzet], DimScenario[Scenario] = "Actual")
-		formatString: #,0
-		displayFolder: Budget
-		lineageTag: 2bbabb34-83e0-4dd0-86ae-e37601fde5ef
-
-	/// Netto-omzet in het scenario Budget.
-	measure 'Netto-omzet Budget' = CALCULATE([Netto-omzet], DimScenario[Scenario] = "Budget")
-		formatString: #,0
-		displayFolder: Budget
-		lineageTag: aa99c78e-bab6-4d9c-9966-4620b5cce80b
-
-	/// EBITDA in het scenario Actual.
-	measure 'EBITDA Actual' = CALCULATE([EBITDA], DimScenario[Scenario] = "Actual")
-		formatString: #,0
-		displayFolder: Budget
-		lineageTag: 2d73c6c7-771c-49db-9bbc-486284f64d11
-
-	/// EBITDA in het scenario Budget.
-	measure 'EBITDA Budget' = CALCULATE([EBITDA], DimScenario[Scenario] = "Budget")
-		formatString: #,0
-		displayFolder: Budget
-		lineageTag: 30baab75-c563-4927-87ae-d48d49fcb2d2
-
-	/// EBITDA in het scenario Forecast.
-	measure 'EBITDA Forecast' = CALCULATE([EBITDA], DimScenario[Scenario] = "Forecast")
-		formatString: #,0
-		displayFolder: Budget
-		lineageTag: 4a5b61f8-00d8-4af5-9178-0ace977008ce
+	/// Omzet: Actual tot en met de laatste gerealiseerde maand (DimDatum[IsActual] = 1), daarna Forecast. Handig voor doorlopende tijdreeksen.
+	measure 'Omzet A+F' = CALCULATE([Omzet Actual], DimDatum[IsActual] = 1) + CALCULATE([Omzet Forecast], DimDatum[IsActual] = 0)
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
+		displayFolder: Actual + Forecast
+		lineageTag: 4fa68faf-883c-4a05-b559-949f2e24e7ff
 
 	/// EBITDA: Actual tot en met de laatste gerealiseerde maand, daarna Forecast.
 	measure 'EBITDA A+F' = CALCULATE([EBITDA Actual], DimDatum[IsActual] = 1) + CALCULATE([EBITDA Forecast], DimDatum[IsActual] = 0)
-		formatString: #,0
-		displayFolder: Budget
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
+		displayFolder: Actual + Forecast
 		lineageTag: 8bdc6f93-d1cc-4aa2-b820-c40112304069
 
-	/// Operationele kosten in het scenario Budget.
+	/// Rentelasten in het scenario Actual.
+	measure 'Rentelasten Actual' = CALCULATE([Rentelasten], DimScenario[Scenario] = "Actual")
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
+		displayFolder: Actual + Forecast
+		lineageTag: b3e93337-ce63-4cfa-a546-fee08b2a53ef
+
+	/// Rentelasten in het scenario Forecast.
+	measure 'Rentelasten Forecast' = CALCULATE([Rentelasten], DimScenario[Scenario] = "Forecast")
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
+		displayFolder: Actual + Forecast
+		lineageTag: 8641eedb-a8ed-4a63-b045-4e646caefb6d
+
+	/// Rentelasten: Actual tot en met de laatste gerealiseerde maand, daarna Forecast.
+	measure 'Rentelasten A+F' = CALCULATE([Rentelasten Actual], DimDatum[IsActual] = 1) + CALCULATE([Rentelasten Forecast], DimDatum[IsActual] = 0)
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
+		displayFolder: Actual + Forecast
+		lineageTag: 97f0a61a-e11d-4d21-96ba-ed742a87d8b0
+
+	/// W&V bedrag in het scenario Budget (alleen 2026).
+	measure 'W&V bedrag Budget' = CALCULATE([W&V bedrag], DimScenario[Scenario] = "Budget")
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
+		displayFolder: Budget
+		lineageTag: b3bd10cc-d164-4550-a31e-6f4dc2685bfd
+
+	/// W&V bedrag Budget voor de maanden die al gerealiseerd zijn (DimDatum[IsActual] = 1), naast [W&V bedrag] Actual in dezelfde matrix. Vergeleken over de gerealiseerde maanden van het budgetjaar (Actual en Budget beide januari t/m de laatste gerealiseerde maand).
+	measure 'W&V bedrag Budget (t/m realisatie)' = CALCULATE([W&V bedrag Budget], KEEPFILTERS(DimDatum[IsActual] = 1))
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
+		displayFolder: Budget
+		lineageTag: 8517c84f-5d6b-40ec-b2fb-dce428965825
+
+	/// Netto-omzet in het scenario Actual.
+	measure 'Netto-omzet Actual' = CALCULATE([Netto-omzet], DimScenario[Scenario] = "Actual")
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
+		displayFolder: Budget
+		lineageTag: 2bbabb34-83e0-4dd0-86ae-e37601fde5ef
+
+	/// Netto-omzet in het scenario Budget (twaalf maanden 2026).
+	measure 'Netto-omzet Budget' = CALCULATE([Netto-omzet], DimScenario[Scenario] = "Budget")
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
+		displayFolder: Budget
+		lineageTag: aa99c78e-bab6-4d9c-9966-4620b5cce80b
+
+	/// Netto-omzet Budget voor de maanden die al gerealiseerd zijn (DimDatum[IsActual] = 1). Vergeleken over de gerealiseerde maanden van het budgetjaar (Actual en Budget beide januari t/m de laatste gerealiseerde maand).
+	measure 'Netto-omzet Budget (t/m realisatie)' = CALCULATE([Netto-omzet Budget], KEEPFILTERS(DimDatum[IsActual] = 1))
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
+		displayFolder: Budget
+		lineageTag: 8320f975-bc40-49c9-8c9c-311ea582d968
+
+	/// Netto-omzet Actual, beperkt tot de gerealiseerde maanden waarvoor een budget bestaat (2026-01 t/m 2026-09). Leeg buiten het budgetjaar.
+	measure 'Netto-omzet Actual (budgetmaanden)' = CALCULATE([Netto-omzet Actual], TREATAS(CALCULATETABLE(VALUES(FactWinstVerlies[DatumKey]), DimScenario[Scenario] = "Budget", KEEPFILTERS(DimDatum[IsActual] = 1)), DimDatum[DatumKey]))
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
+		displayFolder: Budget
+		lineageTag: 5ba76848-5fbf-4ecc-85f0-0336b21911cf
+
+	/// EBITDA in het scenario Actual.
+	measure 'EBITDA Actual' = CALCULATE([EBITDA], DimScenario[Scenario] = "Actual")
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
+		displayFolder: Budget
+		lineageTag: 2d73c6c7-771c-49db-9bbc-486284f64d11
+
+	/// EBITDA in het scenario Budget (twaalf maanden 2026).
+	measure 'EBITDA Budget' = CALCULATE([EBITDA], DimScenario[Scenario] = "Budget")
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
+		displayFolder: Budget
+		lineageTag: 30baab75-c563-4927-87ae-d48d49fcb2d2
+
+	/// EBITDA Budget voor de maanden die al gerealiseerd zijn (DimDatum[IsActual] = 1). Vergeleken over de gerealiseerde maanden van het budgetjaar (Actual en Budget beide januari t/m de laatste gerealiseerde maand).
+	measure 'EBITDA Budget (t/m realisatie)' = CALCULATE([EBITDA Budget], KEEPFILTERS(DimDatum[IsActual] = 1))
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
+		displayFolder: Budget
+		lineageTag: b3dfee7c-d814-43c3-a3ee-6caf19617298
+
+	/// EBITDA Actual, beperkt tot de gerealiseerde maanden waarvoor een budget bestaat. Leeg buiten het budgetjaar.
+	measure 'EBITDA Actual (budgetmaanden)' = CALCULATE([EBITDA Actual], TREATAS(CALCULATETABLE(VALUES(FactWinstVerlies[DatumKey]), DimScenario[Scenario] = "Budget", KEEPFILTERS(DimDatum[IsActual] = 1)), DimDatum[DatumKey]))
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
+		displayFolder: Budget
+		lineageTag: e5153599-28dc-4377-b0dd-94862122d2dc
+
+	/// EBITDA in het scenario Forecast.
+	measure 'EBITDA Forecast' = CALCULATE([EBITDA], DimScenario[Scenario] = "Forecast")
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
+		displayFolder: Budget
+		lineageTag: 4a5b61f8-00d8-4af5-9178-0ace977008ce
+
+	/// Operationele kosten in het scenario Budget (twaalf maanden 2026).
 	measure 'Operationele kosten Budget' = CALCULATE([Operationele kosten], DimScenario[Scenario] = "Budget")
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Budget
 		lineageTag: 876f04fc-22bb-453d-9f7b-9f98b40e93ce
 
+	/// Operationele kosten Budget voor de maanden die al gerealiseerd zijn (DimDatum[IsActual] = 1). Vergeleken over de gerealiseerde maanden van het budgetjaar (Actual en Budget beide januari t/m de laatste gerealiseerde maand).
+	measure 'Operationele kosten Budget (t/m realisatie)' = CALCULATE([Operationele kosten Budget], KEEPFILTERS(DimDatum[IsActual] = 1))
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
+		displayFolder: Budget
+		lineageTag: d98fd2dc-73f1-4090-96a1-ce188d982f39
+
 	/// Operationele kosten in het scenario Actual.
 	measure 'Operationele kosten Actual' = CALCULATE([Operationele kosten], DimScenario[Scenario] = "Actual")
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Budget
 		lineageTag: 54ae5c4a-ef89-408e-ae5a-da789f79043a
 
-	/// Netto-omzet Actual minus Budget; positief = gunstig.
-	measure 'Afwijking omzet vs budget (€)' = [Netto-omzet Actual] - [Netto-omzet Budget]
-		formatString: #,0
+	/// Operationele kosten Actual, beperkt tot de gerealiseerde maanden waarvoor een budget bestaat. Leeg buiten het budgetjaar.
+	measure 'Operationele kosten Actual (budgetmaanden)' = CALCULATE([Operationele kosten Actual], TREATAS(CALCULATETABLE(VALUES(FactWinstVerlies[DatumKey]), DimScenario[Scenario] = "Budget", KEEPFILTERS(DimDatum[IsActual] = 1)), DimDatum[DatumKey]))
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
+		displayFolder: Budget
+		lineageTag: c1ebf509-deb9-431c-8c4a-15645108d7c5
+
+	/// Netto-omzet Actual minus Budget; positief = gunstig. Vergeleken over de gerealiseerde maanden van het budgetjaar (Actual en Budget beide januari t/m de laatste gerealiseerde maand).
+	measure 'Afwijking omzet vs budget (€)' = [Netto-omzet Actual (budgetmaanden)] - [Netto-omzet Budget (t/m realisatie)]
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Budget
 		lineageTag: b5bada8f-0e93-4f61-97d5-41c62b9e8ad4
 
-	/// Omzetafwijking als percentage van het budget; positief = gunstig.
-	measure 'Afwijking omzet vs budget (%)' = DIVIDE([Afwijking omzet vs budget (€)], [Netto-omzet Budget])
+	/// Omzetafwijking als percentage van het budget; positief = gunstig. Vergeleken over de gerealiseerde maanden van het budgetjaar (Actual en Budget beide januari t/m de laatste gerealiseerde maand).
+	measure 'Afwijking omzet vs budget (%)' = DIVIDE([Afwijking omzet vs budget (€)], [Netto-omzet Budget (t/m realisatie)])
 		formatString: 0.0%
 		displayFolder: Budget
 		lineageTag: 9155ffd2-1842-4be5-9f69-26129a1970b9
 
-	/// EBITDA Actual minus Budget; positief = gunstig.
-	measure 'Afwijking EBITDA vs budget (€)' = [EBITDA Actual] - [EBITDA Budget]
-		formatString: #,0
+	/// EBITDA Actual minus Budget; positief = gunstig. Vergeleken over de gerealiseerde maanden van het budgetjaar (Actual en Budget beide januari t/m de laatste gerealiseerde maand).
+	measure 'Afwijking EBITDA vs budget (€)' = [EBITDA Actual (budgetmaanden)] - [EBITDA Budget (t/m realisatie)]
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Budget
 		lineageTag: 1efffce0-91f2-4b43-a7f5-e08be78d3ca5
 
-	/// EBITDA-afwijking als percentage van het budget (noemer absoluut); positief = gunstig.
-	measure 'Afwijking EBITDA vs budget (%)' = DIVIDE([Afwijking EBITDA vs budget (€)], ABS([EBITDA Budget]))
+	/// EBITDA-afwijking als percentage van het budget (noemer absoluut); positief = gunstig. Vergeleken over de gerealiseerde maanden van het budgetjaar (Actual en Budget beide januari t/m de laatste gerealiseerde maand).
+	measure 'Afwijking EBITDA vs budget (%)' = DIVIDE([Afwijking EBITDA vs budget (€)], ABS([EBITDA Budget (t/m realisatie)]))
 		formatString: 0.0%
 		displayFolder: Budget
 		lineageTag: 7bf2c9f2-dd8c-4b44-9101-abe4851c8fe2
 
-	/// Budget minus Actual voor de operationele kosten; positief = onder budget = gunstig.
-	measure 'Afwijking opex vs budget (€)' = [Operationele kosten Budget] - [Operationele kosten Actual]
-		formatString: #,0
+	/// Budget minus Actual voor de operationele kosten; positief = onder budget = gunstig. Vergeleken over de gerealiseerde maanden van het budgetjaar (Actual en Budget beide januari t/m de laatste gerealiseerde maand).
+	measure 'Afwijking opex vs budget (€)' = [Operationele kosten Budget (t/m realisatie)] - [Operationele kosten Actual (budgetmaanden)]
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Budget
 		lineageTag: fe047c0c-a75d-46f0-a363-a4901784fe29
 
-	/// Balansbedrag op de laatste maand binnen de huidige periode (standen worden niet opgeteld over maanden). Passiva en eigen vermogen zijn negatief opgeslagen; in een matrix op FactBalans[Balanspost] telt alles op tot nul.
+	/// Balansbedrag op de laatste maand binnen de huidige periode (standen worden niet opgeteld over maanden). Passiva en eigen vermogen zijn negatief opgeslagen; in een matrix op DimBalanspost[Balanspost] telt alles op tot nul. Gebruik [Balansstand (gepresenteerd)] voor een balans met beide zijden positief.
 	measure 'Balans laatste stand' =
 			VAR LaatsteKey = MAX(FactBalans[DatumKey])
 			RETURN
 			    CALCULATE(SUM(FactBalans[Bedrag]), FactBalans[DatumKey] = LaatsteKey)
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Balans
 		lineageTag: 7ae85f77-27ae-40bd-82f2-a1d10911d0a6
 
+	/// Balansstand met activa én passiva positief (teken uit DimBalanspost), voor een matrix met rijen DimBalanspost[Zijde] > [Balanspost] in balansvolgorde. Het eindtotaal blijft leeg: activa en passiva worden niet bij elkaar opgeteld.
+	measure 'Balansstand (gepresenteerd)' =
+			IF(
+			    HASONEVALUE(DimBalanspost[Zijde]),
+			    SUMX(VALUES(DimBalanspost[Teken]), DimBalanspost[Teken] * [Balans laatste stand]),
+			    BLANK()
+			)
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
+		displayFolder: Balans
+		lineageTag: 4adbb1ad-8064-45f0-b693-005e6c1ad0c8
+
 	/// Kas en banktegoeden op de laatste balansdatum in de periode.
-	measure 'Liquide middelen' = CALCULATE([Balans laatste stand], REMOVEFILTERS(FactBalans[Balanspost]), FactBalans[Balanspost] = "Liquide middelen")
-		formatString: #,0
+	measure 'Liquide middelen' = CALCULATE([Balans laatste stand], REMOVEFILTERS(DimBalanspost), DimBalanspost[Balanspost] = "Liquide middelen")
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Balans
 		lineageTag: 1d3e12a2-de53-4817-b5ba-5b7b710c1867
 
 	/// Openstaande handelsvorderingen op de laatste balansdatum.
-	measure Debiteuren = CALCULATE([Balans laatste stand], REMOVEFILTERS(FactBalans[Balanspost]), FactBalans[Balanspost] = "Debiteuren")
-		formatString: #,0
+	measure Debiteuren = CALCULATE([Balans laatste stand], REMOVEFILTERS(DimBalanspost), DimBalanspost[Balanspost] = "Debiteuren")
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Balans
 		lineageTag: c15ee912-6d9f-492a-b632-92c73c132da0
 
 	/// Voorraad (fietsen en onderdelen) op de laatste balansdatum.
-	measure Voorraden = CALCULATE([Balans laatste stand], REMOVEFILTERS(FactBalans[Balanspost]), FactBalans[Balanspost] = "Voorraden")
-		formatString: #,0
+	measure Voorraden = CALCULATE([Balans laatste stand], REMOVEFILTERS(DimBalanspost), DimBalanspost[Balanspost] = "Voorraden")
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Balans
 		lineageTag: 01ec405b-572c-42ba-9079-29c3cfdaa99d
 
 	/// Materiële vaste activa (netto, na afschrijvingen) op de laatste balansdatum.
-	measure 'Materiële vaste activa' = CALCULATE([Balans laatste stand], REMOVEFILTERS(FactBalans[Balanspost]), FactBalans[Balanspost] = "Materiële vaste activa")
-		formatString: #,0
+	measure 'Materiële vaste activa' = CALCULATE([Balans laatste stand], REMOVEFILTERS(DimBalanspost), DimBalanspost[Balanspost] = "Materiële vaste activa")
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Balans
 		lineageTag: 277c99bb-108a-4d19-8e65-834edaccc7d0
 
 	/// Handelscrediteuren als positief bedrag.
-	measure Crediteuren = -CALCULATE([Balans laatste stand], REMOVEFILTERS(FactBalans[Balanspost]), FactBalans[Balanspost] = "Crediteuren")
-		formatString: #,0
+	measure Crediteuren = -CALCULATE([Balans laatste stand], REMOVEFILTERS(DimBalanspost), DimBalanspost[Balanspost] = "Crediteuren")
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Balans
 		lineageTag: d22180c0-cdb5-437a-95b4-d7fe8ad4b451
 
 	/// Te betalen vennootschapsbelasting als positief bedrag.
-	measure Belastingschuld = -CALCULATE([Balans laatste stand], REMOVEFILTERS(FactBalans[Balanspost]), FactBalans[Balanspost] = "Belastingschuld")
-		formatString: #,0
+	measure Belastingschuld = -CALCULATE([Balans laatste stand], REMOVEFILTERS(DimBalanspost), DimBalanspost[Balanspost] = "Belastingschuld")
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Balans
 		lineageTag: 7df92cd6-f199-47f1-965e-9d978fa1d7b0
 
 	/// Uitstaande termijnlening als positief bedrag.
-	measure Termijnlening = -CALCULATE([Balans laatste stand], REMOVEFILTERS(FactBalans[Balanspost]), FactBalans[Balanspost] = "Termijnlening")
-		formatString: #,0
+	measure Termijnlening = -CALCULATE([Balans laatste stand], REMOVEFILTERS(DimBalanspost), DimBalanspost[Balanspost] = "Termijnlening")
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Balans
 		lineageTag: 6666707c-e81d-4f2f-a1e6-a99853d1199c
 
 	/// Opgenomen rekening-courantkrediet (RCF) als positief bedrag.
-	measure 'Rekening-courantkrediet' = -CALCULATE([Balans laatste stand], REMOVEFILTERS(FactBalans[Balanspost]), FactBalans[Balanspost] = "Rekening-courantkrediet")
-		formatString: #,0
+	measure 'Rekening-courantkrediet' = -CALCULATE([Balans laatste stand], REMOVEFILTERS(DimBalanspost), DimBalanspost[Balanspost] = "Rekening-courantkrediet")
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Balans
 		lineageTag: bd86d86b-5d2f-4f0e-b076-29a86362690f
 
 	/// Eigen vermogen als positief bedrag.
-	measure 'Eigen vermogen' = -CALCULATE([Balans laatste stand], REMOVEFILTERS(FactBalans[Balanspost]), FactBalans[Balanspost] = "Eigen vermogen")
-		formatString: #,0
+	measure 'Eigen vermogen' = -CALCULATE([Balans laatste stand], REMOVEFILTERS(DimBalanspost), DimBalanspost[Balanspost] = "Eigen vermogen")
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Balans
 		lineageTag: 7904f192-dd03-4628-bc05-f0c8f80082a7
 
-	/// Rentedragende schuld minus liquide middelen; negatief betekent netto kaspositie.
+	/// Rentedragende schuld minus liquide middelen op de laatste balansdatum in de periode; negatief betekent netto kaspositie.
 	measure 'Netto schuld' = [Termijnlening] + [Rekening-courantkrediet] - [Liquide middelen]
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Balans
 		lineageTag: f9596af6-e905-4113-aec3-2e1b8f2fb45b
 
 	/// Som van alle activa op de laatste balansdatum.
 	measure 'Totaal activa' = [Liquide middelen] + [Debiteuren] + [Voorraden] + [Materiële vaste activa]
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Balans
 		lineageTag: 0dc5c2f7-0068-46e7-9ea7-cd17a2507624
 
 	/// Som van schulden en eigen vermogen op de laatste balansdatum.
 	measure 'Totaal passiva' = [Crediteuren] + [Belastingschuld] + [Termijnlening] + [Rekening-courantkrediet] + [Eigen vermogen]
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Balans
 		lineageTag: 0a54dfba-671e-4f16-bd65-4726c1836fae
 
 	/// Som van alle balansposten (activa positief, passiva negatief); moet nul zijn.
-	measure Balanscontrole = CALCULATE([Balans laatste stand], REMOVEFILTERS(FactBalans[Balanspost]))
+	measure Balanscontrole = CALCULATE([Balans laatste stand], REMOVEFILTERS(DimBalanspost))
 		formatString: #,0.00
 		displayFolder: Balans
 		lineageTag: f94cca58-f2e2-4cd9-985e-5883f2cf525f
 
 	/// Operationeel werkkapitaal: debiteuren + voorraden − crediteuren.
 	measure Werkkapitaal = [Debiteuren] + [Voorraden] - [Crediteuren]
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Balans
 		lineageTag: e247920c-8bf0-448e-846e-f6c33a364ac3
 
@@ -367,43 +438,43 @@ table _Maten
 
 	/// Bedrag per kasstroompost (instroom +, uitstroom −).
 	measure 'Kasstroom bedrag' = SUM(FactKasstroom[Bedrag])
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Kasstroom
 		lineageTag: 50e9eb8c-781f-43de-978e-fe89a633d9c4
 
 	/// Kasstroom uit operationele activiteiten (CFO): nettowinst + afschrijvingen + mutaties werkkapitaal.
 	measure 'Operationele kasstroom' = CALCULATE(SUM(FactKasstroom[Bedrag]), REMOVEFILTERS(FactKasstroom[Kasstroompost]), FactKasstroom[Kasstroompost] IN {"Nettowinst", "Afschrijvingen", "Mutatie debiteuren", "Mutatie voorraden", "Mutatie crediteuren", "Mutatie belastingschuld"})
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Kasstroom
 		lineageTag: f3a8e54e-a1d8-41fa-a5d2-194b5160310e
 
 	/// Investeringskasstroom (capex), negatief.
 	measure Investeringen = CALCULATE(SUM(FactKasstroom[Bedrag]), REMOVEFILTERS(FactKasstroom[Kasstroompost]), FactKasstroom[Kasstroompost] IN {"Investeringen"})
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Kasstroom
 		lineageTag: 9c0213a2-f0aa-4d66-a2cd-85da5fa4794f
 
 	/// Vrije kasstroom (FCF): operationele kasstroom plus investeringen.
 	measure 'Vrije kasstroom' = [Operationele kasstroom] + [Investeringen]
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Kasstroom
 		lineageTag: c6062d4a-529c-42c1-861e-3f405ab1589d
 
 	/// Kasstroom uit financieringsactiviteiten (CFF).
 	measure Financieringskasstroom = CALCULATE(SUM(FactKasstroom[Bedrag]), REMOVEFILTERS(FactKasstroom[Kasstroompost]), FactKasstroom[Kasstroompost] IN {"Opname termijnlening", "Aflossing termijnlening", "Mutatie RCF", "Dividend", "Kapitaalstorting"})
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Kasstroom
 		lineageTag: 31cc7dff-a565-41db-ab90-32b1e66903f8
 
 	/// Totale mutatie van de liquide middelen in de periode.
 	measure 'Netto kasmutatie' = [Vrije kasstroom] + [Financieringskasstroom]
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Kasstroom
 		lineageTag: 8940a9ba-13fa-4d3f-a3e6-09ec827ba04e
 
 	/// Uitgekeerd dividend als positief bedrag.
 	measure Dividend = -CALCULATE(SUM(FactKasstroom[Bedrag]), REMOVEFILTERS(FactKasstroom[Kasstroompost]), FactKasstroom[Kasstroompost] IN {"Dividend"})
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Kasstroom
 		lineageTag: 4250b8e3-4e5d-4daa-ae3b-6adfc02a561e
 
@@ -437,20 +508,40 @@ table _Maten
 		displayFolder: Werkkapitaal
 		lineageTag: aff69d28-6423-4e8a-a4ff-c23d01aaba3b
 
-	/// EBITDA over de laatste twaalf maanden tot en met de laatste datum in de periode (Actual + Forecast).
-	measure 'LTM EBITDA' = CALCULATE([EBITDA A+F], DATESINPERIOD(DimDatum[Datum], MAX(DimDatum[Datum]), -12, MONTH))
-		formatString: #,0
+	/// EBITDA over de twaalf maanden tot en met de laatste maand mét W&V-gegevens in de periode (Actual + Forecast); dezelfde maand als [Netto schuld], ook bij een jaar- of kwartaalfilter. Minder dan twaalf beschikbare maanden (begin 2023) geannualiseerd, zoals FactKPI[LTMEBITDA].
+	measure 'LTM EBITDA' =
+			VAR LaatsteKey = MAX(FactWinstVerlies[DatumKey])
+			VAR Einde = EOMONTH(LOOKUPVALUE(DimDatum[Datum], DimDatum[DatumKey], LaatsteKey), 0)
+			VAR Periode = DATESINPERIOD(DimDatum[Datum], Einde, -12, MONTH)
+			VAR Maanden = CALCULATE(DISTINCTCOUNT(FactWinstVerlies[DatumKey]), Periode, REMOVEFILTERS(DimScenario))
+			RETURN
+			    DIVIDE(CALCULATE([EBITDA A+F], Periode) * 12, Maanden)
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Covenants
 		lineageTag: bcb957d9-98f1-452d-bd80-dabe753c53b0
 
-	/// Rentelasten over de laatste twaalf maanden (Actual + Forecast).
-	measure 'LTM rentelasten' = CALCULATE(CALCULATE([Rentelasten], DimScenario[Scenario] = "Actual", DimDatum[IsActual] = 1) + CALCULATE([Rentelasten], DimScenario[Scenario] = "Forecast", DimDatum[IsActual] = 0), DATESINPERIOD(DimDatum[Datum], MAX(DimDatum[Datum]), -12, MONTH))
-		formatString: #,0
+	/// Rentelasten over de twaalf maanden tot en met de laatste maand mét W&V-gegevens in de periode (Actual + Forecast); minder dan twaalf beschikbare maanden geannualiseerd.
+	measure 'LTM rentelasten' =
+			VAR LaatsteKey = MAX(FactWinstVerlies[DatumKey])
+			VAR Einde = EOMONTH(LOOKUPVALUE(DimDatum[Datum], DimDatum[DatumKey], LaatsteKey), 0)
+			VAR Periode = DATESINPERIOD(DimDatum[Datum], Einde, -12, MONTH)
+			VAR Maanden = CALCULATE(DISTINCTCOUNT(FactWinstVerlies[DatumKey]), Periode, REMOVEFILTERS(DimScenario))
+			RETURN
+			    DIVIDE(CALCULATE([Rentelasten A+F], Periode) * 12, Maanden)
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Covenants
 		lineageTag: 48190e62-06dc-4ad6-bf59-b206917b49e9
 
-	/// Netto schuld / LTM EBITDA. Covenant: maximaal 3,0x.
-	measure Leverage = DIVIDE([Netto schuld], [LTM EBITDA])
+	/// Netto schuld / LTM EBITDA op de laatste maand in de periode, volgens dezelfde conventie als FactKPI[Leverage]: bij LTM EBITDA ≤ 0 geldt 99 (schuld) of 0 (netto kas); een netto kaspositie geeft een negatieve ratio. Covenant: maximaal 3,0x.
+	measure Leverage =
+			VAR Schuld = [Netto schuld]
+			VAR E = [LTM EBITDA]
+			RETURN
+			    IF(
+			        ISBLANK(Schuld) || ISBLANK(E),
+			        BLANK(),
+			        IF(E > 0, DIVIDE(Schuld, E), IF(Schuld > 0, 99, 0))
+			    )
 		formatString: 0.00
 		displayFolder: Covenants
 		lineageTag: ca9869cc-81c4-463b-aae7-cb2996b9d39d
@@ -476,7 +567,7 @@ table _Maten
 		displayFolder: Covenants
 		lineageTag: 1f30dd2a-f002-4136-bf8f-c3836fa62dac
 
-	/// Tekst "OK" of "Breuk": leverage ≤ 3,0x én ICR ≥ 4,0x op de laatste datum in de periode.
+	/// Tekst "OK" of "Overschrijding": leverage ≤ 3,0x én ICR ≥ 4,0x op de laatste maand in de periode. Bij LTM EBITDA ≤ 0 met netto schuld is de leverage 99 en dus een overschrijding.
 	measure Covenantstatus =
 			VAR Lev = [Leverage]
 			VAR Icr = [ICR]
@@ -484,7 +575,7 @@ table _Maten
 			    IF(
 			        ISBLANK(Lev) || ISBLANK(Icr),
 			        BLANK(),
-			        IF(Lev <= [Covenant leverage max] && Icr >= [Covenant ICR min], "OK", "Breuk")
+			        IF(Lev <= [Covenant leverage max] && Icr >= [Covenant ICR min], "OK", "Overschrijding")
 			    )
 		displayFolder: Covenants
 		lineageTag: 2ee68e5d-e69a-4db7-b5c7-244b8a130a33
@@ -512,7 +603,7 @@ table _Maten
 			VAR LaatsteKey = MAX(FactKPI[DatumKey])
 			RETURN
 			    CALCULATE(MAX(FactKPI[LTMEBITDA]), FactKPI[DatumKey] = LaatsteKey)
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Covenants
 		lineageTag: 189e49ab-9ca7-42ab-9bb0-49a4e28cb9ef
 
@@ -521,13 +612,13 @@ table _Maten
 			VAR LaatsteKey = MAX(FactKPI[DatumKey])
 			RETURN
 			    CALCULATE(MAX(FactKPI[RCFHeadroom]), FactKPI[DatumKey] = LaatsteKey)
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Covenants
 		lineageTag: 230f689d-22c7-4aa5-9de9-a5028ae00eb7
 
 	/// Omzet in dezelfde periode een jaar eerder.
 	measure 'Omzet vorig jaar' = CALCULATE([Omzet], SAMEPERIODLASTYEAR(DimDatum[Datum]))
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Tijd
 		lineageTag: 8b755c55-42ed-4677-82ef-3e0ca309248d
 
@@ -539,13 +630,13 @@ table _Maten
 
 	/// Omzet cumulatief vanaf 1 januari tot en met de periode.
 	measure 'Omzet YTD' = TOTALYTD([Omzet], DimDatum[Datum])
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Tijd
 		lineageTag: 1feb7a53-f55f-4b1f-a014-0f33e52f06e2
 
 	/// Netto-omzet (W&V) in dezelfde periode een jaar eerder.
 	measure 'Netto-omzet vorig jaar' = CALCULATE([Netto-omzet], SAMEPERIODLASTYEAR(DimDatum[Datum]))
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Tijd
 		lineageTag: c402faea-76b0-4b88-a121-d32580dbbbfd
 
@@ -557,19 +648,25 @@ table _Maten
 
 	/// EBITDA in dezelfde periode een jaar eerder.
 	measure 'EBITDA vorig jaar' = CALCULATE([EBITDA], SAMEPERIODLASTYEAR(DimDatum[Datum]))
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Tijd
 		lineageTag: 1d2eed86-6b7a-4e6d-8615-a15522135c91
 
 	/// EBITDA cumulatief vanaf 1 januari tot en met de periode.
 	measure 'EBITDA YTD' = TOTALYTD([EBITDA], DimDatum[Datum])
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Tijd
 		lineageTag: 51ac50f8-e598-43b6-81c6-87b509d4c056
 
-	/// Omzet over de laatste twaalf maanden (Actual + Forecast).
-	measure 'Omzet LTM' = CALCULATE([Omzet A+F], DATESINPERIOD(DimDatum[Datum], MAX(DimDatum[Datum]), -12, MONTH))
-		formatString: #,0
+	/// Omzet over de twaalf maanden tot en met de laatste maand mét verkoopgegevens in de periode (Actual + Forecast); minder dan twaalf beschikbare maanden geannualiseerd.
+	measure 'Omzet LTM' =
+			VAR LaatsteKey = MAX(FactVerkoop[DatumKey])
+			VAR Einde = EOMONTH(LOOKUPVALUE(DimDatum[Datum], DimDatum[DatumKey], LaatsteKey), 0)
+			VAR Periode = DATESINPERIOD(DimDatum[Datum], Einde, -12, MONTH)
+			VAR Maanden = CALCULATE(DISTINCTCOUNT(FactVerkoop[DatumKey]), Periode, REMOVEFILTERS(DimScenario))
+			RETURN
+			    DIVIDE(CALCULATE([Omzet A+F], Periode) * 12, Maanden)
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Tijd
 		lineageTag: 31d99931-5143-4d4d-88ec-0d33fac5e7ed
 
@@ -581,13 +678,13 @@ table _Maten
 
 	/// Netto-omzet per gemiddelde FTE in de periode.
 	measure 'Omzet per FTE' = DIVIDE([Netto-omzet], [FTE])
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: FTE
 		lineageTag: e84c2856-e5e3-4da7-a758-7435cf41909f
 
 	/// Personeelskosten per gemiddelde FTE in de periode.
 	measure 'Personeelskosten per FTE' = DIVIDE([Personeelskosten], [FTE])
-		formatString: #,0
+		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: FTE
 		lineageTag: c04d90bc-7f16-4255-8711-dc8f812be0b4
 
@@ -597,8 +694,8 @@ table _Maten
 		displayFolder: Gebeurtenissen
 		lineageTag: 74935560-adc3-4966-997c-4ae0bfb76f1f
 
-	/// Titels van de gebeurtenissen in de periode, gescheiden door puntkomma.
-	measure Gebeurtenis = CONCATENATEX(Gebeurtenissen, Gebeurtenissen[Titel], "; ")
+	/// Titels van de gebeurtenissen in de periode, chronologisch, gescheiden door puntkomma.
+	measure Gebeurtenis = CONCATENATEX(Gebeurtenissen, Gebeurtenissen[Titel], "; ", Gebeurtenissen[DatumKey], ASC)
 		displayFolder: Gebeurtenissen
 		lineageTag: 40349e08-0c2e-49cb-883b-ef1ca876a383
 
@@ -615,9 +712,9 @@ table _Maten
 	partition _Maten = m
 		mode: import
 		source =
-			let
-			    Bron = #table(type table [Kolom1 = Int64.Type], {{1}})
-			in
-			    Bron
+				let
+				    Bron = #table(type table [Kolom1 = Int64.Type], {{1}})
+				in
+				    Bron
 
 	annotation PBI_ResultType = Table

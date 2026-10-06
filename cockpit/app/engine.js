@@ -271,7 +271,7 @@
       const icr = ltmInterest > 0 ? ltmEbitda / ltmInterest : 99;
       const fcf = cfo + cfi;
       if (lean) {
-        opts.collect({ i, period: ym, year: yearOf(ym), month: monthOf(ym), revenue, ebitda, netIncome, fcf, cash, leverage, icr, rcfHeadroom: config.rcfLimit - rcf, covenantOk: leverage <= config.covenantLeverageMax && icr >= config.covenantIcrMin, minCash: config.minCash });
+        opts.collect({ i, period: ym, year: yearOf(ym), month: monthOf(ym), revenue, ebitda, netIncome, fcf, cash, leverage, icr, ltmEbitda, rcf, rcfHeadroom: config.rcfLimit - rcf, leverageOk: leverage <= config.covenantLeverageMax, icrOk: icr >= config.covenantIcrMin, covenantOk: leverage <= config.covenantLeverageMax && icr >= config.covenantIcrMin, minCash: config.minCash });
         continue;
       }
       months[i] = {
@@ -280,7 +280,7 @@
         pl: { revenue, cogs, materialCost, laborCost, freightCost, warranty, oneOffCogs, grossProfit, personnel, personnelTotal, marketing, housing: d.housing, it: d.it, other: d.other, oneOffOpex, opex, ebitda, dep, ebit, interestExp, interestInc, netInterest, ebt, tax, netIncome },
         bs: { cash, ar, inventory: inv, ppeGross, ppeAcc, ppeNet, totalAssets, ap, taxPayable: taxPay, termLoan: tl, rcf, totalLiab, equity, totalLiabEquity: totalLiab + equity, check },
         cf: { netIncome, dep, dAR: -dAR, dInv: -dInv, dAP, dTax, cfo, capex: -capex, cfi, tlDraw, tlRepay: -tlRepay, rcfDraw, rcfRepay: -rcfRepay, dividend: -dividend, equityRaise, cff, netCash: cfo + cfi + cff, cashOpen: cashNew - (cfo + cfi + cff), cashClose: cashNew, fcf, taxPaid },
-        kpi: { units: unitsTotal, asp: unitsTotal > 0 ? revenue / unitsTotal : 0, grossMarginPct: revenue > 0 ? grossProfit / revenue : 0, ebitdaPct: revenue > 0 ? ebitda / revenue : 0, dso: d.dso, dio: d.dio, dpo: d.dpo, ccc: d.dso + d.dio - d.dpo, fte: fteTotal, fteByDept: Object.assign({}, d.fte), netDebt, ltmEbitda, ltmInterest, leverage, icr, covenantLeverageOk: leverage <= config.covenantLeverageMax, covenantIcrOk: icr >= config.covenantIcrMin, rcfHeadroom: config.rcfLimit - rcf, lossCarryforward: lcf, oneOffLabel: d.oneOff && d.oneOff.label || '' },
+        kpi: { units: unitsTotal, asp: unitsTotal > 0 ? revenue / unitsTotal : 0, grossMarginPct: revenue > 0 ? grossProfit / revenue : 0, ebitdaPct: revenue > 0 ? ebitda / revenue : 0, dso: d.dso, dio: d.dio, dpo: d.dpo, ccc: d.dso + d.dio - d.dpo, fte: fteTotal, fteByDept: Object.assign({}, d.fte), netDebt, ltmEbitda, ltmInterest, ltmMonths: ebitdaHist.length, covenantTestable: ebitdaHist.length >= 12, leverage, icr, covenantLeverageOk: leverage <= config.covenantLeverageMax, covenantIcrOk: icr >= config.covenantIcrMin, rcfHeadroom: config.rcfLimit - rcf, lossCarryforward: lcf, oneOffLabel: d.oneOff && d.oneOff.label || '' },
         byLine, byChannel, byCountry,
         cells
       };
@@ -294,7 +294,7 @@
   const SUM_CF = ['netIncome', 'dep', 'dAR', 'dInv', 'dAP', 'dTax', 'cfo', 'capex', 'cfi', 'tlDraw', 'tlRepay', 'rcfDraw', 'rcfRepay', 'dividend', 'equityRaise', 'cff', 'netCash', 'fcf', 'taxPaid'];
 
   function aggregate(months, grain) { // grain: 'M' | 'Q' | 'Y'
-    if (grain === 'M') return months.map(m => Object.assign({ key: m.period, label: m.period, n: 1 }, m));
+    if (grain === 'M') return months.map(m => Object.assign({ key: m.period, label: m.period, n: 1, months: [m], partial: false }, m));
     const groups = new Map();
     for (const m of months) {
       const key = grain === 'Q' ? m.quarter : String(m.year);
@@ -472,7 +472,7 @@
     const actRun = run(config, actuals, { detail: false });
     const state = actRun.state;
     const targetYear = opts.targetYear || 2027;
-    const results = { ebitda: new Float64Array(n), revenue: new Float64Array(n), minCash: new Float64Array(n), maxLeverage: new Float64Array(n), minIcr: new Float64Array(n), netIncome: new Float64Array(n), fcf: new Float64Array(n), breach: 0, cashBreach: 0, draws: new Array(n) };
+    const results = { ebitda: new Float64Array(n), revenue: new Float64Array(n), minCash: new Float64Array(n), maxLeverage: new Float64Array(n), minIcr: new Float64Array(n), netIncome: new Float64Array(n), fcf: new Float64Array(n), breach: 0, cashBreach: 0, breachLeverage: 0, breachIcr: 0, breachBoth: 0, breachUndefined: 0, rcfDrawn: 0, breachFlags: new Uint8Array(n), draws: new Array(n) };
     for (let k = 0; k < n; k++) {
       const s = Object.assign({}, a, {
         volumeGrowth: r.normal(a.volumeGrowth, u.volumeGrowthSd),
@@ -484,15 +484,18 @@
         dio: Math.max(30, r.normal(a.dio, u.dioSd))
       });
       const fc = buildForecastDrivers(config, actuals, s, actRun.months);
-      let eb = 0, rev = 0, ni = 0, fcf = 0, minCash = Infinity, maxLev = -Infinity, minIcr = Infinity, breach = false, cashBreach = false;
+      let eb = 0, rev = 0, ni = 0, fcf = 0, minCash = Infinity, maxLev = -Infinity, minIcr = Infinity, breach = false, cashBreach = false, bLev = false, bIcr = false, bBoth = false, bUndef = false, drawn = false;
       run(config, fc, { detail: false, state, collect: function (m) {
         if (m.year === targetYear) { eb += m.ebitda; rev += m.revenue; ni += m.netIncome; fcf += m.fcf; }
         if (m.cash < minCash) minCash = m.cash;
         if (m.leverage > maxLev) maxLev = m.leverage;
         if (m.icr < minIcr) minIcr = m.icr;
-        if (m.month % 3 === 0 && !m.covenantOk) breach = true;
+        if (m.month % 3 === 0 && !m.covenantOk) { breach = true; if (m.ltmEbitda <= 0) bUndef = true; else if (!m.leverageOk && !m.icrOk) bBoth = true; else if (!m.leverageOk) bLev = true; else bIcr = true; }
+        if (m.rcf > 1e-6) drawn = true;
         if (m.rcfHeadroom < 1e-6 && m.cash < m.minCash - 1) cashBreach = true;
       } });
+      results.breachFlags[k] = (bUndef ? 8 : 0) | (bBoth ? 4 : 0) | (bLev ? 2 : 0) | (bIcr ? 1 : 0);
+      if (bLev) results.breachLeverage++; if (bIcr) results.breachIcr++; if (bBoth) results.breachBoth++; if (bUndef) results.breachUndefined++; if (drawn) results.rcfDrawn++;
       results.ebitda[k] = eb; results.revenue[k] = rev; results.netIncome[k] = ni; results.fcf[k] = fcf; results.minCash[k] = minCash; results.maxLeverage[k] = maxLev; results.minIcr[k] = minIcr;
       if (breach) results.breach++; if (cashBreach) results.cashBreach++;
       results.draws[k] = { volumeGrowth: s.volumeGrowth, priceIndex: s.priceIndex, materialIndex: s.materialIndex, dso: s.dso, dio: s.dio, wageIndex: s.wageIndex, marketingPct: s.marketingPct, ebitda: eb };
@@ -570,7 +573,7 @@
     const netDebt = bsAtVal.termLoan + bsAtVal.rcf - bsAtVal.cash;
     const equityValue = ev - netDebt;
     const ltmEbitda = months[startIdx - 1].kpi.ltmEbitda;
-    return { rows, pvExplicit: pv, tv, pvTv, ev, netDebt, equityValue, ltmEbitda, evToEbitda: ltmEbitda > 0 ? ev / ltmEbitda : NaN, tvShare: ev ? pvTv / ev : 0, params: p, valuationDate: valDate };
+    return { rows, pvExplicit: pv, tv, tvFcff, tvDf, monthsElapsed, pvTv, ev, netDebt, equityValue, ltmEbitda, evToEbitda: ltmEbitda > 0 ? ev / ltmEbitda : NaN, tvShare: ev ? pvTv / ev : 0, params: p, valuationDate: valDate };
   }
 
   function dcfGrid(res, waccs, growths) {

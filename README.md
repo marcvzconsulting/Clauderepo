@@ -9,7 +9,7 @@ Een complete financiële cockpit voor **Helder E-Bikes B.V.**, een verzonnen Ned
 | Drie-statement model | `cockpit/app/engine.js` | Maandelijkse winst-en-verliesrekening, balans en kasstroom, driver-based, met automatisch rekening-courantkrediet, verliescompensatie, kwartaalbetaling VPB, convenanten en DCF. De balans sluit per constructie; `tests/engine.test.mjs` controleert dat met miljoenen checks over duizenden willekeurige scenario's. |
 | Synthetische dataset | `generator/generate.mjs` → `cockpit/data/` en `powerbi/data/` | 45 maanden actuals (jan 2023 t/m sep 2026) met geplante gebeurtenissen (voorraadoverhang, terugroepactie, celprijsspike, Duitse uitrol), budget 2026 en vier scenario's. Deterministisch: dezelfde cijfers in de browser en in Power BI. |
 | Cockpit | `cockpit/index.html` + `cockpit/app/` | Acht tabbladen: Overzicht, Winst & verlies, Balans & kasstroom, Scenario's (live sliders), Risico (Monte Carlo in een Web Worker), Waardering (DCF met gevoeligheidstabel), Analist (Claude met tools die het engine aanroepen) en Power BI (projectdownload). Licht en donker, desktop en telefoon, elke grafiek met tabelweergave. |
-| Power BI-project | `powerbi/` | PBIP met semantisch model in TMDL (sterrenschema, datumtabel, calculation group voor tijdintelligentie, 45+ DAX-maten), rapportdefinitie, CSV-data, Power Query-parameter voor het datapad en een validatiescript. |
+| Power BI-project | `powerbi/` | PBIP met semantisch model in TMDL (sterschema met 17 tabellen en 19 relaties, datumtabel met hiërarchie, calculation group voor tijdintelligentie, 107 DAX-maten met beschrijvingen en mappen), rapportdefinitie met drie pagina's, CSV-data, Power Query-parameter voor het datapad en een validatiescript. |
 
 ## Zelf draaien
 

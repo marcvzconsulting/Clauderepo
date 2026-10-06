@@ -2,15 +2,18 @@
 table DimRekening
 	lineageTag: 1ea8a1ad-70c4-499a-9d5a-caf6bf5075b6
 
+	/// Sleutel naar DimRekening (rekeningnummer).
 	column RekeningKey
 		dataType: int64
 		isHidden
+		isAvailableInMdx: false
 		lineageTag: b04feb74-3f6b-456f-a357-9dd0918fd050
 		summarizeBy: none
 		sourceColumn: RekeningKey
 
 		annotation SummarizationSetBy = User
 
+	/// Rekeningnaam uit het rekeningschema.
 	column Rekening
 		dataType: string
 		lineageTag: da2f7214-5015-46a0-81fd-74e19c6041fe
@@ -20,24 +23,30 @@ table DimRekening
 
 		annotation SummarizationSetBy = User
 
+	/// Groep van rekeningen (Omzet, Kostprijs omzet, Personeelskosten, ...).
 	column Rekeninggroep
 		dataType: string
 		lineageTag: 3069f646-93b6-464d-914f-318a70010df7
 		summarizeBy: none
 		sourceColumn: Rekeninggroep
+		sortByColumn: RekeninggroepVolgorde
 
 		annotation SummarizationSetBy = User
 
+	/// Hoogste indeling van de W&V (Omzet, Brutomarge, Operationele kosten, Afschrijvingen, Financieel, Belastingen).
 	column Niveau1
 		dataType: string
 		lineageTag: d8ed2d30-ed61-4de2-9890-aff80273105b
 		summarizeBy: none
 		sourceColumn: Niveau1
+		sortByColumn: Niveau1Volgorde
 
 		annotation SummarizationSetBy = User
 
+	/// +1 voor opbrengsten/activa, -1 voor kosten/passiva.
 	column Teken
 		dataType: int64
+		isHidden
 		formatString: 0
 		lineageTag: 00e78353-48ab-4776-ace8-0315948c4389
 		summarizeBy: none
@@ -45,6 +54,7 @@ table DimRekening
 
 		annotation SummarizationSetBy = User
 
+	/// Sorteervolgorde voor de weergave.
 	column Volgorde
 		dataType: int64
 		isHidden
@@ -55,14 +65,34 @@ table DimRekening
 
 		annotation SummarizationSetBy = User
 
+	/// Sorteerkolom voor Rekeninggroep (laagste Volgorde in de groep).
+	column RekeninggroepVolgorde = CALCULATE(MIN(DimRekening[Volgorde]), ALLEXCEPT(DimRekening, DimRekening[Rekeninggroep]))
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 73856bee-2c2b-40cd-be00-f231c065affc
+		summarizeBy: none
+
+		annotation SummarizationSetBy = User
+
+	/// Sorteerkolom voor Niveau1 (laagste Volgorde in het niveau).
+	column Niveau1Volgorde = CALCULATE(MIN(DimRekening[Volgorde]), ALLEXCEPT(DimRekening, DimRekening[Niveau1]))
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 2ffc4a24-bad3-4266-83e0-fa2bae64f80b
+		summarizeBy: none
+
+		annotation SummarizationSetBy = User
+
 	partition DimRekening = m
 		mode: import
 		source =
-			let
-			    Bron = Csv.Document(File.Contents(CsvMap & "DimRekening.csv"), [Delimiter=",", Columns=6, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
-			    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
-			    Typen = Table.TransformColumnTypes(Kop, {{"RekeningKey", Int64.Type}, {"Rekening", type text}, {"Rekeninggroep", type text}, {"Niveau1", type text}, {"Teken", Int64.Type}, {"Volgorde", Int64.Type}}, "en-US")
-			in
-			    Typen
+				let
+				    Bron = Csv.Document(File.Contents(CsvMap & "DimRekening.csv"), [Delimiter=",", Columns=6, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
+				    Typen = Table.TransformColumnTypes(Kop, {{"RekeningKey", Int64.Type}, {"Rekening", type text}, {"Rekeninggroep", type text}, {"Niveau1", type text}, {"Teken", Int64.Type}, {"Volgorde", Int64.Type}}, "en-US")
+				in
+				    Typen
 
 	annotation PBI_ResultType = Table

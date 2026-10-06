@@ -2,33 +2,40 @@
 table FactWinstVerlies
 	lineageTag: b8d9dbfb-bf41-4e1a-9731-35d629bb6f29
 
+	/// Sleutel naar DimDatum (yyyymmdd, eerste dag van de maand).
 	column DatumKey
 		dataType: int64
 		isHidden
+		isAvailableInMdx: false
 		lineageTag: 846b7da9-6ccf-4aa1-997c-a88a98ca6249
 		summarizeBy: none
 		sourceColumn: DatumKey
 
 		annotation SummarizationSetBy = User
 
+	/// Sleutel naar DimScenario (1 Actual, 2 Budget, 3 Forecast).
 	column ScenarioKey
 		dataType: int64
 		isHidden
+		isAvailableInMdx: false
 		lineageTag: 2ab96b23-7015-4baa-bd57-7d84190b6fd2
 		summarizeBy: none
 		sourceColumn: ScenarioKey
 
 		annotation SummarizationSetBy = User
 
+	/// Sleutel naar DimRekening (rekeningnummer).
 	column RekeningKey
 		dataType: int64
 		isHidden
+		isAvailableInMdx: false
 		lineageTag: 7376809b-644d-41ab-994a-79a16c29f92e
 		summarizeBy: none
 		sourceColumn: RekeningKey
 
 		annotation SummarizationSetBy = User
 
+	/// Bedrag in euro; kosten positief opgeslagen, teken via DimRekening[Teken].
 	column Bedrag
 		dataType: double
 		formatString: #,0
@@ -41,11 +48,12 @@ table FactWinstVerlies
 	partition FactWinstVerlies = m
 		mode: import
 		source =
-			let
-			    Bron = Csv.Document(File.Contents(CsvMap & "FactWinstVerlies.csv"), [Delimiter=",", Columns=4, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
-			    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
-			    Typen = Table.TransformColumnTypes(Kop, {{"DatumKey", Int64.Type}, {"ScenarioKey", Int64.Type}, {"RekeningKey", Int64.Type}, {"Bedrag", type number}}, "en-US")
-			in
-			    Typen
+				let
+				    Bron = Csv.Document(File.Contents(CsvMap & "FactWinstVerlies.csv"), [Delimiter=",", Columns=4, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
+				    Typen = Table.TransformColumnTypes(Kop, {{"DatumKey", Int64.Type}, {"ScenarioKey", Int64.Type}, {"RekeningKey", Int64.Type}, {"Bedrag", type number}}, "en-US"),
+				    Binnen = Table.SelectRows(Typen, each [DatumKey] >= 20230101 and [DatumKey] <= 20291231)
+				in
+				    Binnen
 
 	annotation PBI_ResultType = Table
