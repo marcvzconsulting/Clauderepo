@@ -32,7 +32,7 @@
         for (let k = 0; k < plan.length; k++) {
           const part = MC.runChunk(m.dataset, m.assumptions, m.unc, plan[k]);
           done += plan[k].size;
-          root.postMessage({ type: 'part', id: m.id, k: k, done: done, n: m.n, part: part }, MC.KEYS.map(function (key) { return part[key].buffer; }));
+          root.postMessage({ type: 'part', id: m.id, k: k, done: done, n: m.n, part: part }, MC.KEYS.map(function (key) { return part[key].buffer; }).concat(part.breachFlags ? [part.breachFlags.buffer] : []));
         }
         root.postMessage({ type: 'done', id: m.id, ms: now() - t0 });
       } catch (e) {
@@ -70,13 +70,20 @@
   function runChunk(dataset, assumptions, unc, c) {
     return E.monteCarlo(dataset, assumptions, unc, c.size, c.seed, { targetYear: c.targetYear });
   }
-  /** voegt de deelresultaten van engine.monteCarlo samen tot één resultaat met dezelfde vorm */
+  /** tellers van engine.monteCarlo die bij het samenvoegen opgeteld worden */
+  const COUNTERS = ['breach', 'cashBreach', 'breachLeverage', 'breachIcr', 'breachBoth', 'breachUndefined', 'rcfDrawn'];
+  /** voegt de deelresultaten van engine.monteCarlo samen tot één resultaat met dezelfde vorm (incl. breachFlags per simulatie) */
   function merge(parts, seed, targetYear) {
     const n = parts.reduce((s, p) => s + p.n, 0);
-    const out = { n: n, seed: seed, targetYear: targetYear, breach: 0, cashBreach: 0, draws: new Array(n) };
+    const out = { n: n, seed: seed, targetYear: targetYear, draws: new Array(n), breachFlags: new Uint8Array(n) };
+    for (const c of COUNTERS) out[c] = 0;
     for (const k of KEYS) { const arr = new Float64Array(n); let off = 0; for (const p of parts) { arr.set(p[k], off); off += p.n; } out[k] = arr; }
-    let i = 0;
-    for (const p of parts) { out.breach += p.breach; out.cashBreach += p.cashBreach; for (let j = 0; j < p.n; j++) out.draws[i++] = p.draws[j]; }
+    let i = 0, off = 0;
+    for (const p of parts) {
+      for (const c of COUNTERS) out[c] += p[c] || 0;
+      if (p.breachFlags) out.breachFlags.set(p.breachFlags, off); off += p.n;
+      for (let j = 0; j < p.n; j++) out.draws[i++] = p.draws[j];
+    }
     return out;
   }
   /** runChunked(dataset, assumptions, unc, n, seed, opts, onProgress(done, n, parts)) → resultaat als engine.monteCarlo (synchroon; Node/hoofdthread) */
@@ -86,5 +93,5 @@
     for (const c of plan) { parts.push(runChunk(dataset, assumptions, unc, c)); done += c.size; if (onProgress) onProgress(done, n, parts); }
     return merge(parts, plan.length ? plan[0].baseSeed : (seed >>> 0), plan.length ? plan[0].targetYear : (opts && opts.targetYear) || 2027);
   }
-  return { KEYS, chunkSeed, chunkSizes, chunkPlan, runChunk, merge, runChunked };
+  return { KEYS, COUNTERS, chunkSeed, chunkSizes, chunkPlan, runChunk, merge, runChunked };
 });

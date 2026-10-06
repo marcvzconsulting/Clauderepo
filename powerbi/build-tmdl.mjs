@@ -130,14 +130,14 @@ const COLUMN_DESCRIPTION = {
   Niveau1: 'Hoogste indeling van de W&V (Omzet, Brutomarge, Operationele kosten, Afschrijvingen, Financieel, Belastingen).',
   Teken: '+1 voor opbrengsten/activa, -1 voor kosten/passiva.',
   Balanspost: 'Naam van de balanspost.', 'FactBalans.Balanspost': 'Balanspost (tekst); relatie naar DimBalanspost.', Zijde: 'Activa of Passiva.',
-  Aantal: 'Aantal verkochte fietsen.', Omzet: 'Omzet in euro.', Kostprijs: 'Directe kostprijs in euro.',
+  Aantal: 'Aantal verkochte e-bikes.', Omzet: 'Omzet in euro.', Kostprijs: 'Directe kostprijs in euro.',
   'FactWinstVerlies.Bedrag': 'Bedrag in euro; kosten positief opgeslagen, teken via DimRekening[Teken].',
   'FactBalans.Bedrag': 'Stand per maandeinde in euro; passiva en eigen vermogen negatief.',
   'FactKasstroom.Bedrag': 'Kasmutatie in euro (instroom +, uitstroom -).',
   Kasstroompost: 'Post van het kasstroomoverzicht (indirecte methode).',
   DSO: 'Debiteurendagen.', DIO: 'Voorraaddagen.', DPO: 'Crediteurendagen.',
-  NettoSchuld: 'Netto schuld in euro (termijnlening + RCF - liquide middelen).', LTMEBITDA: 'EBITDA over de laatste twaalf maanden in euro.',
-  Leverage: 'Netto schuld / LTM EBITDA; 99 bij schuld zonder positieve EBITDA, 0 bij netto kas zonder positieve EBITDA.', ICR: 'LTM EBITDA / LTM rentelasten, afgetopt op 99.',
+  NettoSchuld: 'Nettoschuld in euro (termijnlening + RCF - liquide middelen).', LTMEBITDA: 'EBITDA over de laatste twaalf maanden in euro.',
+  Leverage: 'Nettoschuld / LTM EBITDA; 99 bij schuld zonder positieve EBITDA, 0 bij nettokas zonder positieve EBITDA.', ICR: 'LTM EBITDA / LTM rentelasten, afgetopt op 99.',
   RCFHeadroom: 'Onbenutte ruimte onder de rekening-courantfaciliteit in euro.', Eenmalig: 'Omschrijving van de eenmalige post in de maand, indien van toepassing.',
   FTE: 'Aantal fte in de maand.',
   Titel: 'Korte titel van de gebeurtenis.', Soort: 'Soort gebeurtenis: Marge, Financiering, Eenmalig of Groei.', Toelichting: 'Toelichting op de gebeurtenis.'
@@ -432,7 +432,7 @@ function reportJson() {
     jaarSlicer({ x: 972, y: 520, w: 284, h: 160, tab: 13 })
   ]);
   const balans = page('ReportSection3', 'Balans', 2, [
-    ...cardsRow(['Totaal activa', 'Eigen vermogen', 'Netto schuld', 'Leverage', 'Covenantstatus']),
+    ...cardsRow(['Totaal activa', 'Eigen vermogen', 'Nettoschuld', 'Leverage', 'Covenantstatus']),
     matrix(`m${id()}`, { x: 24, y: 160, w: 620, h: 520, tab: 10 }, 'DimBalanspost', ['Zijde', 'Balanspost'], ['Balansstand (gepresenteerd)'], 'Balans (laatste stand in de periode)'),
     lineChart(`v${id()}`, { x: 668, y: 160, w: 588, h: 176, tab: 11 }, ['Leverage', 'Covenant leverage max'], 'Leverage vs covenant (max 3,0x)'),
     columnChart(`v${id()}`, { x: 668, y: 352, w: 588, h: 176, tab: 12 }, 'Vrije kasstroom', 'Vrije kasstroom per maand'),

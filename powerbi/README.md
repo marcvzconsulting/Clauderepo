@@ -85,11 +85,11 @@ Alle maten staan in `_Maten`, gegroepeerd in weergavemappen; de volledige lijst 
 
 | Map | Maten |
 |---|---|
-| Verkoop | Omzet, Aantal, Gemiddelde prijs, Kostprijs, Brutowinst, Brutomarge %, Omzet Actual / Budget / Forecast, Omzet per fiets Actual |
+| Verkoop | Omzet, Aantal, Gemiddelde prijs, Kostprijs, Brutowinst, Brutomarge %, Omzet Actual / Budget / Forecast, Omzet per e-bike Actual |
 | Winst & verlies | W&V bedrag (met teken, geeft in een matrix op `DimRekening` de volledige W&V), Netto-omzet, Kostprijs omzet, Brutowinst (W&V), Brutomarge % (W&V), Personeelskosten, Marketing, Operationele kosten, Eenmalige posten, EBITDA, EBITDA %, EBITDA genormaliseerd, Afschrijvingen, EBIT, Rentelasten, Financieel resultaat, Belastingen, Nettowinst, Nettomarge % |
 | Actual + Forecast | Omzet A+F, EBITDA A+F, Rentelasten Actual / Forecast / A+F: Actual tot en met de laatste gerealiseerde maand (`DimDatum[IsActual] = 1`), daarna Forecast |
 | Budget | W&V bedrag Budget (+ t/m realisatie), Netto-omzet / EBITDA / Operationele kosten Actual, Budget, Budget (t/m realisatie) en Actual (budgetmaanden), EBITDA Forecast, Afwijking omzet / EBITDA / opex vs budget (€ en %), gunstig = positief. **De afwijkingen vergelijken over de gerealiseerde maanden van het budgetjaar**: Actual januari t/m september 2026 tegen Budget januari t/m september 2026, niet negen maanden tegen twaalf; buiten het budgetjaar zijn ze leeg |
-| Balans | Balans laatste stand, Balansstand (gepresenteerd), Liquide middelen, Debiteuren, Voorraden, Materiële vaste activa, Crediteuren, Belastingschuld, Termijnlening, Rekening-courantkrediet, Eigen vermogen, Netto schuld, Totaal activa, Totaal passiva, Balanscontrole (= 0), Werkkapitaal, Solvabiliteit % |
+| Balans | Balans laatste stand, Balansstand (gepresenteerd), Liquide middelen, Debiteuren, Voorraden, Materiële vaste activa, Crediteuren, Belastingschuld, Termijnlening, Rekening-courantkrediet, Eigen vermogen, Nettoschuld, Totaal activa, Totaal passiva, Balanscontrole (= 0), Werkkapitaal, Solvabiliteit % |
 | Kasstroom | Kasstroom bedrag, Operationele kasstroom, Investeringen, Vrije kasstroom, Financieringskasstroom, Netto kasmutatie, Dividend, Kasconversie % |
 | Werkkapitaal | DSO, DIO, DPO, CCC (gemiddelde van de maandwaarden in de periode) |
 | Covenants | LTM EBITDA, LTM rentelasten, Leverage, ICR, Covenant leverage max (3,0x), Covenant ICR min (4,0x), Covenantstatus ("OK"/"Overschrijding"), Leverage / ICR / LTM EBITDA (gerapporteerd), RCF headroom |
@@ -112,10 +112,10 @@ Conventies:
   (balansvolgorde, eindtotaal leeg).
 - **LTM-maten zijn verankerd op de laatste maand mét gegevens in de filtercontext**, niet op het kalendereinde van het filter:
   `EOMONTH(LOOKUPVALUE(DimDatum[Datum], DimDatum[DatumKey], MAX(FactWinstVerlies[DatumKey])), 0)` en daarna `DATESINPERIOD(…, -12, MONTH)`
-  op de A+F-reeks. Daardoor delen `[Netto schuld]` en `[LTM EBITDA]` dezelfde maand bij een jaar-, kwartaal- of maandfilter (bij
+  op de A+F-reeks. Daardoor delen `[Nettoschuld]` en `[LTM EBITDA]` dezelfde maand bij een jaar-, kwartaal- of maandfilter (bij
   Jaar = 2026 en Actual: beide september 2026). Minder dan twaalf beschikbare maanden (begin 2023) worden geannualiseerd, zoals in
   `FactKPI`; `[Leverage]`, `[ICR]` en `[LTM EBITDA]` zijn daarmee in alle 72 maanden gelijk aan de gerapporteerde varianten.
-- **Leverage volgt de conventie van het model**: `IF(E > 0, Schuld / E, IF(Schuld > 0, 99, 0))`; een netto kaspositie geeft een
+- **Leverage volgt de conventie van het model**: `IF(E > 0, Schuld / E, IF(Schuld > 0, 99, 0))`; een nettokaspositie geeft een
   negatieve ratio. `[Covenantstatus]` vergelijkt leverage (≤ 3,0x) en ICR (≥ 4,0x) en geeft "OK" of "Overschrijding".
 
 ## Calculation group `Tijdintelligentie`
@@ -137,7 +137,7 @@ het openen Actual 2026 tonen in plaats van drie scenario's bij elkaar opgeteld.
 2. **Winst & verlies** — matrix `DimRekening[Rekeninggroep]` > `[Rekening]` × `[W&V bedrag]` / `[W&V bedrag Budget (t/m realisatie)]`
    (opent ingeklapt op rekeninggroep in W&V-volgorde; **Alles uitvouwen** in de visualkop toont de rekeningen); EBITDA per maand;
    kaart `Afwijking EBITDA vs budget (€)` (like-for-like).
-3. **Balans** — Totaal activa, Eigen vermogen, Netto schuld, Leverage, Covenantstatus; matrix `DimBalanspost[Zijde]` > `[Balanspost]`
+3. **Balans** — Totaal activa, Eigen vermogen, Nettoschuld, Leverage, Covenantstatus; matrix `DimBalanspost[Zijde]` > `[Balanspost]`
    × `[Balansstand (gepresenteerd)]`; lijngrafiek **Leverage vs covenant** met `[Leverage]` en de referentielijn
    `[Covenant leverage max]`; vrije kasstroom per maand.
 

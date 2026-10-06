@@ -10,12 +10,16 @@
   // Lokale helpers: de projectbundel en de TMDL-bestanden lezen
   // =====================================================================
   let loadingBundle = null;
-  /** laadt data/pbip.js (ca. 650 KB) pas als dit tabblad geopend wordt; roept cb() aan zodra de bundel er is */
+  // 'al geprobeerd' staat op moduleniveau, niet op de sectie: H.tabs.rerender() maakt elke keer een nieuwe sectie, dus een vlag op
+  // root.dataset wordt nooit teruggezien en een mislukte lading (404, lege bundel) zou het tabblad eindeloos opnieuw laten renderen
+  let bundleTried = false;
+  /** laadt data/pbip.js (ca. 650 KB) pas als dit tabblad geopend wordt; roept cb(ok) aan zodra de lading geslaagd of mislukt is */
   function ensureBundle(cb) {
     const b = window.HELDER_PBIP;
-    if (b && b.files && Object.keys(b.files).length) { cb(true); return; }
+    if (b && b.files && Object.keys(b.files).length) { bundleTried = true; cb(true); return; }
     if (!loadingBundle) {
-      loadingBundle = new Promise(resolve => { const s = document.createElement('script'); s.src = 'data/pbip.js'; s.async = true; s.onload = () => resolve(true); s.onerror = () => resolve(false); document.head.appendChild(s); });
+      loadingBundle = new Promise(resolve => { const s = document.createElement('script'); s.src = 'data/pbip.js'; s.async = true; s.onload = () => resolve(true); s.onerror = () => resolve(false); document.head.appendChild(s); })
+        .then(ok => { bundleTried = true; return ok; });
     }
     loadingBundle.then(ok => cb(ok));
   }
@@ -31,13 +35,15 @@
   function csvRowCount(text) { if (typeof text !== 'string') return 0; const n = text.split('\n').filter(l => l.trim() !== '').length; return Math.max(0, n - 1); }
   /** datumfilter uit een M-partitie: `[DatumKey] >= 20230101 and [DatumKey] <= 20281231` → { lo, hi } */
   function dateBounds(mSource) { const m = /\[DatumKey\]\s*>=\s*(\d{8})\s+and\s+\[DatumKey\]\s*<=\s*(\d{8})/.exec(mSource || ''); return m ? { lo: Number(m[1]), hi: Number(m[2]) } : null; }
-  /** aantal CSV-rijen waarvan DatumKey buiten [lo, hi] valt (die filtert de M-query weg) */
-  function csvRowsOutside(text, b) {
-    if (typeof text !== 'string' || !b) return 0;
-    const lines = text.split('\n'); const head = (lines[0] || '').replace(/\r$/, '').split(','); const iD = head.indexOf('DatumKey'); if (iD < 0) return 0;
-    let n = 0;
-    for (let i = 1; i < lines.length; i++) { const l = lines[i]; if (l.trim() === '') continue; const k = Number(l.split(',')[iD]); if (isFinite(k) && (k < b.lo || k > b.hi)) n++; }
-    return n;
+  /** CSV-rijen waarvan DatumKey buiten [lo, hi] valt (die filtert de M-query weg): { rows, months } (months = aantal verschillende DatumKeys) */
+  function csvOutside(text, b) {
+    const out = { rows: 0, months: 0 };
+    if (typeof text !== 'string' || !b) return out;
+    const lines = text.split('\n'); const head = (lines[0] || '').replace(/\r$/, '').split(','); const iD = head.indexOf('DatumKey'); if (iD < 0) return out;
+    const keys = new Set();
+    for (let i = 1; i < lines.length; i++) { const l = lines[i]; if (l.trim() === '') continue; const k = Number(l.split(',')[iD]); if (isFinite(k) && (k < b.lo || k > b.hi)) { out.rows++; keys.add(k); } }
+    out.months = keys.size;
+    return out;
   }
   function keyToIso(k) { const s = String(k); return s.slice(0, 4) + '-' + s.slice(4, 6) + '-' + s.slice(6, 8); }
   /** sleutelmarkering: klein inline-SVG-sleuteltje (geen Unicode-glyph die van een systeemfont afhangt) */
@@ -189,11 +195,11 @@
     render(root, ctx) {
       const { model, fmt, h, ui } = ctx;
       const B = bundle(); const files = B.files;
-      if (B.empty && !root.dataset.bundleTried) {
+      if (B.empty && !bundleTried) {
         // de projectbundel (ca. 650 KB) wordt pas geladen als dit tabblad geopend wordt
         root.appendChild(h('div', { class: 'page-head' }, h('div', null, h('h1', null, 'Power BI'))));
         root.appendChild(h('div', { class: 'note', 'data-busy': 'true' }, 'Power BI-project laden…'));
-        ensureBundle(() => { root.dataset.bundleTried = '1'; if (H.tabs.current === 'powerbi') H.tabs.rerender(); });
+        ensureBundle(() => { if (H.tabs.current === 'powerbi') H.tabs.rerender(); });
         return;
       }
       const measures = (function () { const m = parseJson(files['measures.json'], []); return Array.isArray(m) ? m.filter(x => x && x.name) : []; })();
@@ -212,17 +218,29 @@
       const tableByName = {}; for (const t of tables) tableByName[t.name] = t;
       // rijen die de M-query's wegfilteren omdat ze buiten de datumtabel vallen (per tabel afgeleid uit de partitie en de CSV)
       let excludedRows = 0, dateHi = null;
-      for (const t of tables) { const b = dateBounds(t.mSource); if (!b) continue; dateHi = b.hi; excludedRows += csvRowsOutside(files['data/' + t.name + '.csv'], b); }
+      for (const t of tables) { const b = dateBounds(t.mSource); if (!b) continue; dateHi = b.hi; excludedRows += csvOutside(files['data/' + t.name + '.csv'], b).rows; }
+      // specifiek voor de aansluiting: wat de M-partitie van FactVerkoop wegfiltert (afgeleid uit de partitie en de CSV, nooit uit een jaartal)
+      const salesBounds = dateBounds(tableByName.FactVerkoop && tableByName.FactVerkoop.mSource);
+      const salesOutside = csvOutside(files['data/FactVerkoop.csv'], salesBounds);
       // parameter CsvMap: standaardwaarde uit expressions.tmdl (bijv. "C:\Helder\powerbi\data\") en de projectmap die daarbij hoort
       const csvMapExpr = expressions.find(e => e.name === 'CsvMap');
       const csvMapDefault = (csvMapExpr && (/^"([^"]*)"/.exec(csvMapExpr.expression) || [])[1]) || 'C:\\Helder\\powerbi\\data\\';
       const projectDir = csvMapDefault.replace(/data\\?$/i, '') || 'C:\\Helder\\powerbi\\';
 
       // ---------- pagina-kop ----------
+      // chips in de paginakop: vast (TMDL, bundeldatum) plus de canonieke scenario-chip 'Forecast: <scenario>', die bij elke statewijziging opnieuw wordt gezet
+      const headChips = h('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap' } });
+      const drawHeadChips = () => {
+        H.clear(headChips);
+        headChips.appendChild(ui.chip('TMDL · compatibilityLevel 1604', 'accent'));
+        if (B.generatedAt) headChips.appendChild(ui.chip('bundel ' + fmt.date(B.generatedAt), null));
+        headChips.appendChild(ui.scenarioChip());
+      };
+      drawHeadChips();
       root.appendChild(h('div', { class: 'page-head' },
         h('div', null, h('h1', null, 'Power BI'),
-          h('p', null, 'Hetzelfde model als Power BI-project (PBIP): een semantisch model in TMDL met een sterschema, ' + (measures.length ? fmt.int(measures.length) + ' DAX-maten' : 'DAX-maten') + ' en een calculation group voor tijdintelligentie. Download het project en open het in Power BI Desktop; de ZIP wordt in uw browser samengesteld, er gaat niets over het netwerk.')),
-        h('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap' } }, ui.chip('TMDL · compatibilityLevel 1604', 'accent'), B.generatedAt ? ui.chip('bundel ' + fmt.date(B.generatedAt), null) : null)));
+          h('p', null, 'Hetzelfde model, maar dan als Power BI-project (PBIP): een semantisch model in TMDL met een sterschema, ' + (measures.length ? fmt.int(measures.length) + ' DAX-maten' : 'DAX-maten') + ' en een calculation group voor tijdintelligentie. Download het project en open het in Power BI Desktop; de ZIP wordt in uw browser samengesteld, er gaat niets over het netwerk.')),
+        headChips));
 
       if (B.empty) root.appendChild(ui.note('De projectbundel (cockpit/data/pbip.js) is leeg: voer node scripts/build-pbip-bundle.mjs uit om het Power BI-project in te sluiten. Downloads zijn tot die tijd uitgeschakeld.', 'warning'));
 
@@ -293,7 +311,7 @@
       // ---------- aansluiting met de cockpit (dynamisch: volgt korrel, periode en scenario) ----------
       const recon = h('div', { class: 'span-12', style: { minWidth: 0, display: 'flex', flexDirection: 'column', gap: '14px' } });
       grid1.appendChild(recon);
-      const draw = c => { H.clear(recon); buildRecon(recon, c); };
+      const draw = c => { drawHeadChips(); H.clear(recon); buildRecon(recon, c); };
       draw(ctx); ctx.subscribe(draw);
       function buildRecon(el, c) {
         const state = c.state; const sc = model.scenarios[state.scenarioKey] || model.scenarios.basis;
@@ -305,7 +323,9 @@
           const months = Array.isArray(p.months) ? p.months : [p]; // korrel M: het periodeobject is de maand zelf
           let omzet = 0, aantal = 0, missing = 0;
           for (const m of months) { const a = factSales[m.period + '|' + (m.isActual ? 1 : 3)]; if (!a) { missing++; continue; } omzet += a.omzet; aantal += a.aantal; }
-          return { key: p.key, label: fmt.period(p.key, state.grain), isActual: p.isActual, partial: !p.isActual && months.some(m => m.isActual), revC: p.pl.revenue, revP: omzet, diff: omzet - p.pl.revenue, n: months.length, unitsC: p.kpi.units, unitsP: aantal, missing };
+          const mixed = !p.isActual && months.some(m => m.isActual); // actual én forecast in één periode → '2026*'
+          // partial (engine): de periode valt maar voor een deel in het gekozen bereik → '(n mnd)'; n = maanden van de periode in het bereik
+          return { key: p.key, label: fmt.period(p.key, state.grain), isActual: p.isActual, mixed, partial: !!p.partial, revC: p.pl.revenue, revP: omzet, diff: omzet - p.pl.revenue, n: months.length, unitsC: p.kpi.units, unitsP: aantal, missing };
         });
         // afrondingsmarge: de CSV's slaan 27 cellen per maand op in centen (hooguit € 0,135 per maand); marge € 0,50 per maand in de periode
         const tolOf = r => 0.5 * r.n;
@@ -325,37 +345,54 @@
           const chips = [];
           if (isBasis) chips.push(ui.statusChip(allClose, 'sluit (afronding op centen)', 'wijkt af'));
           else { if (actualRows.length) chips.push(ui.statusChip(actualsClose, 'actuals sluiten', 'actuals wijken af')); if (fcRows.length) chips.push(ui.chip('forecast wijkt bewust af', 'forecast', 'info')); }
-          chips.push(ui.chip(sc.label + (custom ? ' (aangepast)' : ''), 'forecast'));
+          const scrolls = rows.length > 16; // lange tabellen (bijv. 84 maanden) krijgen een vaste hoogte, zoals de kwartaaltoets op Balans
           body.push(h('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' } }, chips,
-            h('span', { class: 'small muted' }, 'grootste verschil ' + absText(maxDiffAll) + ' over ' + fmt.int(rows.length) + ' periodes')));
+            h('span', { class: 'small muted' }, 'grootste verschil ' + absText(maxDiffAll) + ' over ' + fmt.int(rows.length) + ' periodes' + (scrolls ? ', scrol voor alle rijen' : ''))));
           body.push(h('div', { class: 'small ink-2' }, isBasis
-            ? 'Omzet en aantallen per ' + { M: 'maand', Q: 'kwartaal', Y: 'jaar' }[state.grain] + ' uit FactVerkoop.csv (scenario Actual t/m ' + fmt.month(model.lastActualPeriod) + ', daarna Forecast) tegenover de berekening van het engine in deze cockpit. Beide komen uit één generator; het verschil is hooguit afronding op centen.'
-            : 'De CSV\'s bevatten de forecast van het basisscenario. In deze cockpit staat scenario ' + sc.label.toLowerCase() + (custom ? ' met aangepaste drivers' : '') + ': ' + (actualRows.length ? 'de gerealiseerde maanden sluiten (grootste verschil ' + absText(maxDiffActual) + ')' : 'in de gekozen periode staan geen gerealiseerde maanden') + (fcRows.length ? (actualRows.length ? ', ' : '; ') + 'de forecastperiodes wijken bewust af.' : '.')));
+            ? 'Omzet en aantallen per ' + { M: 'maand', Q: 'kwartaal', Y: 'jaar' }[state.grain] + ' uit FactVerkoop.csv (scenario Actual t/m ' + fmt.monthLong(model.lastActualPeriod) + ', daarna Forecast) tegenover de berekening van het engine in deze cockpit (scenario Basis). Beide komen uit één generator; het verschil is hooguit afronding op centen.'
+            : 'De CSV\'s bevatten de forecast van het basisscenario. In deze cockpit staat scenario ' + sc.label + (custom ? ' met aangepaste drivers' : '') + ': ' + (actualRows.length ? 'de gerealiseerde maanden sluiten (grootste verschil ' + absText(maxDiffActual) + ')' : 'in de gekozen periode staan geen gerealiseerde maanden') + (fcRows.length ? (actualRows.length ? ', ' : '; ') + 'de forecastperiodes wijken bewust af.' : '.')));
+          // periodelabel volgens de canon: '2026*' = deels forecast, 'Q4 2026 F' = forecast als gedempte tekst (geen chip per rij), '2026 F (3 mnd)' = deel van de periode in het bereik
+          const partialTxt = r => r.partial ? ' (' + fmt.int(r.n) + ' mnd)' : '';
+          const periodCell = (v, r) => r.isActual ? v + partialTxt(r) : r.mixed ? v + '*' + partialTxt(r) : h('span', null, v, h('span', { class: 'forecast muted' }, ' F'), partialTxt(r));
           const tbl = ui.table({
             columns: [
-              { key: 'label', label: 'Periode', format: (v, r) => r.isActual ? v : h('span', null, v + ' ', ui.chip(r.partial ? 'deels forecast' : 'forecast', 'forecast')) },
+              { key: 'label', label: 'Periode', format: periodCell },
               { key: 'diff', label: 'Verschil', align: 'num', format: (v, r) => flagged(r) ? h('span', { style: { color: 'var(--critical-ink)' }, title: 'buiten de afrondingsmarge van ' + cents(tolOf(r)) }, diffText(v)) : diffText(v) },
               { key: 'revC', label: 'Omzet cockpit', align: 'num', format: full },
               { key: 'revP', label: 'Omzet CSV', align: 'num', format: full },
-              { key: 'unitsC', label: 'Fietsen cockpit', align: 'num', format: fmt.int },
-              { key: 'unitsP', label: 'Fietsen CSV', align: 'num', format: fmt.int }
+              { key: 'unitsC', label: 'Eenheden cockpit', align: 'num', format: fmt.int },
+              { key: 'unitsP', label: 'Eenheden CSV', align: 'num', format: fmt.int }
             ],
-            rows, rowClass: r => r.isActual ? '' : 'forecast'
+            rows, rowClass: r => r.isActual ? '' : 'forecast', maxHeight: scrolls ? 420 : null
           });
           body.push(tbl);
-          if (fcRows.some(r => r.key >= '2029')) body.push(h('div', { class: 'small muted' }, 'Maanden in 2029 staan wel in de CSV\'s maar buiten de datumtabel van het model (DimDatum loopt t/m ' + (dateHi ? fmt.date(keyToIso(dateHi)) : '2028-12-31') + '); de M-query\'s filteren ze weg.'));
+          // legendazin letterlijk zoals overal in de cockpit, alleen de delen die voorkomen
+          const legend = [rows.some(r => r.mixed) ? '* = deels forecast' : null, rows.some(r => !r.isActual && !r.mixed) ? 'F = forecast' : null, rows.some(r => r.partial) ? '(n mnd) = deel van de periode in het bereik' : null].filter(Boolean).join(' · ');
+          if (legend) body.push(h('div', { class: 'small muted' }, legend));
+          if (salesOutside.rows) body.push(h('div', { class: 'small muted' }, fmt.int(salesOutside.months) + ' maanden (' + fmt.int(salesOutside.rows) + ' rijen) in FactVerkoop.csv vallen buiten de datumtabel van het model (DimDatum loopt t/m ' + fmt.date(keyToIso(salesBounds.hi)) + ') en worden door de M-query\'s weggefilterd.'));
         }
-        el.appendChild(ui.card({ title: 'Aansluiting met de cockpit', subtitle: 'FactVerkoop.csv tegenover het engine, volgens de filters hierboven', body, footer: 'Omzet per fiets, kanaal en land in de CSV\'s is afgerond op centen; de cockpit rekent met volledige precisie. Verschil = CSV − cockpit; rood alleen als een periode buiten de afrondingsmarge valt zonder dat een ander scenario dat verklaart.' }));
+        el.appendChild(ui.card({ title: 'Aansluiting met de cockpit', subtitle: 'FactVerkoop.csv tegenover het engine, volgens de filters hierboven', body, footer: 'Omzet per productlijn, kanaal en land in de CSV\'s is afgerond op centen; de cockpit rekent met volledige precisie. Verschil = CSV − cockpit; rood alleen als een periode buiten de afrondingsmarge valt zonder dat een ander scenario dat verklaart.' }));
       }
 
       // ---------- sterschema ----------
       const grid2 = h('div', { class: 'grid' }); root.appendChild(grid2);
       const roleOf = t => t.isCalcGroup ? 'calc' : t.name === '_Maten' ? 'measures' : factNames.has(t.name) ? 'fact' : 'dim';
       const ordered = tables.slice().sort((a, b) => { const r = { fact: 0, dim: 1, measures: 2, calc: 3 }; return r[roleOf(a)] - r[roleOf(b)] || a.name.localeCompare(b.name); });
+      // op een telefoon (≤ 640 px) staan de kolommen per entiteit en de relatielijst in een gesloten <details>: de kop met naam en aantal
+      // blijft zichtbaar, het detail (17 entiteiten × alle kolommen, 19 relaties) niet; op desktop is de weergave ongewijzigd
+      const compact = !!(window.matchMedia && window.matchMedia('(max-width: 640px)').matches);
+      /** <details> met expliciete chevron: een summary met display:flex verliest in Chromium/Safari het native driehoekje */
+      const foldable = (summaryChildren, bodyEl, opts) => {
+        const chev = h('span', { class: 'muted', style: { display: 'inline-flex', flex: 'none', marginLeft: 'auto' }, 'aria-hidden': 'true' }, H.icon('down', 14));
+        const det = h('details', { class: opts && opts.class, onToggle: () => { H.clear(chev); chev.appendChild(H.icon(det.open ? 'up' : 'down', 14)); } },
+          h('summary', { class: opts && opts.summaryClass, title: opts && opts.title, style: { cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', listStyle: 'none' } }, summaryChildren, chev), bodyEl);
+        return det;
+      };
       const schema = h('div', { class: 'schema' });
       for (const t of ordered) {
         const role = roleOf(t);
-        const head = h('div', { class: 'ent-head', title: t.description || t.name }, t.name, h('span', { class: 'muted', style: { fontWeight: 400, marginLeft: '6px', fontSize: '11px' } }, role === 'fact' ? 'feit' : role === 'dim' ? 'dimensie' : role === 'measures' ? 'maattabel' : 'calculation group'));
+        const roleTxt = role === 'fact' ? 'feit' : role === 'dim' ? 'dimensie' : role === 'measures' ? 'maattabel' : 'calculation group';
+        const head = h('div', { class: 'ent-head', title: t.description || t.name }, t.name, h('span', { class: 'muted', style: { fontWeight: 400, marginLeft: '6px', fontSize: '11px' } }, roleTxt));
         const ul = h('ul');
         if (role === 'calc') { for (const it of t.calcItems) ul.appendChild(h('li', null, it.name)); for (const col of t.columns.filter(cl => !cl.hidden)) ul.appendChild(h('li', { class: 'muted' }, col.name + ' (kolom)')); }
         else if (role === 'measures') { ul.appendChild(h('li', null, fmt.int(t.measures) + ' maten in ' + fmt.int(groups.length) + ' mappen')); for (const col of t.columns) ul.appendChild(h('li', { class: 'muted' }, col.name + ' (verborgen)')); }
@@ -367,7 +404,10 @@
           }
           if (t.hierarchy) ul.appendChild(h('li', { class: 'muted' }, 'hiërarchie ' + t.hierarchy));
         }
-        schema.appendChild(h('div', { class: 'ent' + (role === 'fact' ? ' fact' : '') }, head, ul));
+        if (compact) {
+          const nItems = ul.children.length;
+          schema.appendChild(foldable([h('span', { style: { minWidth: 0, overflowWrap: 'anywhere' } }, t.name), h('span', { class: 'muted', style: { fontWeight: 400, fontSize: '11px', flex: 'none' } }, roleTxt + ' · ' + fmt.int(nItems))], ul, { class: 'ent' + (role === 'fact' ? ' fact' : ''), summaryClass: 'ent-head', title: t.description || t.name }));
+        } else schema.appendChild(h('div', { class: 'ent' + (role === 'fact' ? ' fact' : '') }, head, ul));
       }
       const schemaBody = B.empty ? [ui.note('Geen tabellen gevonden in de bundel.', 'warning')] : [schema, h('div', { class: 'small muted' }, keyIcon(), '= sleutel (isKey) of relatiekolom · ƒ = berekende kolom · grijs = verborgen in het model · feiten op de eerste dag van de maand, DatumKey als yyyymmdd')];
       grid2.appendChild(ui.card({ span: 8, title: 'Sterschema', subtitle: fmt.int(factNames.size) + ' feittabellen rond ' + fmt.int(dimCount) + ' dimensies; gelezen uit de TMDL-bestanden', body: schemaBody }));
@@ -383,7 +423,8 @@
       const hasDatumKey = rels.some(r => r.fromCol === 'DatumKey');
       const relFoot = !rels.length ? null
         : (textRels.length ? (textRels.length === 1 ? 'Alleen ' + textRels[0].from + ' → ' + textRels[0].to + ' loopt op de tekstkolom ' + textRels[0].fromCol : textRels.map(r => r.from + ' → ' + r.to).join(', ') + ' lopen op een tekstkolom') + (otherTypes.length ? '; alle andere sleutels zijn ' + otherTypes.join('/') : '') : 'Alle sleutels zijn ' + otherTypes.join('/')) + (hasDatumKey ? ' (DatumKey als yyyymmdd).' : '.');
-      grid2.appendChild(ui.card({ span: 4, title: 'Relaties', subtitle: fmt.int(rels.length) + ' relaties, ' + relSummary(rels, fmt), body: rels.length ? relList : ui.note('Geen relaties gevonden.', 'warning'), footer: relFoot }));
+      const relBody = !rels.length ? ui.note('Geen relaties gevonden.', 'warning') : compact ? foldable([h('span', { style: { fontWeight: 600 } }, 'Toon de ' + fmt.int(rels.length) + ' relaties per feittabel')], relList, { summaryClass: 'small' }) : relList;
+      grid2.appendChild(ui.card({ span: 4, title: 'Relaties', subtitle: fmt.int(rels.length) + ' relaties, ' + relSummary(rels, fmt), body: relBody, footer: relFoot }));
 
       // ---------- DAX-maten ----------
       const grid3 = h('div', { class: 'grid' }); root.appendChild(grid3);
@@ -448,7 +489,7 @@
         [['Basismaten volgen het scenariofilter', 'Zonder slicer op DimScenario tellen [Omzet] en [EBITDA] Actual, Budget en Forecast op. De A+F-maten geven een doorlopende reeks: Actual t/m de laatste gerealiseerde maand, daarna Forecast.'],
           ['Kosten positief, resultaten met teken', '[W&V bedrag] past DimRekening[Teken] toe via SUMX over VALUES(Teken) — twee storage-engine-scans, geen rij-voor-rij RELATED — en telt op tot de nettowinst.'],
           ['Balans = stand op de laatste maand', 'Geen optelling over maanden: VAR LaatsteKey = MAX(FactBalans[DatumKey]). [Balanscontrole] moet nul zijn.'],
-          ['LTM verankerd op de laatste maand mét data', 'EOMONTH(LOOKUPVALUE(…)) en DATESINPERIOD(−12 maanden) op de A+F-reeks, zodat [Nettoschuld] en [LTM EBITDA] dezelfde maand delen bij elk filter.']
+          ['LTM verankerd op de laatste maand mét data', 'EOMONTH(LOOKUPVALUE(…)) en DATESINPERIOD(−12 maanden) op de A+F-reeks, zodat [Netto schuld] en [LTM EBITDA] dezelfde maand delen bij elk filter.']
         ].map(([t, d]) => h('div', { class: 'list-item' }, h('span', { class: 'chip accent' }, H.icon('info', 12)), h('div', null, h('div', { class: 'title' }, t), h('div', { class: 'desc' }, d)))));
       side.appendChild(ui.card({ title: 'Conventies', subtitle: 'wat een Power BI-ontwikkelaar moet weten', body: conv }));
 
@@ -469,8 +510,8 @@
       const verkoopText = files[MODEL_DIR + 'tables/FactVerkoop.tmdl'];
       const partitionBlock = extractBlock(verkoopText, /^\tpartition FactVerkoop\b/);
       const codeBody = [];
-      // .code is white-space: pre (horizontaal scrollend); hier laten we lange regels afbreken zodat niets wordt afgesneden (verzoek: .code.wrap in index.html)
-      const codeBox = text => h('div', { class: 'code', tabindex: '0', style: { whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' } }, text);
+      // .code.wrap (index.html) laat lange regels afbreken zodat niets wordt afgesneden; geen tabindex: de box scrolt niet, dus een focusstop zou doelloos zijn
+      const codeBox = text => h('div', { class: 'code wrap' }, text);
       if (measureBlock) codeBody.push(h('div', { class: 'eyebrow' }, 'Representatieve maat (_Maten.tmdl)'), codeBox(measureBlock));
       if (partitionBlock) codeBody.push(h('div', { class: 'eyebrow' }, 'Power Query-partitie (FactVerkoop.tmdl)'), codeBox(partitionBlock));
       if (!codeBody.length) codeBody.push(ui.note('De TMDL-bestanden ontbreken in de bundel.', 'warning'));

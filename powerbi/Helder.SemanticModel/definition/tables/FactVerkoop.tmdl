@@ -57,7 +57,7 @@ table FactVerkoop
 
 		annotation SummarizationSetBy = User
 
-	/// Aantal verkochte fietsen.
+	/// Aantal verkochte e-bikes.
 	column Aantal
 		dataType: double
 		formatString: #,0

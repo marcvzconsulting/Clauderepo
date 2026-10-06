@@ -234,7 +234,7 @@
           "z": 0,
           "width": 236,
           "height": 110,
-          "config": "{\"name\":\"c0021\",\"layouts\":[{\"id\":0,\"position\":{\"x\":528,\"y\":24,\"z\":0,\"width\":236,\"height\":110,\"tabOrder\":2}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"_Maten.Netto schuld\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Netto schuld\"},\"Name\":\"_Maten.Netto schuld\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Netto schuld'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
+          "config": "{\"name\":\"c0021\",\"layouts\":[{\"id\":0,\"position\":{\"x\":528,\"y\":24,\"z\":0,\"width\":236,\"height\":110,\"tabOrder\":2}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"_Maten.Nettoschuld\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"_Maten\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Nettoschuld\"},\"Name\":\"_Maten.Nettoschuld\"}]},\"vcObjects\":{\"title\":[{\"properties\":{\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Nettoschuld'\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"drillFilterOtherVisuals\":true}}",
           "filters": "[]"
         },
         {

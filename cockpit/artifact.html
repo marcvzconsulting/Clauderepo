@@ -129,6 +129,8 @@ button, input, select { font: inherit; color: inherit; }
 .kpi-label { font-size: 12px; color: var(--muted); font-weight: 500; }
 .kpi-value { font-size: 24px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.15; }
 .kpi.hero { grid-column: span 2; }
+@media (min-width: 1101px) { .kpi-row.hero-row { grid-template-columns: repeat(7, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .kpi-row.hero-row .kpi.hero { grid-column: 1 / -1; } }
 .kpi.hero .kpi-value { font-size: 44px; font-weight: 600; }
 .kpi-delta { font-size: 12.5px; display: flex; align-items: center; gap: 6px; color: var(--ink-2); flex-wrap: wrap; }
 .kpi-delta > span:first-child { white-space: nowrap; display: inline-flex; align-items: center; gap: 3px; }
@@ -189,7 +191,7 @@ table.data caption { text-align: left; font-size: 12px; color: var(--muted); pad
 .table-block { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .table-caption { font-size: 12px; color: var(--muted); line-height: 1.4; }
 .table-wrap.scroll { overflow-y: auto; }
-table.data th .forecast, table.data th.forecast { color: var(--muted); font-weight: 500; }
+table.data th .forecast, table.data th.forecast, table.data td .forecast { color: var(--muted); font-weight: 500; }
 table.data tr.mean td { border-top: 1px solid var(--line-2); color: var(--ink-2); }
 table.data tr:hover td { background: color-mix(in srgb, var(--accent-soft) 45%, transparent); }
 .heat td { text-align: right; font-variant-numeric: tabular-nums; }
@@ -273,6 +275,9 @@ table.data tr:hover td { background: color-mix(in srgb, var(--accent-soft) 45%, 
 .msg.bot { background: var(--surface-2); color: var(--ink); align-self: flex-start; }
 .msg.bot.pending { color: var(--muted); font-style: italic; }
 .suggest { display: flex; flex-wrap: wrap; gap: 6px; }
+button.chip { border: 0; cursor: pointer; white-space: normal; text-align: left; max-width: 100%; font: inherit; font-size: 11.5px; font-weight: 600; }
+button.chip:hover { background: var(--accent-soft); color: var(--accent-ink); }
+.msg.system { align-self: center; font-size: 12px; color: var(--muted); background: none; padding: 2px 0; }
 .chat-input { display: flex; gap: 8px; }
 .chat-input textarea { flex: 1; min-height: 44px; max-height: 160px; resize: vertical; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--surface); font: inherit; color: inherit; }
 .schema { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }

@@ -41,11 +41,18 @@
   function chunkSeed(seed, k) { const s = seed >>> 0; if (k === 0) return s; let x = (s ^ Math.imul(k, 0x9E3779B9)) >>> 0; x = Math.imul(x ^ (x >>> 16), 0x85EBCA6B) >>> 0; x = Math.imul(x ^ (x >>> 13), 0xC2B2AE35) >>> 0; return (x ^ (x >>> 16)) >>> 0; }
   function chunkSizes(n, chunks) { const c = Math.max(1, Math.min(chunks || 10, n)); const out = []; for (let k = 0; k < c; k++) { const size = Math.floor(n * (k + 1) / c) - Math.floor(n * k / c); if (size > 0) out.push(size); } return out; }
   function chunkPlan(n, seed, opts) { const base = (seed == null ? DEFAULT_SEED : seed) >>> 0; const targetYear = (opts && opts.targetYear) || 2027; return chunkSizes(n, opts && opts.chunks).map((size, k) => ({ k, size, seed: chunkSeed(base, k), baseSeed: base, targetYear })); }
+  const COUNTERS = ['breach', 'cashBreach', 'breachLeverage', 'breachIcr', 'breachBoth', 'breachUndefined', 'rcfDrawn'];
   function merge(parts, seed, targetYear) {
     const n = parts.reduce((s, p) => s + p.n, 0);
-    const out = { n, seed, targetYear, breach: 0, cashBreach: 0, draws: new Array(n) };
+    const out = { n, seed, targetYear, draws: new Array(n), breachFlags: new Uint8Array(n) };
+    for (const c of COUNTERS) out[c] = 0;
     for (const k of KEYS) { const arr = new Float64Array(n); let off = 0; for (const p of parts) { arr.set(p[k], off); off += p.n; } out[k] = arr; }
-    let i = 0; for (const p of parts) { out.breach += p.breach; out.cashBreach += p.cashBreach; for (let j = 0; j < p.n; j++) out.draws[i++] = p.draws[j]; }
+    let i = 0, off = 0;
+    for (const p of parts) {
+      for (const c of COUNTERS) out[c] += p[c] || 0;
+      if (p.breachFlags) out.breachFlags.set(p.breachFlags, off); off += p.n;
+      for (let j = 0; j < p.n; j++) out.draws[i++] = p.draws[j];
+    }
     return out;
   }
 
@@ -89,11 +96,12 @@
       setTimeout(step, 0);
     });
   }
-  /** simulate(req, onProgress) → Promise<{results, ms, cached, via}>; cache op aannames + instellingen */
+  /** simulate(req, onProgress) → Promise<{results, ms, cached, via}>; cache op aannames + instellingen. Een lopende simulatie wordt
+   *  altijd afgebroken (ook bij een cachetreffer), zodat voortgangsbalk en status nooit een oud verzoek blijven volgen. */
   function simulate(req, onProgress) {
     const key = keyOf(req);
-    if (cache.has(key)) { const r = cache.get(key); return Promise.resolve({ results: r, ms: r._ms, cached: true, via: r._via }); }
     if (mc.busy) mc.busy.cancel();
+    if (cache.has(key)) { const r = cache.get(key); return Promise.resolve({ results: r, ms: r._ms, cached: true, via: r._via }); }
     const id = ++mc.seq; const t0 = performance.now();
     const useWorker = mc.workerOk && !mc.forceMainThread;
     let via = useWorker ? 'worker' : 'main';
@@ -123,7 +131,8 @@
     const w = (hi - lo) / bins;
     const below = Math.max(0, Math.ceil((edge - lo) / w - 1e-9)), above = Math.max(0, Math.ceil((hi - edge) / w - 1e-9));
     if (!(below + above)) return E.histogram(sorted, bins, lo, hi);
-    return E.histogram(sorted, below + above, edge - below * w, edge + above * w);
+    const snap = (v, to) => Math.abs(v - to) < 1e-9 ? to : v; // afrondingsruis wegnemen, anders valt een tick of marker op precies `lo` (bijv. 0x) buiten beeld
+    return E.histogram(sorted, below + above, snap(edge - below * w, lo), snap(edge + above * w, hi));
   }
   function linear(d0, d1, r0, r1) { const f = v => r0 + (v - d0) / (d1 - d0 || 1) * (r1 - r0); f.invert = p => d0 + (p - r0) / (r1 - r0 || 1) * (d1 - d0); return f; }
   /** responsief hertekenen (zoals charts.js intern doet) */
@@ -222,13 +231,14 @@
       const sdText = d => v => 'σ ' + (d.unit === 'days' ? fmt.days(v) : fmt.num(v * 100, 1) + ' pp');
       const figure = o => { const f = ui.figure(o); f.style.margin = '0'; return f; }; // <figure> heeft een browsermarge van 1em 40px die .figure niet reset
       const eurTick = v => Math.abs(v) >= 1e6 && Math.abs(v / 1e6 - Math.round(v / 1e6)) < 1e-9 ? fmt.eurM(v, 0) : fmt.eur(v); // hele miljoenen compact (astitels), rest met decimaal
-      const pctR = p => fmt.pct(p, p > 0 && p < 0.01 ? 1 : 0); // kleine kansen met één decimaal, zodat 0,2% niet als 0% leest
+      const pctR = p => p > 0 && p < 0.0005 ? '< 0,1%' : fmt.pct(p, p > 0 && p < 0.01 ? 1 : 0); // kleine kansen met één decimaal, zodat 0,2% niet als 0% leest; onder 0,05% '< 0,1%' i.p.v. '0,0%'
+      const fcLabel = text => h('span', null, text + ' ', h('span', { class: 'forecast' }, 'F')); // kolomkop met gedempte 'F' = forecast (canon; CSS th .forecast)
       const page = h('div', { style: { display: 'flex', flexDirection: 'column', gap: '18px' } }); root.appendChild(page);
 
       // ---------- paginakop ----------
       const headP = h('p', null, '');
       const headChips = h('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap' } });
-      const statusChip = h('span', { class: 'chip', id: 'rk-state' }); // vaste plek voor 'voorlopig'/'definitief', zodat de resultaten niet verspringen
+      const statusChip = h('span', { class: 'chip', id: 'rk-state' }); // vaste plek voor 'voorlopig'/'definitief', zodat de resultaten niet verspringen (geen live region: die zit op #rk-status)
       const setStatus = (text, tone, icon) => { H.clear(statusChip); statusChip.className = 'chip ' + tone; statusChip.appendChild(H.icon(icon, 12)); statusChip.appendChild(document.createTextNode(text)); };
       setStatus('Nog niet gesimuleerd', 'forecast', 'info');
       page.appendChild(h('div', { class: 'page-head' }, h('div', null, h('h1', null, 'Risico'), headP), headChips));
@@ -243,7 +253,7 @@
       const nSeg = ui.segmented({ id: 'rk-n', label: 'Aantal simulaties', value: settings.n, options: [1000, 5000, 10000, 20000].map(v => ({ value: v, label: fmt.int(v) })), onChange: v => { settings.n = v; applyPending(); refresh(); } });
       const ySeg = ui.segmented({ id: 'rk-year', label: 'Doeljaar', value: settings.targetYear, options: [2027, 2028].map(v => ({ value: v, label: String(v) })), onChange: v => { settings.targetYear = v; applyPending(); refresh(); } });
       panel.appendChild(h('div', { class: 'field' }, h('label', { for: 'rk-n' }, 'Aantal simulaties'), nSeg));
-      panel.appendChild(h('div', { class: 'field' }, h('label', { for: 'rk-year' }, 'Doeljaar voor EBITDA, nettowinst en FCF'), ySeg));
+      panel.appendChild(h('div', { class: 'field' }, h('label', { for: 'rk-year' }, 'Doeljaar voor EBITDA, nettowinst en vrije kasstroom'), ySeg));
       const slBox = h('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } }, h('div', { class: 'eyebrow' }, 'Onzekerheid per driver (standaardafwijking)'));
       const hintEls = {};
       for (const d of DRIVERS) {
@@ -257,12 +267,14 @@
       const btnSeed = ui.button('Nieuwe trekking', () => { settings.seed = nextSeed(settings.seed); applyPending(); refresh(true); }, { icon: 'refresh', id: 'rk-seed' });
       panel.appendChild(h('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap' } }, btnSim, btnSeed));
       const barFill = h('i'); const bar = h('div', { class: 'progress', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': 100, 'aria-valuenow': 0, 'aria-label': 'Voortgang simulatie' }, barFill);
-      const status = h('div', { class: 'small muted num', id: 'rk-status' }, '');
+      const status = h('div', { class: 'small muted num', id: 'rk-status', role: 'status', 'aria-live': 'polite' }, ''); // één live region: meldt voortgang en 'definitief'
       panel.appendChild(h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } }, bar, status));
       const foot = h('span', null, 'Nog niet gesimuleerd.');
       grid.appendChild(ui.card({ span: 4, title: 'Simulatie-instellingen', subtitle: 'drivers worden normaal verdeeld getrokken rond het actieve scenario', body: panel, footer: foot }));
       const results = h('div', { class: 'span-8', style: { display: 'flex', flexDirection: 'column', gap: '14px', minWidth: 0 } });
       grid.appendChild(results);
+      const pctBox = h('div', { class: 'span-12', style: { minWidth: 0 } }); // percentieltabel over de volle breedte (zeven kolommen passen niet in span-8)
+      grid.appendChild(pctBox);
 
       function isStale() { return DRIVERS.some(d => Math.abs(pending[d.sd] - settings.unc[d.sd]) > 1e-12); }
       function applyPending() { settings.unc = Object.assign({}, pending); staleNote.hidden = true; }
@@ -270,32 +282,36 @@
       function setProgress(done, n) { const p = n > 0 ? done / n : 0; barFill.style.width = (p * 100).toFixed(1) + '%'; bar.setAttribute('aria-valuenow', Math.round(p * 100)); status.textContent = fmt.int(done) + ' van ' + fmt.int(n) + ' simulaties'; }
       function syncHead(req) {
         const s = H.state.get(); const sc = model.scenarios[s.scenarioKey]; const custom = Object.keys(s.overrides || {}).length > 0;
-        headP.textContent = fmt.int(req.n) + ' simulaties van de forecast waarbij zeven drivers onafhankelijk rond scenario ' + sc.label.toLowerCase() + (custom ? ' (aangepast)' : '') + ' variëren. Doeljaar ' + req.opts.targetYear + '; convenanten en kas worden over de hele forecast t/m 2029 getoetst. De filters korrel en periode gelden hier niet.';
-        H.clear(headChips); headChips.appendChild(ui.chip(sc.label + (custom ? ' · aangepast' : ''), 'forecast')); headChips.appendChild(ui.chip('Doeljaar ' + req.opts.targetYear, 'accent')); headChips.appendChild(statusChip);
+        headP.textContent = fmt.int(req.n) + ' simulaties van de forecast waarbij zeven drivers onafhankelijk rond scenario ' + sc.label + (custom ? ' (aangepast)' : '') + ' variëren. Doeljaar ' + req.opts.targetYear + '; convenanten en kas worden over de hele forecast t/m 2029 getoetst. De filters korrel en periode gelden hier niet; het scenario wel.';
+        H.clear(headChips); headChips.appendChild(ui.scenarioChip()); headChips.appendChild(ui.chip('Doeljaar ' + req.opts.targetYear, 'accent')); headChips.appendChild(statusChip);
         for (const d of DRIVERS) if (hintEls[d.key]) hintEls[d.key].textContent = 'rond ' + meta[d.key].format(req.assumptions[d.key]);
       }
+      const kpiLabels = ty => ['EBITDA ' + ty + ' F · P10', 'EBITDA ' + ty + ' F · P50', 'EBITDA ' + ty + ' F · P90', 'Kans op verlies ' + ty + ' F', 'Kans op convenantbreuk', 'Kans op kasklem']; // 'F' = forecast (canon)
       function placeholderSummary(req) {
-        H.clear(summary); const ty = req.opts.targetYear;
-        for (const label of ['EBITDA ' + ty + ' · P10', 'EBITDA ' + ty + ' · P50', 'EBITDA ' + ty + ' · P90', 'Kans op verlies ' + ty, 'Kans op convenantbreuk', 'Kans op kasklem']) summary.appendChild(ui.kpi({ label, value: '–', hint: 'simulatie loopt' }));
+        H.clear(summary);
+        for (const label of kpiLabels(req.opts.targetYear)) summary.appendChild(ui.kpi({ label, value: '–', hint: 'simulatie loopt' }));
       }
+      const setBusy = on => { for (const el of [results, summary, pctBox]) { if (on) el.dataset.busy = 'true'; else delete el.dataset.busy; } }; // data-busy="true" tijdens asynchroon werk (scripts/shot.mjs wacht erop)
+      const setFade = on => { for (const el of [results, summary, pctBox]) el.classList.toggle('fade', on); };
 
       // ---------- simulatie starten / resultaten tonen ----------
       let shownKey = null, wantedKey = null, lastBuild = null;
       function refresh(force) {
         const req = request(); const key = keyOf(req);
         syncHead(req);
-        if (!force && key === shownKey) return;              // filterwissel (korrel/periode) raakt de simulatie niet
+        if (!force && key === shownKey && key === wantedKey) return; // filterwissel (korrel/periode) raakt de simulatie niet; loopt er iets anders, dan wordt dat hieronder afgebroken en de getoonde uitkomst hersteld
         if (mc.busy && key === wantedKey && !cache.has(key)) return; // loopt al
         wantedKey = key;
         if (!cache.has(key)) {
           btnSim.disabled = true; setProgress(0, req.n); setStatus('Voorlopig · 0 van ' + fmt.int(req.n), 'warning', 'refresh');
-          if (results.children.length) { results.classList.add('fade'); summary.classList.add('fade'); }
-          else { placeholderSummary(req); H.clear(results); results.appendChild(ui.note('De eerste simulatie loopt — ' + fmt.int(req.n) + ' volledige herberekeningen van het drie-statement model.', 'accent')); }
+          setBusy(true); // blijft staan tot de definitieve weergave; een cachetreffer hieronder laat het attribuut weg zodat filterwissels direct zijn
+          if (results.children.length) setFade(true);
+          else { placeholderSummary(req); H.clear(results); H.clear(pctBox); results.appendChild(ui.note('De eerste simulatie loopt — ' + fmt.int(req.n) + ' volledige herberekeningen van het drie-statement model.', 'accent')); }
         }
         let lastPrelim = performance.now();
         const onProgress = (done, n, parts) => {
+          if (key !== wantedKey) return; // een nieuwer verzoek bezit voortgangsbalk en status
           setProgress(done, n);
-          if (key !== wantedKey) return;
           setStatus('Voorlopig · ' + fmt.int(done) + ' van ' + fmt.int(n), 'warning', 'refresh');
           if (!parts || !parts.length || done >= n) return;
           if (performance.now() - lastPrelim < 400) return; // voorlopige verdeling hooguit elke 400 ms hertekenen
@@ -303,18 +319,20 @@
           try { build(merge(parts, req.seed >>> 0, req.opts.targetYear), req, { preliminary: true, done, n }); } catch (e) { console.error(e); }
         };
         simulate(req, onProgress).then(info => {
-          if (key !== wantedKey) return; // inmiddels iets anders gevraagd
+          if (key !== wantedKey) return; // inmiddels iets anders gevraagd (dat verzoek beheert data-busy zelf)
           btnSim.disabled = false; setProgress(info.results.n, info.results.n);
+          status.textContent += ' · definitief';
           shownKey = key; mc.lastInfo = info;
           setStatus('Definitief · ' + fmt.int(info.results.n) + ' simulaties', 'accent', 'check');
           build(info.results, req);
+          setBusy(false);
           H.clear(foot); foot.appendChild(document.createTextNode(fmt.int(info.results.n) + ' simulaties in ' + fmt.num(info.ms / 1000, 1) + ' s' + (info.cached ? ' (uit cache)' : '') + ' · trekking #' + info.results.seed + '.'));
           foot.title = (info.via === 'worker' ? 'Web Worker' : 'hoofdthread') + ' · ' + fmt.int(CHUNKS) + ' brokken · statistiek en grafieken opgebouwd in ' + fmt.num(info.buildMs || 1, 0) + ' ms';
         }).catch(e => {
-          if (e && e.cancelled) return;
-          console.error(e); btnSim.disabled = false; results.classList.remove('fade'); summary.classList.remove('fade');
+          if (e && e.cancelled) return; // afgebroken door een nieuwer verzoek, dat data-busy en de weergave overneemt
+          console.error(e); btnSim.disabled = false; setFade(false); setBusy(false);
           setStatus('Simulatie mislukt', 'critical', 'warn');
-          H.clear(results); results.appendChild(ui.note('De simulatie is mislukt: ' + e.message, 'critical'));
+          H.clear(results); H.clear(pctBox); results.appendChild(ui.note('De simulatie is mislukt: ' + e.message, 'critical'));
         });
       }
       const rebuild = () => { if (lastBuild) build(lastBuild.res, lastBuild.req, lastBuild.opt); };
@@ -322,7 +340,7 @@
       function build(res, req, opt) {
         const t0 = performance.now();
         lastBuild = { res, req, opt };
-        H.clear(summary); H.clear(results); summary.classList.remove('fade'); results.classList.remove('fade');
+        H.clear(summary); H.clear(results); H.clear(pctBox); setFade(false);
         const n = res.n, ty = req.opts.targetYear, cfg = model.config;
         const a0 = model.assumptions();
         const det = model.year(ty); const detEbitda = det.pl.ebitda;
@@ -330,17 +348,20 @@
         const detMinCash = Math.min(...fc.map(m => m.bs.cash)); const detMaxLev = Math.max(...fc.map(m => m.kpi.leverage)); const detMinIcr = Math.min(...fc.map(m => m.kpi.icr));
         const S = { ebitda: E.stats(res.ebitda), ni: E.stats(res.netIncome), fcf: E.stats(res.fcf), minCash: E.stats(res.minCash), maxLev: E.stats(res.maxLeverage), minIcr: E.stats(res.minIcr) };
         const below = upperBound(S.ebitda.sorted, detEbitda - 1e-6); const pBelow = below / n;
-        // convenant-ontleding per simulatie op maandbasis (laagste rentedekking / hoogste leverage over de hele forecast); de kwartaaltoets telt res.breach
+        // convenant-ontleding uit de kwartaaltoets van het engine (breachFlags: 8 = EBITDA LTM ≤ 0, 4 = beide, 2 = leverage, 1 = ICR); elke simulatie
+        // telt één keer, naar de zwaarste oorzaak, zodat de vier delen precies optellen tot res.breach. nIcr/nLevDef zijn op maandbasis (voor de histogrammen).
         let nLoss = 0, nIcr = 0, nLevDef = 0, cUndef = 0, cBoth = 0, cIcr = 0, cLev = 0;
+        const flags = res.breachFlags || new Uint8Array(n);
         for (let i = 0; i < n; i++) {
           if (res.netIncome[i] < 0) nLoss++;
-          const icrLow = res.minIcr[i] < cfg.covenantIcrMin; const lv = res.maxLeverage[i]; const undef = lv >= 50; const levHigh = !undef && lv > cfg.covenantLeverageMax;
-          if (icrLow) nIcr++; if (levHigh) nLevDef++;
-          if (undef) cUndef++; else if (icrLow && levHigh) cBoth++; else if (icrLow) cIcr++; else if (levHigh) cLev++;
+          const lv = res.maxLeverage[i];
+          if (res.minIcr[i] < cfg.covenantIcrMin) nIcr++; if (lv < 50 && lv > cfg.covenantLeverageMax) nLevDef++;
+          const f = flags[i];
+          if (f & 8) cUndef++; else if ((f & 4) || ((f & 2) && (f & 1))) cBoth++; else if (f & 2) cLev++; else if (f & 1) cIcr++;
         }
         const cAny = cUndef + cBoth + cIcr + cLev;
         const pBreach = res.breach / n, pCash = res.cashBreach / n, pLoss = nLoss / n;
-        const levFmt = v => v < 0 ? 'nettokas' : v >= 50 ? 'EBITDA ≤ 0' : fmt.x(v, 2); // engine geeft 99 als LTM-EBITDA ≤ 0 (leverage niet definieerbaar)
+        const levFmt = v => v < 0 ? 'nettokas' : v >= 50 ? 'EBITDA ≤ 0' : fmt.x(v, 2); // engine geeft 99 als EBITDA LTM ≤ 0 (ratio niet definieerbaar); nettokas in tabellen als woord, in grafieken 0x
         const icrFmt = v => v >= 50 ? 'geen rente' : fmt.x(v, 1);                          // engine geeft 99 als er geen rentelast is
         const tone = p => p < 0.05 ? 'good' : p < 0.20 ? 'warning' : 'critical';
         const toneText = p => p < 0.05 ? 'laag' : p < 0.20 ? 'verhoogd' : 'hoog';
@@ -348,12 +369,13 @@
 
         // ---------- KPI's (samenvatting, boven het paneel) ----------
         const medDiff = S.ebitda.p50 - detEbitda;
-        summary.appendChild(ui.kpi({ label: 'EBITDA ' + ty + ' · P10', value: fmt.eurM(S.ebitda.p10), hint: 'één op de tien simulaties komt lager uit' }));
-        summary.appendChild(ui.kpi({ label: 'EBITDA ' + ty + ' · P50', value: fmt.eurM(S.ebitda.p50), hint: 'mediaan · ' + (Math.abs(medDiff) < 5e4 ? 'gelijk aan de scenariowaarde ' + fmt.eurM(detEbitda) : fmt.eur(Math.abs(medDiff)) + (medDiff < 0 ? ' onder' : ' boven') + ' de scenariowaarde ' + fmt.eurM(detEbitda)) + ' · σ ' + fmt.eurM(S.ebitda.sd) }));
-        summary.appendChild(ui.kpi({ label: 'EBITDA ' + ty + ' · P90', value: fmt.eurM(S.ebitda.p90), hint: 'één op de tien simulaties komt hoger uit' }));
-        summary.appendChild(ui.kpi({ label: 'Kans op verlies ' + ty, value: pctR(pLoss), hint: riskHint(pLoss, fmt.int(nLoss) + ' simulaties met negatieve nettowinst · scenario ' + fmt.eurM(det.pl.netIncome)) }));
-        summary.appendChild(ui.kpi({ label: 'Kans op convenantbreuk', value: pctR(pBreach), hint: riskHint(pBreach, fmt.int(res.breach) + ' simulaties op de kwartaaltoets · rentedekking onder ' + fmt.x(cfg.covenantIcrMin) + ' in ' + fmt.int(nIcr) + ', leverage boven ' + fmt.x(cfg.covenantLeverageMax) + ' in ' + fmt.int(nLevDef) + ' (overlap mogelijk)') }));
-        summary.appendChild(ui.kpi({ label: 'Kans op kasklem', value: pctR(pCash), hint: riskHint(pCash, fmt.int(res.cashBreach) + ' simulaties · RCF van ' + fmt.eurM(cfg.rcfLimit) + ' volledig benut en kas onder ' + fmt.eurM(cfg.minCash)) }));
+        const labels = kpiLabels(ty);
+        summary.appendChild(ui.kpi({ label: labels[0], value: fmt.eurM(S.ebitda.p10), hint: 'één op de tien simulaties komt lager uit' }));
+        summary.appendChild(ui.kpi({ label: labels[1], value: fmt.eurM(S.ebitda.p50), hint: 'mediaan · ' + (Math.abs(medDiff) < 5e4 ? 'gelijk aan de scenariowaarde ' + fmt.eurM(detEbitda) : fmt.eur(Math.abs(medDiff)) + (medDiff < 0 ? ' onder' : ' boven') + ' de scenariowaarde ' + fmt.eurM(detEbitda)) + ' · σ ' + fmt.eurM(S.ebitda.sd) }));
+        summary.appendChild(ui.kpi({ label: labels[2], value: fmt.eurM(S.ebitda.p90), hint: 'één op de tien simulaties komt hoger uit' }));
+        summary.appendChild(ui.kpi({ label: labels[3], value: pctR(pLoss), hint: riskHint(pLoss, fmt.int(nLoss) + ' simulaties met negatieve nettowinst · scenario ' + fmt.eurM(det.pl.netIncome)) }));
+        summary.appendChild(ui.kpi({ label: labels[4], value: pctR(pBreach), hint: riskHint(pBreach, fmt.int(res.breach) + ' simulaties · kwartaaltoets · zie ontleding hieronder') }));
+        summary.appendChild(ui.kpi({ label: labels[5], value: pctR(pCash), hint: riskHint(pCash, fmt.int(res.cashBreach) + ' simulaties · RCF uitgeput en kas onder ' + fmt.eurM(cfg.minCash)) }));
 
         // ---------- markeringslabels zonder botsing (charts.histogram zet labels blind naast de lijn) ----------
         const vw = window.innerWidth, rw = results.clientWidth || 800;
@@ -371,11 +393,11 @@
           }
           return markers;
         }
-        const pctAxis = v => fmt.pct(v, Math.abs(v * 100 - Math.round(v * 100)) < 1e-9 ? 0 : 1); // hele procenten zonder, overige met één decimaal
+        const pctAxis = v => fmt.pct(v, Math.abs(v * 100 - Math.round(v * 100)) < 1e-9 ? 0 : v < 0.001 ? 2 : 1); // hele procenten zonder decimaal, overige met één; onder 0,1% twee, zodat 0,04% niet als 0,0% leest
 
         // ---------- histogram EBITDA ----------
         const eb = S.ebitda; const bins = E.histogram(eb.sorted, 40);
-        const hist = charts.histogram({ bins, xFormat: fmt.eur, height: 230, color: 'var(--series-1)', ariaLabel: 'Verdeling EBITDA ' + ty, markers: layoutMarkers([
+        const hist = charts.histogram({ bins, xFormat: eurTick, height: 230, color: 'var(--series-1)', ariaLabel: 'Verdeling EBITDA ' + ty, markers: layoutMarkers([
           { x: eb.p10, label: 'P10', color: 'var(--ink-2)', dashed: true, anchor: 'start', priority: 2 },
           { x: eb.p50, label: 'P50', color: 'var(--ink-2)', dashed: true, anchor: eb.p50 <= detEbitda ? 'end' : 'start', priority: 3 },
           { x: eb.p90, label: 'P90', color: 'var(--ink-2)', dashed: true, anchor: 'end', priority: 1 },
@@ -399,19 +421,21 @@
         const tgtSeg = ui.segmented({ id: 'rk-tgt', label: 'Doelgrootheid van de gevoeligheid', value: tgt, options: Object.keys(TARGETS).map(k => ({ value: k, label: TARGETS[k].seg })), onChange: v => { settings.tornadoTarget = v; rebuild(); } });
         const g2 = h('div', { class: 'grid' });
         g2.appendChild(ui.card({ span: 12, title: 'Gevoeligheid van ' + tName, subtitle: 'één driver tegelijk op zijn P10/P90 (±1,28 σ), de rest op scenariowaarde', body: [
-          h('div', { style: { display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' } }, h('span', { class: 'small muted' }, 'Doelgrootheid'), tgtSeg),
+          h('div', { style: { display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' } }, h('label', { for: 'rk-tgt', class: 'small muted' }, 'Doelgrootheid'), tgtSeg),
           figure({ chart: tornado, note: 'Afwijking t.o.v. het scenario (' + fmt.eurM(tBase) + ')' + (shown.length ? '; ' + lcFirst(shown[0].label) + ' weegt het zwaarst (' + fmt.eurM(shown[0].range) + ' tussen P10 en P90).' : '.') + (flat.length ? ' Geen effect op ' + tName + ': ' + flat.map(it => lcFirst(it.label)).join(' en ') + ' — werkkapitaal werkt alleen door in liquiditeit, rente en convenanten.' : '') })] }));
         results.appendChild(g2);
 
         // ---------- convenanten: ontleding van de breuk + laagste rentedekking in klassen ----------
         const parts = [
-          { label: 'EBITDA ≤ 0 (beide)', count: cUndef },
-          { label: 'ICR én leverage', count: cBoth },
-          { label: 'Alleen ICR', count: cIcr },
-          { label: 'Alleen leverage', count: cLev }
+          { label: 'EBITDA LTM ≤ 0', count: cUndef },
+          { label: 'Rentedekking én nettoschuld / EBITDA', count: cBoth },
+          { label: 'Alleen rentedekking', count: cIcr },
+          { label: 'Alleen nettoschuld / EBITDA', count: cLev }
         ];
-        const decomp = cAny > 0 ? figure({ chart: charts.bar({ categories: parts.map(p => p.label), series: [{ name: 'Aandeel van alle simulaties', values: parts.map(p => p.count / n), color: 'var(--series-1)' }], horizontal: true, yFormat: pctAxis, labels: 'all', rowHeight: 30, xLabel: 'Oorzaak', tooltipTitle: i => parts[i].label + ' · ' + fmt.int(parts[i].count) + ' simulaties', ariaLabel: 'Oorzaken van convenantbreuk' }), note: 'Per simulatie de laagste rentedekking en hoogste leverage over alle maanden (benadering); de kwartaaltoets telt ' + fmt.int(res.breach) + ' breuken' + (cAny === res.breach ? ', precies gelijk aan deze ontleding (' + fmt.int(cAny) + ').' : ', tegenover ' + fmt.int(cAny) + ' op maandbasis.') })
-          : ui.note('Geen enkele simulatie breekt een convenant: de rentedekking blijft boven ' + fmt.x(cfg.covenantIcrMin) + ' en de leverage onder ' + fmt.x(cfg.covenantLeverageMax) + '.', 'accent');
+        // bij weinig breuken zijn aantallen leesbaarder dan aandelen van 0,04%; de as blijft dan op hele simulaties
+        const useCounts = cAny < 50;
+        const decomp = cAny > 0 ? figure({ chart: charts.bar({ categories: parts.map(p => p.label), series: [{ name: useCounts ? 'Aantal simulaties' : 'Aandeel van alle simulaties', values: parts.map(p => useCounts ? p.count : p.count / n), color: 'var(--series-1)' }], horizontal: true, yFormat: useCounts ? fmt.int : pctAxis, yMax: useCounts ? Math.max(4, cAny) : null, labels: 'all', rowHeight: 30, xLabel: 'Oorzaak', tooltipTitle: i => parts[i].label + ' · ' + fmt.int(parts[i].count) + ' simulaties (' + pctAxis(parts[i].count / n) + ')', ariaLabel: 'Oorzaken van convenantbreuk' }), note: 'Elke simulatie telt één keer, naar de zwaarste oorzaak op de kwartaaltoets; samen ' + fmt.int(cAny) + ' simulaties met convenantbreuk (' + pctR(cAny / n) + '). Bij EBITDA LTM ≤ 0 is de ratio niet definieerbaar en geldt het convenant als gebroken.' })
+          : ui.note('Geen enkele simulatie breekt een convenant: de rentedekking blijft boven ' + fmt.x(cfg.covenantIcrMin) + ' en nettoschuld / EBITDA onder ' + fmt.x(cfg.covenantLeverageMax) + '.', 'accent');
         // laagste ICR per simulatie is sterk tweetoppig (ruim 90% binnen 0,4x van elkaar, de rest een lange staart onder nul): een histogram
         // ontaardt in één staaf, daarom klassen rond het convenant met directe labels
         const icS = S.minIcr; const covI = cfg.covenantIcrMin;
@@ -423,32 +447,34 @@
         const bandBad = [true].concat(edges.map((e, i) => i < edges.length - 1 && edges[i + 1] <= covI + 1e-9));
         const icrBands = charts.bar({ categories: bandLabels, series: [{ name: 'Aandeel van de simulaties', values: bandCounts.map(c => c / n), color: 'var(--series-1)' }], horizontal: true, colorBy: i => bandBad[i] ? 'var(--critical)' : 'var(--series-1)', yFormat: pctAxis, labels: 'all', rowHeight: 26, xLabel: 'Laagste rentedekking', tooltipTitle: i => 'Laagste rentedekking ' + bandLabels[i] + ' · ' + fmt.int(bandCounts[i]) + ' simulaties', ariaLabel: 'Laagste rentedekking per simulatie, in klassen' });
         const g3 = h('div', { class: 'grid' });
-        g3.appendChild(ui.card({ span: 6, title: 'Waardoor breekt het convenant?', subtitle: 'ICR = rentedekking < ' + fmt.x(cfg.covenantIcrMin) + ' · leverage = nettoschuld/EBITDA > ' + fmt.x(cfg.covenantLeverageMax) + ' · LTM-EBITDA ≤ 0 breekt beide', body: decomp }));
-        g3.appendChild(ui.card({ span: 6, title: 'Laagste rentedekking (ICR)', subtitle: 'per simulatie het dieptepunt van EBITDA / rente (LTM) t/m 2029 · convenant ≥ ' + fmt.x(covI), body: figure({ chart: icrBands, note: 'In ' + fmt.pct(nIcr / n, 0) + ' van de simulaties zakt de rentedekking op enig moment onder ' + fmt.x(covI) + ' (rood), in ' + fmt.pct(cum[0] / n, 0) + ' zelfs onder nul doordat de LTM-EBITDA negatief wordt. Mediaan van het dieptepunt ' + icrFmt(icS.p50) + ', laagste ' + icrFmt(icS.min) + '; scenario zelf ' + icrFmt(detMinIcr) + '.' }) }));
+        // de Engelse termen één keer per tab, tussen haakjes (canon)
+        g3.appendChild(ui.card({ span: 6, title: 'Waardoor breekt het convenant?', subtitle: 'rentedekking (ICR) < ' + fmt.x(cfg.covenantIcrMin) + ' · nettoschuld / EBITDA (leverage) > ' + fmt.x(cfg.covenantLeverageMax) + ' · EBITDA LTM ≤ 0 breekt bij nettoschuld beide', body: decomp }));
+        g3.appendChild(ui.card({ span: 6, title: 'Laagste rentedekking', subtitle: 'per simulatie het dieptepunt van EBITDA LTM / rente t/m 2029 · convenant ≥ ' + fmt.x(covI), body: figure({ chart: icrBands, note: 'In ' + pctR(nIcr / n) + ' van de simulaties zakt de rentedekking op enig moment onder ' + fmt.x(covI) + ' (rood), in ' + pctR(cum[0] / n) + ' zelfs onder nul doordat EBITDA LTM negatief wordt. Mediaan van het dieptepunt ' + icrFmt(icS.p50) + ', laagste ' + icrFmt(icS.min) + '; scenario zelf ' + icrFmt(detMinIcr) + '.' }) }));
         results.appendChild(g3);
 
         // ---------- histogrammen leverage en kas ----------
-        const levS = S.maxLev; const levDef = levS.sorted.filter(v => v < 50); const levUndef = n - levDef.length;
-        const levLo = levDef.length ? levDef[0] : 0; const levHi = levDef.length ? Math.min(levDef[levDef.length - 1], Math.max(cfg.covenantLeverageMax * 1.5, E.quantile(levDef, 0.99))) : cfg.covenantLeverageMax * 1.5;
-        const levBins = alignedBins(E, levDef.length ? levDef : [0], 30, levLo, Math.max(levHi, levLo + 0.1), cfg.covenantLeverageMax); for (const b of levBins) b.share = b.count / n; // aandeel t.o.v. álle simulaties
-        const levTop = levBins[levBins.length - 1].x1; const levClipped = levDef.length - upperBound(levDef, levTop);
+        // nettokas (negatieve ratio) telt in de ratiografiek als 0x (canon); het aantal staat in de toelichting. Het bereik loopt altijd tot voorbij het convenant.
+        const levS = S.maxLev; const levNetCash = upperBound(levS.sorted, -1e-12); const levDef = levS.sorted.filter(v => v < 50).map(v => Math.max(0, v)); const levUndef = n - levDef.length;
+        const levLo = 0; const levHi = Math.max(cfg.covenantLeverageMax * 1.2, levDef.length ? Math.min(levDef[levDef.length - 1], Math.max(cfg.covenantLeverageMax * 1.5, E.quantile(levDef, 0.99))) : 0);
+        const levBins = alignedBins(E, levDef.length ? levDef : [0], 30, levLo, levHi, cfg.covenantLeverageMax); for (const b of levBins) b.share = b.count / n; // aandeel t.o.v. álle simulaties
+        const levTop = levBins[levBins.length - 1].x1;
         const levMeanDef = levDef.length ? levDef.reduce((a, b) => a + b, 0) / levDef.length : NaN;
         const icDef = icS.sorted.filter(v => v < 50); const icUndef = n - icDef.length; const icMeanDef = icDef.length ? icDef.reduce((a, b) => a + b, 0) / icDef.length : NaN;
-        const levHist = charts.histogram({ bins: levBins, xFormat: v => fmt.x(v, 1), height: 214, ariaLabel: 'Verdeling hoogste leverage', colorBin: b => b.x0 >= cfg.covenantLeverageMax - 1e-9 ? 'var(--critical)' : 'var(--series-1)', markers: layoutMarkers([
+        const levHist = charts.histogram({ bins: levBins, xFormat: v => fmt.x(v, 1), height: 214, ariaLabel: 'Verdeling hoogste nettoschuld / EBITDA', colorBin: b => b.x0 >= cfg.covenantLeverageMax - 1e-9 ? 'var(--critical)' : 'var(--series-1)', markers: layoutMarkers([
           { x: cfg.covenantLeverageMax, label: 'convenant', color: 'var(--ink)', strong: true, anchor: detMaxLev < cfg.covenantLeverageMax ? 'start' : 'end', priority: 2 }
-        ].concat(detMaxLev >= 50 ? [] : [{ x: detMaxLev, label: 'scenario', color: 'var(--ink-2)', dashed: true, anchor: detMaxLev < cfg.covenantLeverageMax ? 'end' : 'start', priority: 1 }]), levBins[0].x0, levTop, 6) });
+        ].concat(detMaxLev >= 50 ? [] : [{ x: Math.max(0, detMaxLev), label: detMaxLev < 0 ? 'scenario (nettokas)' : 'scenario', color: 'var(--ink-2)', dashed: true, anchor: detMaxLev < cfg.covenantLeverageMax ? 'end' : 'start', priority: 1 }]), levBins[0].x0, levTop, 6) });
         const mcS = S.minCash; const cashLo = Math.max(mcS.min, E.quantile(mcS.sorted, 0.01)); const cashHi = Math.max(mcS.max, cfg.minCash + 1);
         const cashBins = alignedBins(E, mcS.sorted, 30, cashLo, cashHi, cfg.minCash);
         const atFloor = upperBound(mcS.sorted, cfg.minCash + 1) - upperBound(mcS.sorted, cfg.minCash - 1);
         const belowFloor = upperBound(mcS.sorted, cfg.minCash - 1);
-        const cashClipped = upperBound(mcS.sorted, cashBins[0].x0 - 1e-6);
         const detTrough = fc.reduce((m, x) => x.bs.cash < m.bs.cash ? x : m, fc[0]); const scenAtFloor = Math.abs(detMinCash - cfg.minCash) < 1;
-        const cashHist = charts.histogram({ bins: cashBins, xFormat: fmt.eur, height: 214, ariaLabel: 'Verdeling laagste kaspositie', colorBin: b => b.x1 <= cfg.minCash + 1e-6 ? 'var(--critical)' : 'var(--series-1)', markers: layoutMarkers([
+        const cashHist = charts.histogram({ bins: cashBins, xFormat: eurTick, height: 214, ariaLabel: 'Verdeling laagste kas in de forecast', colorBin: b => b.x1 <= cfg.minCash + 1e-6 ? 'var(--critical)' : 'var(--series-1)', markers: layoutMarkers([
           { x: cfg.minCash, label: 'minimumkas', color: 'var(--ink)', strong: true, anchor: detMinCash > cfg.minCash ? 'end' : 'start', priority: 2 }
         ].concat(scenAtFloor ? [] : [{ x: detMinCash, label: 'scenario', color: 'var(--ink-2)', dashed: true, anchor: detMinCash > cfg.minCash ? 'start' : 'end', priority: 1 }]), cashBins[0].x0, cashBins[cashBins.length - 1].x1, 6) });
         const g4 = h('div', { class: 'grid' });
-        g4.appendChild(ui.card({ span: 6, title: 'Hoogste nettoschuld / EBITDA', subtitle: 'per simulatie de piek in de forecast · convenant ≤ ' + fmt.x(cfg.covenantLeverageMax), body: figure({ chart: levHist, note: 'In ' + fmt.pct(nLevDef / n, 0) + ' van de simulaties komt de leverage boven ' + fmt.x(cfg.covenantLeverageMax) + ' (rood); scenario zelf piekt op ' + levFmt(detMaxLev) + '.' + (levUndef > 0 ? ' In ' + fmt.int(levUndef) + ' simulaties (' + fmt.pct(levUndef / n, 0) + ') is de LTM-EBITDA op enig moment ≤ 0: leverage is dan niet definieerbaar en het convenant automatisch gebroken; die staan niet in dit histogram, wel in de ontleding hierboven.' : '') + (levClipped > 0 ? ' ' + fmt.int(levClipped) + ' uitschieters boven ' + fmt.x(levTop, 1) + ' zijn gebundeld in de laatste klasse.' : '') }) }));
-        g4.appendChild(ui.card({ span: 6, title: 'Laagste kaspositie in de forecast', subtitle: 'per simulatie het dieptepunt t/m 2029 · minimumkas ' + fmt.eurM(cfg.minCash), body: figure({ chart: cashHist, note: 'In ' + fmt.pct(atFloor / n, 0) + ' van de simulaties blijft het dieptepunt precies op de minimumkas: het RCF is getrokken maar toereikend. ' + (belowFloor > 0 ? 'In ' + fmt.pct(belowFloor / n, 0) + ' is het RCF uitgeput en zakt de kas eronder (rood; laagste waarde ' + fmt.eur(mcS.min) + ').' : 'Het RCF raakt in geen enkele simulatie uitgeput.') + ' Scenario zelf: dieptepunt ' + fmt.eurM(detMinCash) + ' in ' + fmt.month(detTrough.period) + (detTrough.bs.rcf > 1 ? ' met ' + fmt.eurM(detTrough.bs.rcf) + ' RCF getrokken.' : ', RCF onbenut.') + (cashClipped > 0 ? ' ' + fmt.int(cashClipped) + ' waarden onder ' + fmt.eur(cashBins[0].x0) + ' zijn gebundeld in de eerste klasse.' : '') }) }));
+        // open klassen aan de randen (uitschieters) staan in de tabelweergave; de toelichting houdt het bij één inzicht plus de scenariowaarde
+        g4.appendChild(ui.card({ span: 6, title: 'Hoogste nettoschuld / EBITDA', subtitle: 'per simulatie de piek in de forecast · convenant ≤ ' + fmt.x(cfg.covenantLeverageMax) + ' · nettokas = 0x', body: figure({ chart: levHist, note: 'In ' + pctR(nLevDef / n) + ' van de simulaties komt nettoschuld / EBITDA boven ' + fmt.x(cfg.covenantLeverageMax) + ' (rood); scenario zelf ' + (detMaxLev < 0 ? 'blijft de hele forecast nettokas (0x)' : 'piekt op ' + levFmt(detMaxLev)) + '.' + (levNetCash > 0 ? ' In ' + fmt.int(levNetCash) + ' simulaties (' + pctR(levNetCash / n) + ') blijft het bedrijf de hele forecast nettokas (0x).' : '') + (levUndef > 0 ? ' In ' + fmt.int(levUndef) + ' simulaties (' + pctR(levUndef / n) + ') is EBITDA LTM op enig moment ≤ 0: de ratio is dan niet definieerbaar en het convenant gebroken; die staan niet in dit histogram, wel in de ontleding hierboven.' : '') }) }));
+        g4.appendChild(ui.card({ span: 6, title: 'Laagste kas in de forecast', subtitle: 'per simulatie het dieptepunt t/m 2029 · minimumkas ' + fmt.eurM(cfg.minCash), body: figure({ chart: cashHist, note: 'In ' + pctR(atFloor / n) + ' van de simulaties blijft het dieptepunt precies op de minimumkas: het RCF is getrokken maar toereikend. ' + (belowFloor > 0 ? 'In ' + pctR(belowFloor / n) + ' is het RCF uitgeput en zakt de kas eronder (rood; laagste waarde ' + fmt.eur(mcS.min) + ').' : 'Het RCF raakt in geen enkele simulatie uitgeput.') + ' Scenario zelf: dieptepunt ' + fmt.eurM(detMinCash) + ' in ' + fmt.month(detTrough.period) + (detTrough.bs.rcf > 1 ? ' met ' + fmt.eurM(detTrough.bs.rcf) + ' RCF getrokken.' : ', RCF onbenut.') }) }));
         results.appendChild(g4);
 
         // ---------- percentieltabel ----------
@@ -458,16 +484,16 @@
         const star = (undef) => undef > 0 ? '*' : '';
         const table = ui.table({ columns: [
           { key: 'label', label: 'Percentiel' },
-          { key: 'ebitda', label: 'EBITDA ' + ty, align: 'num', format: fmt.eurM },
-          { key: 'ni', label: 'Nettowinst ' + ty, align: 'num', format: fmt.eurM },
-          { key: 'fcf', label: 'Vrije kasstroom ' + ty, align: 'num', format: fmt.eurM },
+          { key: 'ebitda', label: fcLabel('EBITDA ' + ty), align: 'num', format: fmt.eurM },
+          { key: 'ni', label: fcLabel('Nettowinst ' + ty), align: 'num', format: fmt.eurM },
+          { key: 'fcf', label: fcLabel('Vrije kasstroom ' + ty), align: 'num', format: fmt.eurM },
           { key: 'minCash', label: 'Laagste kas', align: 'num', format: fmt.eurM },
-          { key: 'minIcr', label: 'Laagste ICR', align: 'num', format: (v, r) => icrFmt(v) + (r.mean ? star(icUndef) : '') },
-          { key: 'maxLev', label: 'Max. leverage', align: 'num', format: (v, r) => levFmt(v) + (r.mean ? star(levUndef) : '') }
+          { key: 'minIcr', label: 'Laagste rentedekking', align: 'num', format: (v, r) => icrFmt(v) + (r.mean ? star(icUndef) : '') },
+          { key: 'maxLev', label: 'Hoogste nettoschuld / EBITDA', align: 'num', format: (v, r) => levFmt(v) + (r.mean ? star(levUndef) : '') }
         ], rows, rowClass: r => r.mean ? '' : (r.label === 'P50' ? 'key' : ''), footer: { label: 'Scenario (deterministisch)', ebitda: detEbitda, ni: det.pl.netIncome, fcf: det.cf.fcf, minCash: detMinCash, minIcr: detMinIcr, maxLev: detMaxLev } });
-        results.appendChild(ui.card({ title: 'Percentielen per uitkomst', subtitle: 'per kolom afzonderlijk gesorteerd · laagste kas, laagste rentedekking (ICR) en hoogste leverage over de hele forecast t/m 2029', body: [table,
+        pctBox.appendChild(ui.card({ title: 'Percentielen per uitkomst', subtitle: 'per kolom afzonderlijk gesorteerd · laagste kas, laagste rentedekking en hoogste nettoschuld / EBITDA over de hele forecast t/m 2029 · F = forecast', body: [table,
           ui.note('Lees de percentielen als kansen: P10 betekent dat één op de tien simulaties lager uitkomt, P90 dat één op de tien hoger uitkomt. De zeven drivers worden onafhankelijk getrokken uit normale verdelingen rond het actieve scenario; samenhang tussen drivers (zoals vraaguitval én prijsdruk in een recessie) zit er niet in, waardoor de werkelijke spreiding eerder groter dan kleiner is.')],
-          footer: (levUndef > 0 || icUndef > 0) ? '* gemiddelde zonder de ' + fmt.int(Math.max(levUndef, icUndef)) + ' simulaties waarin de waarde niet definieerbaar is (LTM-EBITDA ≤ 0 of geen rentelast).' : null }));
+          footer: (levUndef > 0 || icUndef > 0) ? '* gemiddelde zonder de ' + fmt.int(Math.max(levUndef, icUndef)) + ' simulaties waarin de waarde niet definieerbaar is (EBITDA LTM ≤ 0 of geen rentelast).' : null }));
         const buildMs = performance.now() - t0;
         if (mc.lastInfo) mc.lastInfo.buildMs = buildMs;
         mc.lastBuildMs = buildMs;

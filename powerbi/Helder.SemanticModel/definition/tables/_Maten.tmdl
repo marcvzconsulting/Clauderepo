@@ -8,13 +8,13 @@ table _Maten
 		displayFolder: Verkoop
 		lineageTag: a67d580d-cec4-4c88-9002-0c114f9d7cfd
 
-	/// Aantal verkochte fietsen.
+	/// Aantal verkochte e-bikes.
 	measure Aantal = SUM(FactVerkoop[Aantal])
 		formatString: #,0
 		displayFolder: Verkoop
 		lineageTag: 56809bbd-737d-4842-b4a9-cd720dc56262
 
-	/// Gemiddelde verkoopprijs per fiets (omzet / aantal).
+	/// Gemiddelde verkoopprijs per e-bike (omzet / aantal).
 	measure 'Gemiddelde prijs' = DIVIDE([Omzet], [Aantal])
 		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Verkoop
@@ -56,11 +56,11 @@ table _Maten
 		displayFolder: Verkoop
 		lineageTag: 6f9c573d-ece8-4fe8-800d-ef7987ddde21
 
-	/// Gerealiseerde gemiddelde verkoopprijs per fiets.
-	measure 'Omzet per fiets Actual' = CALCULATE([Gemiddelde prijs], DimScenario[Scenario] = "Actual")
+	/// Gerealiseerde gemiddelde verkoopprijs per e-bike.
+	measure 'Omzet per e-bike Actual' = CALCULATE([Gemiddelde prijs], DimScenario[Scenario] = "Actual")
 		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Verkoop
-		lineageTag: 9cb3fe3f-0626-4d15-8094-6c2c2795eec3
+		lineageTag: 6b971187-5e7a-4d9e-85c9-4acd3533d778
 
 	/// Bedrag per rekening met teken (opbrengst +, kosten −). In een matrix op DimRekening levert dit de volledige winst- en verliesrekening; het totaal is de nettowinst. Twee storage-engine-scans (één per teken), geen rij-voor-rij RELATED.
 	measure 'W&V bedrag' = SUMX(VALUES(DimRekening[Teken]), DimRekening[Teken] * CALCULATE(SUM(FactWinstVerlies[Bedrag])))
@@ -358,7 +358,7 @@ table _Maten
 		displayFolder: Balans
 		lineageTag: c15ee912-6d9f-492a-b632-92c73c132da0
 
-	/// Voorraad (fietsen en onderdelen) op de laatste balansdatum.
+	/// Voorraad (e-bikes en onderdelen) op de laatste balansdatum.
 	measure Voorraden = CALCULATE([Balans laatste stand], REMOVEFILTERS(DimBalanspost), DimBalanspost[Balanspost] = "Voorraden")
 		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Balans
@@ -400,11 +400,11 @@ table _Maten
 		displayFolder: Balans
 		lineageTag: 7904f192-dd03-4628-bc05-f0c8f80082a7
 
-	/// Rentedragende schuld minus liquide middelen op de laatste balansdatum in de periode; negatief betekent netto kaspositie.
-	measure 'Netto schuld' = [Termijnlening] + [Rekening-courantkrediet] - [Liquide middelen]
+	/// Rentedragende schuld minus liquide middelen op de laatste balansdatum in de periode; negatief betekent nettokaspositie.
+	measure Nettoschuld = [Termijnlening] + [Rekening-courantkrediet] - [Liquide middelen]
 		formatString: "€ "#,0;"€ "-#,0;"€ "0
 		displayFolder: Balans
-		lineageTag: f9596af6-e905-4113-aec3-2e1b8f2fb45b
+		lineageTag: 6b449207-3e3a-400c-a217-4ddf171e4ef3
 
 	/// Som van alle activa op de laatste balansdatum.
 	measure 'Totaal activa' = [Liquide middelen] + [Debiteuren] + [Voorraden] + [Materiële vaste activa]
@@ -508,7 +508,7 @@ table _Maten
 		displayFolder: Werkkapitaal
 		lineageTag: aff69d28-6423-4e8a-a4ff-c23d01aaba3b
 
-	/// EBITDA over de twaalf maanden tot en met de laatste maand mét W&V-gegevens in de periode (Actual + Forecast); dezelfde maand als [Netto schuld], ook bij een jaar- of kwartaalfilter. Minder dan twaalf beschikbare maanden (begin 2023) geannualiseerd, zoals FactKPI[LTMEBITDA].
+	/// EBITDA over de twaalf maanden tot en met de laatste maand mét W&V-gegevens in de periode (Actual + Forecast); dezelfde maand als [Nettoschuld], ook bij een jaar- of kwartaalfilter. Minder dan twaalf beschikbare maanden (begin 2023) geannualiseerd, zoals FactKPI[LTMEBITDA].
 	measure 'LTM EBITDA' =
 			VAR LaatsteKey = MAX(FactWinstVerlies[DatumKey])
 			VAR Einde = EOMONTH(LOOKUPVALUE(DimDatum[Datum], DimDatum[DatumKey], LaatsteKey), 0)
@@ -532,9 +532,9 @@ table _Maten
 		displayFolder: Covenants
 		lineageTag: 48190e62-06dc-4ad6-bf59-b206917b49e9
 
-	/// Netto schuld / LTM EBITDA op de laatste maand in de periode, volgens dezelfde conventie als FactKPI[Leverage]: bij LTM EBITDA ≤ 0 geldt 99 (schuld) of 0 (netto kas); een netto kaspositie geeft een negatieve ratio. Covenant: maximaal 3,0x.
+	/// Nettoschuld / LTM EBITDA op de laatste maand in de periode, volgens dezelfde conventie als FactKPI[Leverage]: bij LTM EBITDA ≤ 0 geldt 99 (schuld) of 0 (nettokas); een nettokaspositie geeft een negatieve ratio. Covenant: maximaal 3,0x.
 	measure Leverage =
-			VAR Schuld = [Netto schuld]
+			VAR Schuld = [Nettoschuld]
 			VAR E = [LTM EBITDA]
 			RETURN
 			    IF(

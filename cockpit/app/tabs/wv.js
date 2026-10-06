@@ -1,7 +1,7 @@
 /* Tab: Winst & verlies — marges, kostenstructuur, omzetmix, unit economics, budget 2026 en de volledige W&V per periode.
- * Lokale helpers (verzoeken voor opname in core staan in het eindrapport onder coreRequests): prevRange (vergelijkingsperiode
- * voor de KPI-rij), varianceBars (afwijkingsbalken rond een nullijn, met tabel-twin), tableNote (toelichting boven een
- * horizontaal scrollende tabel) en een beetje CSS (span-5/7, dekkende sticky cel bij hover). */
+ * Lokaal (niet in core): varianceBars (afwijkingsbalken rond een nullijn, met tabel-twin), de toelichting boven de
+ * W&V-tabel (.wv-tnote) en de .wv-* CSS. Bewuste lay-outkeuze: onder 1100 px gaan de span-4/5-kaarten van dit tabblad
+ * naar de volle breedte, zodat er geen halve kaart alleen op een rij staat naast een kaart van 12 kolommen. */
 (function () {
   'use strict';
   const H = window.HC;
@@ -15,11 +15,8 @@
     if (document.getElementById('wv-local-css')) return;
     const st = document.createElement('style'); st.id = 'wv-local-css';
     st.textContent = [
-      '.span-7{grid-column:span 7}.span-5{grid-column:span 5}@media(max-width:1100px){.span-7,.span-5{grid-column:span 12}}',
-      'table.data th .forecast{color:var(--muted);font-weight:500}',
-      /* sticky eerste cel blijft dekkend bij hover (index.html: table.data tr:hover td is doorschijnend en wint op specificiteit) */
-      '.statement tr:hover td:first-child{background:color-mix(in srgb,var(--accent-soft) 45%,var(--surface))}',
-      '.statement tr.key:hover td:first-child{background:color-mix(in srgb,var(--accent-soft) 45%,var(--surface-2))}',
+      /* tablet: geen halve kaart alleen op een rij (core zet span-4/5 op 6 kolommen, de buurkaart op 12) */
+      '@media(max-width:1100px){#tab-wv .span-4,#tab-wv .span-5{grid-column:span 12}}',
       /* afwijkingsbalken */
       '.wv-vb{display:flex;flex-direction:column;gap:8px}',
       '.wv-vb-row{display:grid;grid-template-columns:minmax(104px,1.2fr) minmax(0,2fr) auto;gap:10px;align-items:center;font-size:12.5px;border-radius:6px;outline:none}',
@@ -37,24 +34,6 @@
       '.wv-tnote{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:8px;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}'
     ].join('');
     document.head.appendChild(st);
-  }
-
-  /** Vergelijkingsperiode voor de KPI-rij (seizoensbedrijf): bereik ≤ 12 maanden → dezelfde maanden een jaar eerder;
-   *  hele jaren → een even lang blok ervoor; anders geen vergelijking. */
-  function prevRange(E, months, inR) {
-    const n = inR.length; const idx0 = months.findIndex(m => m.period === inR[0].period);
-    let mode = null, shift = 0;
-    if (n <= 12) { mode = 'yoy'; shift = 12; } else if (n % 12 === 0) { mode = 'block'; shift = n; }
-    const from = mode ? E.addMonths(inR[0].period, -shift) : null;
-    const start = idx0 - shift;
-    return { mode, n, from, to: from ? E.addMonths(from, n - 1) : null, ms: mode && start >= 0 ? months.slice(start, start + n) : null };
-  }
-  function rangeLabel(fmt, a, b, n) {
-    const ya = a.slice(0, 4), yb = b.slice(0, 4);
-    if (n === 1) return fmt.monthLong(a);
-    if (n % 12 === 0 && a.slice(5) === '01') return ya === yb ? ya : ya + ' – ' + yb;
-    if (ya === yb) return fmt.monthShort(a) + ' – ' + fmt.monthShort(b) + ' ' + ya;
-    return fmt.monthShort(a) + ' ' + ya + ' – ' + fmt.monthShort(b) + ' ' + yb;
   }
 
   /** Afwijkingsbalken: één balk per post rond een nullijn; positief = gunstig. Geeft {el, legend, table()} voor ui.figure.
@@ -117,11 +96,25 @@
         const fcFrom = fcIdx >= 0 ? fcIdx : null;
         const firstFc = E.addMonths(model.lastActualPeriod, 1);
         const perLabel = p => fmt.period(p.key, grain);
-        const partialTxt = p => p.partial ? ' (' + p.n + ' mnd)' : ''; // kwartaal/jaar dat maar deels binnen het bereik valt
-        const chartLabel = p => perLabel(p) + (p.partial ? '*' : '');
-        const partialSub = ser.some(p => p.partial) ? ' · * = deel van de periode' : '';
-        const perLong = i => fmt.periodLong(ser[i].key, grain) + partialTxt(ser[i]) + (ser[i].isActual ? '' : ' · forecast');
-        const isMixed = p => !p.isActual && Array.isArray(p.months) && p.months.some(m => m.isActual); // periode met actual én forecast
+        // Markering (canon): 'F' = forecast, '*' = deels forecast (actual én forecast in één periode), '(n mnd)' = deel van de periode in het bereik
+        const isMixed = p => !p.isActual && Array.isArray(p.months) && p.months.some(m => m.isActual);
+        const fcMark = p => p.isActual ? '' : isMixed(p) ? '*' : ' F';
+        const partialTxt = p => p.partial ? ' (' + p.n + ' mnd)' : '';
+        const chartLabel = p => perLabel(p) + fcMark(p) + partialTxt(p);
+        // As-labels: op jaarassen volledig ('2027 F'); op maand- en kwartaalassen markeert de gearceerde band de forecast en blijft
+        // alleen '*' / '(n mnd)' staan, omdat 'Q1 2027 F' breder is dan de vaste labelruimte van charts.bar op 400 px (zie coreRequests).
+        // Tabel-twins en tooltips dragen altijd het volledige label.
+        const axisLabel = p => grain === 'Y' ? chartLabel(p) : perLabel(p) + (isMixed(p) ? '*' : '') + partialTxt(p);
+        const anyFcS = ser.some(p => !p.isActual), anyPartialS = ser.some(p => p.partial);
+        const legendTxt = (anyFcS ? ' · * = deels forecast · F = forecast' : '') + (anyPartialS ? ' · (n mnd) = deel van de periode in het bereik' : '');
+        const fcSub = (hasFc ? ' · gearceerd = forecast' : '') + legendTxt;
+        const perLong = i => fmt.periodLong(ser[i].key, grain) + partialTxt(ser[i]) + (ser[i].isActual ? '' : isMixed(ser[i]) ? ' · deels forecast' : ' · forecast');
+        /** tabel-twin van een periodegrafiek: volledige kolomlabels, forecastrijen met rowClass 'forecast' */
+        const periodTwin = defs => () => ui.table({
+          columns: [{ key: 'label', label: 'Periode' }].concat(defs.map((s, si) => ({ key: 'v' + si, label: s.name, align: 'num', format: v => v == null ? '–' : (s.format || fmt.eur)(v) }))),
+          rows: ser.map((p, i) => { const r = { label: chartLabel(p), fc: !p.isActual }; defs.forEach((s, si) => { r['v' + si] = s.values[i]; }); return r; }),
+          rowClass: r => r.fc ? 'forecast' : null
+        });
         const gw = GRAIN_WORD[grain];
         const pct1 = v => fmt.pct(v, 1);
 
@@ -130,75 +123,82 @@
           + (fullFc ? '; volledig forecast volgens scenario ' + scLabel + '.' : hasFc ? '; vanaf ' + fmt.monthLong(firstFc) + ' forecast volgens scenario ' + scLabel + '.' : '; uitsluitend actuals.');
         el.appendChild(h('div', { class: 'page-head' },
           h('div', null, h('h1', null, 'Winst & verlies'), h('p', null, intro)),
-          h('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap' } },
-            ui.chip(fmt.month(first.period) + ' – ' + fmt.month(last.period), 'actual'),
-            hasFc ? ui.chip('Forecast: ' + scLabel, 'forecast') : null)));
+          h('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap' } }, ui.rangeChip(range), ui.scenarioChip())));
 
-        // ---------- KPI's over het bereik, vergeleken met dezelfde maanden een jaar eerder (of een even lang blok hele jaren) ----------
-        const n = inR.length;
-        const pr = prevRange(E, months, inR);
+        // ---------- KPI's over het bereik, vergeleken met model.prevRange (≤ 12 maanden: zelfde maanden een jaar eerder; anders het even lange blok ervoor) ----------
+        const n = inR.length, nFc = inR.filter(m => !m.isActual).length;
+        const pr = model.prevRange(range);
         const cur = model.sumMonths(inR, 'bereik');
-        const prev = pr.ms ? model.sumMonths(pr.ms, 'vorig') : null;
-        const prevLabel = prev ? 'vs. ' + rangeLabel(fmt, pr.from, pr.to, n) : null;
+        const prev = pr ? pr.agg : null;
+        const prevLabel = pr ? 'vs. ' + pr.label : null;
         const dl = (a, b) => prev ? ui.delta(a, b, { label: prevLabel }) : null;
         const dpp = (a, b) => prev ? ui.deltaPp(a, b, { label: prevLabel }) : null;
+        // periode in het tegellabel (canon: tegel met forecaststand draagt periode én 'F', deels forecast '*')
+        const wholeYears = first.period.endsWith('-01') && last.period.endsWith('-12');
+        const NB = ' '; // vaste spaties rond het streepje en vóór 'F', zodat een bereik niet midden in het tegellabel afbreekt
+        const perTxt = state.preset === 'ltm' ? 'LTM' : state.preset === 'ytd' ? 'YTD ' + last.year
+          : wholeYears ? (first.year === last.year ? String(first.year) : first.year + NB + '–' + NB + last.year) : fmt.month(first.period) + NB + '–' + NB + fmt.month(last.period);
+        const kl = name => name + ' ' + perTxt + (fullFc ? NB + 'F' : hasFc ? '*' : '');
         const fin = cur.pl.netInterest;
-        const finTxt = Math.abs(fin) < 500 ? '' : ' en ' + fmt.eur(Math.abs(fin)) + (fin > 0 ? ' financiële lasten' : ' financiële baten');
+        const finTxt = Math.abs(fin) < 500 ? '' : ' en ' + fmt.eur(Math.abs(fin)) + (fin > 0 ? ' rente' : ' rentebaten');
         const kpis = h('div', { class: 'kpi-row' });
-        kpis.appendChild(ui.kpi({ label: 'Netto-omzet', value: fmt.eur(cur.pl.revenue), delta: dl(cur.pl.revenue, prev && prev.pl.revenue), hint: n + (n === 1 ? ' maand' : ' maanden') + ' · ASP ' + fmt.eur(cur.kpi.asp, { full: true }) }));
-        kpis.appendChild(ui.kpi({ label: 'Brutomarge %', value: fmt.pct(cur.kpi.grossMarginPct), delta: dpp(cur.kpi.grossMarginPct, prev && prev.kpi.grossMarginPct), hint: 'brutowinst ' + fmt.eur(cur.pl.grossProfit) }));
-        kpis.appendChild(ui.kpi({ label: 'EBITDA', value: fmt.eur(cur.pl.ebitda), delta: dl(cur.pl.ebitda, prev && prev.pl.ebitda), hint: 'bedrijfskosten ' + fmt.eur(cur.pl.opex) }));
-        kpis.appendChild(ui.kpi({ label: 'EBITDA %', value: fmt.pct(cur.kpi.ebitdaPct), delta: dpp(cur.kpi.ebitdaPct, prev && prev.kpi.ebitdaPct), hint: 'EBIT ' + fmt.eur(cur.pl.ebit) }));
-        kpis.appendChild(ui.kpi({ label: 'Nettowinst', value: fmt.eur(cur.pl.netIncome), delta: dl(cur.pl.netIncome, prev && prev.pl.netIncome), hint: 'na ' + fmt.eur(cur.pl.tax) + ' VPB' + finTxt }));
-        kpis.appendChild(ui.kpi({ label: 'Eenheden', value: fmt.int(cur.kpi.units), delta: dl(cur.kpi.units, prev && prev.kpi.units), hint: 'verkochte e-bikes' }));
+        kpis.appendChild(ui.kpi({ label: kl('Omzet'), value: fmt.eur(cur.pl.revenue), delta: dl(cur.pl.revenue, prev && prev.pl.revenue),
+          hint: n + (n === 1 ? ' maand' : ' maanden') + (fullFc ? ' forecast' : hasFc ? ', waarvan ' + nFc + ' forecast' : '') + ' · gemiddelde prijs ' + fmt.eur(cur.kpi.asp, { full: true }) }));
+        kpis.appendChild(ui.kpi({ label: kl('Brutomarge'), value: fmt.pct(cur.kpi.grossMarginPct), delta: dpp(cur.kpi.grossMarginPct, prev && prev.kpi.grossMarginPct), hint: 'brutowinst ' + fmt.eur(cur.pl.grossProfit) }));
+        kpis.appendChild(ui.kpi({ label: kl('EBITDA'), value: fmt.eur(cur.pl.ebitda), delta: dl(cur.pl.ebitda, prev && prev.pl.ebitda), hint: 'bedrijfskosten ' + fmt.eur(cur.pl.opex) }));
+        kpis.appendChild(ui.kpi({ label: kl('EBITDA-marge'), value: fmt.pct(cur.kpi.ebitdaPct), delta: dpp(cur.kpi.ebitdaPct, prev && prev.kpi.ebitdaPct), hint: 'EBIT ' + fmt.eur(cur.pl.ebit) }));
+        kpis.appendChild(ui.kpi({ label: kl('Nettowinst'), value: fmt.eur(cur.pl.netIncome), delta: dl(cur.pl.netIncome, prev && prev.pl.netIncome), hint: 'na ' + fmt.eur(cur.pl.tax) + ' belasting' + finTxt }));
+        kpis.appendChild(ui.kpi({ label: kl('Eenheden'), value: fmt.int(cur.kpi.units), delta: dl(cur.kpi.units, prev && prev.kpi.units), hint: 'verkochte e-bikes' }));
         el.appendChild(kpis);
         if (!prev) {
-          const modelStart = fmt.monthLong(months[0].period);
-          const why = pr.mode === 'yoy' ? 'dezelfde maanden een jaar eerder (' + rangeLabel(fmt, pr.from, pr.to, n) + ') vallen vóór de start van het model (' + modelStart + ').'
-            : pr.mode === 'block' ? 'het even lange blok ervoor (' + rangeLabel(fmt, pr.from, pr.to, n) + ') valt vóór de start van het model (' + modelStart + ').'
-            : 'het bereik beslaat ' + n + ' maanden en is geen geheel aantal jaren. Deltas worden getoond voor bereiken tot twaalf maanden (tegenover dezelfde maanden een jaar eerder) en voor hele jaren (tegenover een even lang blok ervoor).';
-          el.appendChild(h('div', { class: 'small muted' }, 'Geen vergelijkingsperiode in de KPI-rij: ' + why));
+          const yoy = n <= 12, pFrom = E.addMonths(range.from, yoy ? -12 : -n), pTo = E.addMonths(range.to, yoy ? -12 : -n);
+          el.appendChild(h('div', { class: 'small muted' }, 'Geen vergelijking in de KPI-rij: ' + (yoy ? 'dezelfde maanden een jaar eerder (' : 'de periode ervoor (') + fmt.month(pFrom) + ' – ' + fmt.month(pTo) + ') ligt vóór de modelstart (' + fmt.monthLong(months[0].period) + ').'));
         }
 
         // ---------- rij 1: marges + kostenstructuur ----------
         const grid1 = h('div', { class: 'grid' });
+        const marginSeries = [
+          { name: 'Brutomarge', values: ser.map(p => p.kpi.grossMarginPct), color: H.util.seriesColor(1), format: pct1 },
+          { name: 'EBITDA-marge', values: ser.map(p => p.kpi.ebitdaPct), color: H.util.seriesColor(2), format: pct1 }
+        ];
         const marginChart = charts.line({
-          x: ser.map(p => p.key), labels: ser.map(chartLabel),
-          series: [
-            { name: 'Brutomarge %', values: ser.map(p => p.kpi.grossMarginPct), color: H.util.seriesColor(1), format: pct1 },
-            { name: 'EBITDA %', values: ser.map(p => p.kpi.ebitdaPct), color: H.util.seriesColor(2), format: pct1 }
-          ],
+          x: ser.map(p => p.key), labels: ser.map(axisLabel), series: marginSeries,
           forecastFrom: fcFrom, yFormat: v => fmt.pct(v, 0), height: 250, baseline: 0, tooltipTitle: perLong, xLabel: 'Periode', endLabels: false
         });
-        grid1.appendChild(ui.card({ span: 7, title: 'Marges per periode', subtitle: 'brutomarge en EBITDA-marge per ' + gw + (hasFc ? ' · gearceerd = forecast' : '') + partialSub, body: ui.figure({ chart: marginChart }) }));
+        grid1.appendChild(ui.card({ span: 7, title: 'Marges per periode', subtitle: 'brutomarge en EBITDA-marge per ' + gw + fcSub,
+          body: ui.figure({ chart: { el: marginChart.el, legend: marginChart.legend, table: periodTwin(marginSeries) } }) }));
 
         const pctOf = (p, v) => p.pl.revenue > 0 ? v / p.pl.revenue : 0;
         const anyOneOff = ser.some(p => p.pl.oneOffCogs + p.pl.oneOffOpex !== 0);
         const costDefs = [
-          { name: 'Materiaalkosten', f: pl => pl.materialCost, color: H.util.seriesColor(1) },
-          { name: 'Directe arbeid, vracht en garantie', f: pl => pl.laborCost + pl.freightCost + pl.warranty, color: H.util.seriesColor(2) },
-          { name: 'Personeelskosten', f: pl => pl.personnelTotal, color: H.util.seriesColor(3) },
+          { name: 'Materiaal', f: pl => pl.materialCost, color: H.util.seriesColor(1) },
+          { name: 'Arbeid, vracht, garantie', f: pl => pl.laborCost + pl.freightCost + pl.warranty, color: H.util.seriesColor(2) },
+          { name: 'Personeel', f: pl => pl.personnelTotal, color: H.util.seriesColor(3) },
           { name: 'Marketing', f: pl => pl.marketing, color: H.util.seriesColor(4) },
           { name: 'Overige bedrijfskosten', f: pl => pl.housing + pl.it + pl.other, color: H.util.seriesColor(5) }
-        ].concat(anyOneOff ? [{ name: 'Eenmalige posten', f: pl => pl.oneOffCogs + pl.oneOffOpex, color: 'var(--series-dim)' }] : []);
+        ].concat(anyOneOff ? [{ name: 'Eenmalig', f: pl => pl.oneOffCogs + pl.oneOffOpex, color: H.util.seriesColor(6) }] : []);
+        const costSeries = costDefs.map(d => ({ name: d.name, values: ser.map(p => pctOf(p, d.f(p.pl))), color: d.color, format: pct1 }));
         const costChart = charts.bar({
-          categories: ser.map(chartLabel),
-          series: costDefs.map(d => ({ name: d.name, values: ser.map(p => pctOf(p, d.f(p.pl))), color: d.color, format: pct1 })),
+          categories: ser.map(chartLabel), labelsShort: ser.map(axisLabel), series: costSeries,
           stacked: true, yFormat: v => fmt.pct(v, 0), height: 250, labels: 'none', forecastFrom: fcFrom, tooltipTitle: perLong, xLabel: 'Periode'
         });
-        grid1.appendChild(ui.card({ span: 5, title: 'Kostenstructuur', subtitle: 'alle kosten in % van de omzet per ' + gw + ' · stapel = 100 % − EBITDA-marge' + partialSub, body: ui.figure({ chart: costChart }) }));
+        // zes reeksen: legenda onder de grafiek, zodat de figuurkop één regel blijft en de plot gelijk begint met 'Marges per periode'
+        grid1.appendChild(ui.card({ span: 5, title: 'Kostenstructuur', subtitle: 'kosten in % van de omzet per ' + gw + fcSub,
+          body: [ui.figure({ chart: { el: costChart.el, table: periodTwin(costSeries) } }), h('div', { style: { marginTop: '8px' } }, costChart.legend)],
+          footer: 'Stapel = 100% − EBITDA-marge; kostprijs en bedrijfskosten samen, eenmalige posten apart.' }));
         el.appendChild(grid1);
 
-        // ---------- rij 2: omzet per dimensie + marge per fiets ----------
+        // ---------- rij 2: omzet per dimensie + marge per e-bike ----------
         const grid2 = h('div', { class: 'grid' });
         const dim = state.split || 'line'; const keys = H.util.dimKeys(dim); const field = H.util.dimField(dim);
+        const mixSeries = keys.map((k, i) => ({ name: dim === 'country' ? H.util.countryName(k) : k, values: ser.map(p => p[field][k].revenue), color: H.util.seriesColor(i + 1) }));
         const mixChart = charts.bar({
-          categories: ser.map(chartLabel),
-          series: keys.map((k, i) => ({ name: dim === 'country' ? H.util.countryName(k) : k, values: ser.map(p => p[field][k].revenue), color: H.util.seriesColor(i + 1) })),
+          categories: ser.map(chartLabel), labelsShort: ser.map(axisLabel), series: mixSeries,
           stacked: true, yFormat: fmt.eur, height: 260, labels: ser.length <= 8 ? 'all' : 'none', forecastFrom: fcFrom, tooltipTitle: perLong, xLabel: 'Periode'
         });
         const splitCtl = ui.segmented({ id: 'wv-split', label: 'Splitsing', value: dim, options: [{ value: 'line', label: 'Productlijn' }, { value: 'channel', label: 'Kanaal' }, { value: 'country', label: 'Land' }], onChange: v => H.state.set({ split: v }) });
-        grid2.appendChild(ui.card({ span: 6, title: 'Omzet per ' + H.util.dimLabel(dim).toLowerCase(), subtitle: 'netto-omzet per ' + gw + ', gestapeld' + (hasFc ? ' · gearceerd = forecast' : '') + partialSub, actions: splitCtl, body: ui.figure({ chart: mixChart }) }));
+        grid2.appendChild(ui.card({ span: 6, title: 'Omzet per ' + H.util.dimLabel(dim).toLowerCase(), subtitle: 'netto-omzet per ' + gw + ', gestapeld' + fcSub, actions: splitCtl,
+          body: ui.figure({ chart: { el: mixChart.el, legend: mixChart.legend, table: periodTwin(mixSeries) } }) }));
 
         const ltm = model.ltm();
         const ueRows = E.LINES.map(l => {
@@ -213,17 +213,21 @@
             { key: 'line', label: 'Productlijn' },
             { key: 'units', label: 'Eenheden', align: 'num', format: fmt.int },
             { key: 'revenue', label: 'Omzet', align: 'num', format: fmt.eurM },
-            { key: 'asp', label: 'Gem. prijs', align: 'num', format: eurFull },
+            { key: 'asp', label: 'Gemiddelde prijs', align: 'num', format: eurFull },
             { key: 'cpu', label: 'Kostprijs', align: 'num', format: eurFull },
-            { key: 'margin', label: 'Marge', align: 'num', format: eurFull },
-            { key: 'gm', label: 'Marge %', align: 'num', format: pct1 }
+            { key: 'margin', label: 'Brutowinst', align: 'num', format: eurFull },
+            { key: 'gm', label: 'Brutomarge', align: 'num', format: pct1 }
           ],
-          rows: ueRows, footer: ueFoot
+          rows: ueRows, footer: ueFoot, caption: 'Per e-bike: gemiddelde prijs, kostprijs en brutowinst; eenheden en omzet over de hele periode.'
         });
-        const ueChart = charts.bar({ categories: E.LINES, series: [{ name: 'Brutomarge %', values: ueRows.map(r => r.gm), color: H.util.seriesColor(1), format: pct1 }], horizontal: true, yFormat: v => fmt.pct(v, 0), xLabel: 'Productlijn' });
-        grid2.appendChild(ui.card({ span: 6, title: 'Marge per fiets per productlijn', subtitle: 'laatste twaalf maanden t/m ' + fmt.monthLong(model.lastActualPeriod) + ' · onafhankelijk van het gekozen bereik',
-          body: [ueTable, ui.figure({ title: 'Brutomarge per productlijn', subtitle: 'gemiddeld ' + pct1(ueFoot.gm) + ' over alle lijnen', chart: ueChart })],
-          footer: 'Gemiddelde prijs, kostprijs en marge per verkochte fiets; kostprijs = materiaal, directe arbeid, inkomende vracht en garantie (excl. eenmalige posten).' }));
+        // gestapeld tot de gemiddelde prijs: kostprijs + brutowinst per e-bike; de tabel hierboven is de tabel-twin
+        const ueChart = charts.bar({ categories: E.LINES, series: [
+          { name: 'Kostprijs per e-bike', values: ueRows.map(r => r.cpu), color: H.util.seriesColor(1), format: eurFull },
+          { name: 'Brutowinst per e-bike', values: ueRows.map(r => r.margin), color: H.util.seriesColor(2), format: eurFull }
+        ], stacked: true, horizontal: true, yFormat: eurFull, xLabel: 'Productlijn' });
+        grid2.appendChild(ui.card({ span: 6, title: 'Marge per e-bike per productlijn', subtitle: 'laatste twaalf maanden t/m ' + fmt.monthLong(model.lastActualPeriod) + ' · onafhankelijk van het gekozen bereik',
+          body: ui.figure({ title: 'Kostprijs en brutowinst per e-bike', subtitle: 'balklengte = gemiddelde prijs · brutomarge gemiddeld ' + pct1(ueFoot.gm) + ' over alle lijnen', chart: { el: ueChart.el, legend: ueChart.legend, table: () => ueTable } }),
+          footer: 'Kostprijs per e-bike = materiaal, directe arbeid, inkomende vracht en garantie (excl. eenmalige posten); brutowinst per e-bike = gemiddelde prijs − kostprijs.' }));
         el.appendChild(grid2);
 
         // ---------- rij 3: budget 2026 versus actual (YTD) ----------
@@ -287,14 +291,14 @@
           grid4.appendChild(ui.card({ span: 8, title: 'EBITDA-brug budget → actual (YTD 2026)', subtitle: 'afwijking per post; positief = gunstig voor de EBITDA', body: ui.figure({ chart: bridge }),
             footer: 'EBITDA YTD ' + fmt.eur(eb.actual) + ' tegenover budget ' + fmt.eur(eb.budget) + ': afwijking ' + fmt.signed(eb.variance, fmt.eur) + (eb.variancePct != null ? ' (' + fmt.signedPct(eb.variancePct, 1) + ')' : '') + '; de posten hierboven tellen op tot dit verschil.' }));
           const ebMonthly = charts.bar({
-            categories: bva.map(x => fmt.monthShort(x.period)),
+            categories: bva.map(x => fmt.month(x.period)),
             series: [{ name: 'Budget', values: bva.map(x => x.budget.pl.ebitda), color: 'var(--series-dim)' }, { name: 'Actual', values: bva.map(x => x.actual.pl.ebitda), color: H.util.seriesColor(1) }],
             yFormat: fmt.eur, height: 250, labels: 'none', tooltipTitle: i => fmt.monthLong(bva[i].period), xLabel: 'Maand'
           });
           grid4.appendChild(ui.card({ span: 4, title: 'EBITDA per maand', subtitle: 'actual tegenover budget, 2026', body: ui.figure({ chart: ebMonthly }) }));
           el.appendChild(grid4);
         } else {
-          el.appendChild(ui.card({ title: 'Budget 2026 versus actual', subtitle: 'afwijkingsanalyse YTD', body: ui.note('De budgetanalyse verschijnt zodra het gekozen bereik actuals van 2026 bevat, bijvoorbeeld "YTD 2026", "Boekjaar 2026", "Laatste 12 maanden" of "2025–2027".'), class: 'flat' }));
+          el.appendChild(ui.card({ title: 'Budget 2026 versus actual', subtitle: 'afwijkingsanalyse YTD', body: ui.note('De budgetanalyse verschijnt zodra het gekozen bereik actuals van 2026 bevat, bijvoorbeeld "YTD 2026", "Boekjaar 2026", "Laatste twaalf maanden" of "2025–2027".'), class: 'flat' }));
         }
 
         // ---------- volledige W&V per periode ----------
@@ -316,7 +320,7 @@
           anyOneOffC ? R('Eenmalige kostprijsposten', 'lvl1', p => -p.pl.oneOffCogs, { dash: true }) : null,
           R('Kostprijs van de omzet', 'lvl0', p => -p.pl.cogs),
           R('Brutowinst', 'key', p => p.pl.grossProfit),
-          R('Brutomarge %', 'lvl2', p => p.kpi.grossMarginPct, { pct: true })
+          R('Brutomarge', 'lvl2', p => p.kpi.grossMarginPct, { pct: true })
         ].concat(E.DEPTS.map(d => R('Personeel ' + E.DEPT_LABELS[d], 'lvl2', p => -p.pl.personnel[d]))).concat([
           R('Personeelskosten', 'lvl1', p => -p.pl.personnelTotal),
           R('Marketing', 'lvl1', p => -p.pl.marketing),
@@ -327,7 +331,7 @@
           anyOneOffO ? R('Eenmalige bedrijfskosten', 'lvl1', p => -p.pl.oneOffOpex, { dash: true }) : null,
           R('Bedrijfskosten', 'lvl0', p => -p.pl.opex),
           R('EBITDA', 'key', p => p.pl.ebitda),
-          R('EBITDA %', 'lvl2', p => p.kpi.ebitdaPct, { pct: true }),
+          R('EBITDA-marge', 'lvl2', p => p.kpi.ebitdaPct, { pct: true }),
           R('Afschrijvingen', 'lvl1', p => -p.pl.dep),
           R('EBIT', 'lvl0', p => p.pl.ebit),
           R('Financiële baten en lasten', 'lvl1', p => -p.pl.netInterest),
@@ -335,24 +339,22 @@
           R('Vennootschapsbelasting', 'lvl1', p => -p.pl.tax),
           R('Nettowinst', 'key', p => p.pl.netIncome)
         ]).filter(Boolean);
-        const fcMark = p => p.isActual ? '' : isMixed(p) ? ' F*' : ' F';
-        const colLabel = p => p.isActual ? perLabel(p) + partialTxt(p) : h('span', { class: 'forecast' }, perLabel(p) + fcMark(p) + partialTxt(p));
+        const colLabel = p => p.isActual ? chartLabel(p) : h('span', { class: 'forecast' }, chartLabel(p));
         const fmtCell = (v, r) => r.pct ? pct1(v) : (r.dash && v === 0 ? '–' : fmt.eurK(v));
         const stCols = [{ key: 'label', label: 'Post', class: 'label' }].concat(cols.map((p, i) => ({ value: r => r.values[c0 + i], label: colLabel(p), align: 'num', format: fmtCell })));
-        const anyFc = cols.some(p => !p.isActual), anyMixed = cols.some(isMixed), anyPartial = cols.some(p => p.partial);
+        const anyFc = cols.some(p => !p.isActual), anyPartial = cols.some(p => p.partial);
         const windowed = ser.length > MAX_COLS;
         const tnote = h('div', { class: 'wv-tnote' },
-          h('span', null, 'Bedragen × € 1.000; kosten als negatieve bedragen' + ((anyOneOffC || anyOneOffO) ? '; – = nihil' : '') + '.'),
+          h('span', null, 'Kosten als negatieve bedragen' + ((anyOneOffC || anyOneOffO) ? '; – = nihil' : '') + '.'),
           windowed ? h('span', null, 'Getoond: ' + perLabel(cols[0]) + ' – ' + perLabel(cols[cols.length - 1]) + ', ' + cols.length + ' van ' + ser.length + ' periodes' + (lastAct >= 0 ? ' rond de laatste actual' : '') + '; de CSV bevat alle ' + ser.length + ' periodes.') : null,
-          anyPartial ? h('span', null, '(n mnd) = periode valt maar gedeeltelijk binnen het gekozen bereik.') : null,
-          anyFc ? ui.chip('F = forecast, scenario ' + scLabel, 'forecast') : null,
-          anyMixed ? h('span', null, 'F* = deels forecast.') : null);
+          anyFc || anyPartial ? h('span', null, (anyFc ? '* = deels forecast · F = forecast' : '') + (anyPartial ? (anyFc ? ' · ' : '') + '(n mnd) = deel van de periode in het bereik' : '') + '.') : null,
+          anyFc ? h('span', null, 'Forecast volgens scenario ' + scLabel + '.') : null);
         const stTable = ui.table({ class: 'statement', columns: stCols, rows: stRows, rowClass: r => r.lvl });
         const csvBtn = ui.button('Download CSV', () => {
           const sep = ';';
           const cell = v => '"' + String(v).replace(/"/g, '""') + '"';
           const num = (v, pct) => pct ? String(Math.round(v * 10000) / 100).replace('.', ',') : String(Math.round(v));
-          const head = ['Post'].concat(ser.map(p => perLabel(p) + fcMark(p) + partialTxt(p))).map(cell).join(sep);
+          const head = ['Post'].concat(ser.map(chartLabel)).map(cell).join(sep);
           const lines = stRows.map(r => [cell(r.label + (r.pct ? ' (%)' : ''))].concat(r.values.map(v => num(v, r.pct))).join(sep));
           const csv = '﻿' + [head].concat(lines).join('\r\n');
           H.download('helder-wv-' + grain.toLowerCase() + '-' + range.from + '-' + range.to + '.csv', csv).catch(() => { csvBtn.lastChild.textContent = 'Download niet beschikbaar'; });

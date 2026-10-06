@@ -9,14 +9,14 @@
   {
     "name": "Aantal",
     "group": "Verkoop",
-    "description": "Aantal verkochte fietsen.",
+    "description": "Aantal verkochte e-bikes.",
     "dax": "SUM(FactVerkoop[Aantal])",
     "formatString": "#,0"
   },
   {
     "name": "Gemiddelde prijs",
     "group": "Verkoop",
-    "description": "Gemiddelde verkoopprijs per fiets (omzet / aantal).",
+    "description": "Gemiddelde verkoopprijs per e-bike (omzet / aantal).",
     "dax": "DIVIDE([Omzet], [Aantal])",
     "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
@@ -63,9 +63,9 @@
     "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
-    "name": "Omzet per fiets Actual",
+    "name": "Omzet per e-bike Actual",
     "group": "Verkoop",
-    "description": "Gerealiseerde gemiddelde verkoopprijs per fiets.",
+    "description": "Gerealiseerde gemiddelde verkoopprijs per e-bike.",
     "dax": "CALCULATE([Gemiddelde prijs], DimScenario[Scenario] = \"Actual\")",
     "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
@@ -408,7 +408,7 @@
   {
     "name": "Voorraden",
     "group": "Balans",
-    "description": "Voorraad (fietsen en onderdelen) op de laatste balansdatum.",
+    "description": "Voorraad (e-bikes en onderdelen) op de laatste balansdatum.",
     "dax": "CALCULATE([Balans laatste stand], REMOVEFILTERS(DimBalanspost), DimBalanspost[Balanspost] = \"Voorraden\")",
     "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
@@ -455,9 +455,9 @@
     "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
   {
-    "name": "Netto schuld",
+    "name": "Nettoschuld",
     "group": "Balans",
-    "description": "Rentedragende schuld minus liquide middelen op de laatste balansdatum in de periode; negatief betekent netto kaspositie.",
+    "description": "Rentedragende schuld minus liquide middelen op de laatste balansdatum in de periode; negatief betekent nettokaspositie.",
     "dax": "[Termijnlening] + [Rekening-courantkrediet] - [Liquide middelen]",
     "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
@@ -583,7 +583,7 @@
   {
     "name": "LTM EBITDA",
     "group": "Covenants",
-    "description": "EBITDA over de twaalf maanden tot en met de laatste maand mét W&V-gegevens in de periode (Actual + Forecast); dezelfde maand als [Netto schuld], ook bij een jaar- of kwartaalfilter. Minder dan twaalf beschikbare maanden (begin 2023) geannualiseerd, zoals FactKPI[LTMEBITDA].",
+    "description": "EBITDA over de twaalf maanden tot en met de laatste maand mét W&V-gegevens in de periode (Actual + Forecast); dezelfde maand als [Nettoschuld], ook bij een jaar- of kwartaalfilter. Minder dan twaalf beschikbare maanden (begin 2023) geannualiseerd, zoals FactKPI[LTMEBITDA].",
     "dax": "VAR LaatsteKey = MAX(FactWinstVerlies[DatumKey])\nVAR Einde = EOMONTH(LOOKUPVALUE(DimDatum[Datum], DimDatum[DatumKey], LaatsteKey), 0)\nVAR Periode = DATESINPERIOD(DimDatum[Datum], Einde, -12, MONTH)\nVAR Maanden = CALCULATE(DISTINCTCOUNT(FactWinstVerlies[DatumKey]), Periode, REMOVEFILTERS(DimScenario))\nRETURN\n    DIVIDE(CALCULATE([EBITDA A+F], Periode) * 12, Maanden)",
     "formatString": "\"€ \"#,0;\"€ \"-#,0;\"€ \"0"
   },
@@ -597,8 +597,8 @@
   {
     "name": "Leverage",
     "group": "Covenants",
-    "description": "Netto schuld / LTM EBITDA op de laatste maand in de periode, volgens dezelfde conventie als FactKPI[Leverage]: bij LTM EBITDA ≤ 0 geldt 99 (schuld) of 0 (netto kas); een netto kaspositie geeft een negatieve ratio. Covenant: maximaal 3,0x.",
-    "dax": "VAR Schuld = [Netto schuld]\nVAR E = [LTM EBITDA]\nRETURN\n    IF(\n        ISBLANK(Schuld) || ISBLANK(E),\n        BLANK(),\n        IF(E > 0, DIVIDE(Schuld, E), IF(Schuld > 0, 99, 0))\n    )",
+    "description": "Nettoschuld / LTM EBITDA op de laatste maand in de periode, volgens dezelfde conventie als FactKPI[Leverage]: bij LTM EBITDA ≤ 0 geldt 99 (schuld) of 0 (nettokas); een nettokaspositie geeft een negatieve ratio. Covenant: maximaal 3,0x.",
+    "dax": "VAR Schuld = [Nettoschuld]\nVAR E = [LTM EBITDA]\nRETURN\n    IF(\n        ISBLANK(Schuld) || ISBLANK(E),\n        BLANK(),\n        IF(E > 0, DIVIDE(Schuld, E), IF(Schuld > 0, 99, 0))\n    )",
     "formatString": "0.00"
   },
   {

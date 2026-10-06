@@ -54,7 +54,7 @@ table FactKPI
 
 		annotation SummarizationSetBy = User
 
-	/// Netto schuld in euro (termijnlening + RCF - liquide middelen).
+	/// Nettoschuld in euro (termijnlening + RCF - liquide middelen).
 	column NettoSchuld
 		dataType: double
 		formatString: #,0
@@ -74,7 +74,7 @@ table FactKPI
 
 		annotation SummarizationSetBy = User
 
-	/// Netto schuld / LTM EBITDA; 99 bij schuld zonder positieve EBITDA, 0 bij netto kas zonder positieve EBITDA.
+	/// Nettoschuld / LTM EBITDA; 99 bij schuld zonder positieve EBITDA, 0 bij nettokas zonder positieve EBITDA.
 	column Leverage
 		dataType: double
 		formatString: 0.00

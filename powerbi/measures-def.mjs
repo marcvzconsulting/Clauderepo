@@ -43,15 +43,15 @@ export const MEASURES = [
   // ---------- Verkoop ----------
   { group: 'Verkoop', name: 'Omzet', formatString: EUR, dax: 'SUM(FactVerkoop[Omzet])',
     description: 'Omzet uit FactVerkoop (productlijn × kanaal × land). Volgt het scenariofilter; zonder scenariofilter worden Actual, Budget en Forecast opgeteld.' },
-  { group: 'Verkoop', name: 'Aantal', formatString: '#,0', dax: 'SUM(FactVerkoop[Aantal])', description: 'Aantal verkochte fietsen.' },
-  { group: 'Verkoop', name: 'Gemiddelde prijs', formatString: EUR, dax: 'DIVIDE([Omzet], [Aantal])', description: 'Gemiddelde verkoopprijs per fiets (omzet / aantal).' },
+  { group: 'Verkoop', name: 'Aantal', formatString: '#,0', dax: 'SUM(FactVerkoop[Aantal])', description: 'Aantal verkochte e-bikes.' },
+  { group: 'Verkoop', name: 'Gemiddelde prijs', formatString: EUR, dax: 'DIVIDE([Omzet], [Aantal])', description: 'Gemiddelde verkoopprijs per e-bike (omzet / aantal).' },
   { group: 'Verkoop', name: 'Kostprijs', formatString: EUR, dax: 'SUM(FactVerkoop[Kostprijs])', description: 'Directe kostprijs van de verkochte fietsen (materiaal, arbeid, vracht).' },
   { group: 'Verkoop', name: 'Brutowinst', formatString: EUR, dax: '[Omzet] - [Kostprijs]', description: 'Omzet minus kostprijs uit de verkoopfeiten.' },
   { group: 'Verkoop', name: 'Brutomarge %', formatString: PCT, dax: 'DIVIDE([Brutowinst], [Omzet])', description: 'Brutowinst als percentage van de omzet (verkoopfeiten).' },
   { group: 'Verkoop', name: 'Omzet Actual', formatString: EUR, dax: `CALCULATE([Omzet], ${SCEN('Actual')})`, description: 'Omzet in het scenario Actual, ongeacht het scenariofilter.' },
   { group: 'Verkoop', name: 'Omzet Budget', formatString: EUR, dax: `CALCULATE([Omzet], ${SCEN('Budget')})`, description: 'Omzet in het scenario Budget (alleen 2026).' },
   { group: 'Verkoop', name: 'Omzet Forecast', formatString: EUR, dax: `CALCULATE([Omzet], ${SCEN('Forecast')})`, description: 'Omzet in het scenario Forecast (vanaf 2026-10).' },
-  { group: 'Verkoop', name: 'Omzet per fiets Actual', formatString: EUR, dax: `CALCULATE([Gemiddelde prijs], ${SCEN('Actual')})`, description: 'Gerealiseerde gemiddelde verkoopprijs per fiets.' },
+  { group: 'Verkoop', name: 'Omzet per e-bike Actual', formatString: EUR, dax: `CALCULATE([Gemiddelde prijs], ${SCEN('Actual')})`, description: 'Gerealiseerde gemiddelde verkoopprijs per e-bike.' },
 
   // ---------- Winst & verlies ----------
   { group: 'Winst & verlies', name: 'W&V bedrag', formatString: EUR,
@@ -127,14 +127,14 @@ export const MEASURES = [
     description: 'Balansstand met activa én passiva positief (teken uit DimBalanspost), voor een matrix met rijen DimBalanspost[Zijde] > [Balanspost] in balansvolgorde. Het eindtotaal blijft leeg: activa en passiva worden niet bij elkaar opgeteld.' },
   { group: 'Balans', name: 'Liquide middelen', formatString: EUR, dax: BALANS('Liquide middelen'), description: 'Kas en banktegoeden op de laatste balansdatum in de periode.' },
   { group: 'Balans', name: 'Debiteuren', formatString: EUR, dax: BALANS('Debiteuren'), description: 'Openstaande handelsvorderingen op de laatste balansdatum.' },
-  { group: 'Balans', name: 'Voorraden', formatString: EUR, dax: BALANS('Voorraden'), description: 'Voorraad (fietsen en onderdelen) op de laatste balansdatum.' },
+  { group: 'Balans', name: 'Voorraden', formatString: EUR, dax: BALANS('Voorraden'), description: 'Voorraad (e-bikes en onderdelen) op de laatste balansdatum.' },
   { group: 'Balans', name: 'Materiële vaste activa', formatString: EUR, dax: BALANS('Materiële vaste activa'), description: 'Materiële vaste activa (netto, na afschrijvingen) op de laatste balansdatum.' },
   { group: 'Balans', name: 'Crediteuren', formatString: EUR, dax: `-${BALANS('Crediteuren')}`, description: 'Handelscrediteuren als positief bedrag.' },
   { group: 'Balans', name: 'Belastingschuld', formatString: EUR, dax: `-${BALANS('Belastingschuld')}`, description: 'Te betalen vennootschapsbelasting als positief bedrag.' },
   { group: 'Balans', name: 'Termijnlening', formatString: EUR, dax: `-${BALANS('Termijnlening')}`, description: 'Uitstaande termijnlening als positief bedrag.' },
   { group: 'Balans', name: 'Rekening-courantkrediet', formatString: EUR, dax: `-${BALANS('Rekening-courantkrediet')}`, description: 'Opgenomen rekening-courantkrediet (RCF) als positief bedrag.' },
   { group: 'Balans', name: 'Eigen vermogen', formatString: EUR, dax: `-${BALANS('Eigen vermogen')}`, description: 'Eigen vermogen als positief bedrag.' },
-  { group: 'Balans', name: 'Netto schuld', formatString: EUR, dax: '[Termijnlening] + [Rekening-courantkrediet] - [Liquide middelen]', description: 'Rentedragende schuld minus liquide middelen op de laatste balansdatum in de periode; negatief betekent netto kaspositie.' },
+  { group: 'Balans', name: 'Nettoschuld', formatString: EUR, dax: '[Termijnlening] + [Rekening-courantkrediet] - [Liquide middelen]', description: 'Rentedragende schuld minus liquide middelen op de laatste balansdatum in de periode; negatief betekent nettokaspositie.' },
   { group: 'Balans', name: 'Totaal activa', formatString: EUR, dax: '[Liquide middelen] + [Debiteuren] + [Voorraden] + [Materiële vaste activa]', description: 'Som van alle activa op de laatste balansdatum.' },
   { group: 'Balans', name: 'Totaal passiva', formatString: EUR, dax: '[Crediteuren] + [Belastingschuld] + [Termijnlening] + [Rekening-courantkrediet] + [Eigen vermogen]', description: 'Som van schulden en eigen vermogen op de laatste balansdatum.' },
   { group: 'Balans', name: 'Balanscontrole', formatString: '#,0.00', dax: 'CALCULATE([Balans laatste stand], REMOVEFILTERS(DimBalanspost))', description: 'Som van alle balansposten (activa positief, passiva negatief); moet nul zijn.' },
@@ -159,12 +159,12 @@ export const MEASURES = [
 
   // ---------- Covenants ----------
   { group: 'Covenants', name: 'LTM EBITDA', formatString: EUR, dax: LTM('[EBITDA A+F]', 'FactWinstVerlies'),
-    description: 'EBITDA over de twaalf maanden tot en met de laatste maand mét W&V-gegevens in de periode (Actual + Forecast); dezelfde maand als [Netto schuld], ook bij een jaar- of kwartaalfilter. Minder dan twaalf beschikbare maanden (begin 2023) geannualiseerd, zoals FactKPI[LTMEBITDA].' },
+    description: 'EBITDA over de twaalf maanden tot en met de laatste maand mét W&V-gegevens in de periode (Actual + Forecast); dezelfde maand als [Nettoschuld], ook bij een jaar- of kwartaalfilter. Minder dan twaalf beschikbare maanden (begin 2023) geannualiseerd, zoals FactKPI[LTMEBITDA].' },
   { group: 'Covenants', name: 'LTM rentelasten', formatString: EUR, dax: LTM('[Rentelasten A+F]', 'FactWinstVerlies'),
     description: 'Rentelasten over de twaalf maanden tot en met de laatste maand mét W&V-gegevens in de periode (Actual + Forecast); minder dan twaalf beschikbare maanden geannualiseerd.' },
   { group: 'Covenants', name: 'Leverage', formatString: RATIO,
     dax: [
-      'VAR Schuld = [Netto schuld]',
+      'VAR Schuld = [Nettoschuld]',
       'VAR E = [LTM EBITDA]',
       'RETURN',
       '    IF(',
@@ -173,7 +173,7 @@ export const MEASURES = [
       '        IF(E > 0, DIVIDE(Schuld, E), IF(Schuld > 0, 99, 0))',
       '    )'
     ].join('\n'),
-    description: 'Netto schuld / LTM EBITDA op de laatste maand in de periode, volgens dezelfde conventie als FactKPI[Leverage]: bij LTM EBITDA ≤ 0 geldt 99 (schuld) of 0 (netto kas); een netto kaspositie geeft een negatieve ratio. Covenant: maximaal 3,0x.' },
+    description: 'Nettoschuld / LTM EBITDA op de laatste maand in de periode, volgens dezelfde conventie als FactKPI[Leverage]: bij LTM EBITDA ≤ 0 geldt 99 (schuld) of 0 (nettokas); een nettokaspositie geeft een negatieve ratio. Covenant: maximaal 3,0x.' },
   { group: 'Covenants', name: 'ICR', formatString: RATIO,
     dax: [
       'VAR Rente = [LTM rentelasten]',

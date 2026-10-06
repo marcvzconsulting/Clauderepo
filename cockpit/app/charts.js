@@ -106,11 +106,15 @@
       const maxLabels = Math.max(2, Math.floor((x1 - x0) / 56));
       const every = Math.ceil(n / maxLabels);
       const labelIdx = []; for (let i = 0; i < n; i += every) labelIdx.push(i);
-      if (n > 1 && labelIdx[labelIdx.length - 1] !== n - 1) { const prev = labelIdx[labelIdx.length - 1]; const need = (measure(labels[prev]) + measure(labels[n - 1])) / 2 + 8; if (sx(n - 1) - sx(prev) < need) labelIdx.pop(); labelIdx.push(n - 1); }
+      if (n > 1 && labelIdx[labelIdx.length - 1] !== n - 1) labelIdx.push(n - 1);
+      // botsingen: eerste label is links uitgelijnd, laatste rechts, de rest gecentreerd
+      const GAP = 8;
+      if (labelIdx.length > 2) { const i1 = labelIdx[1]; if (sx(0) + measure(labels[0]) + GAP > sx(i1) - measure(labels[i1]) / 2) labelIdx.splice(1, 1); }
+      if (labelIdx.length > 2) { const prev = labelIdx[labelIdx.length - 2]; const last = n - 1; if (sx(prev) + measure(labels[prev]) / 2 + GAP > sx(last) - measure(labels[last])) labelIdx.splice(labelIdx.length - 2, 1); }
       for (const i of labelIdx) root.appendChild(svg('text', { class: 'axis-label', x: sx(i), y: Hh - 8, 'text-anchor': i === 0 ? 'start' : (i === n - 1 ? 'end' : 'middle') }, labels[i]));
       for (const r of refLines) { root.appendChild(svg('line', { x1: x0, x2: x1, y1: sy(r.value), y2: sy(r.value), stroke: 'var(--ink-2)', 'stroke-width': 1, 'stroke-dasharray': '4 3' })); if (r.label) root.appendChild(svg('text', { class: 'dlabel', x: x1 + 4, y: sy(r.value) + 4 }, r.label)); }
       const anns = (o.annotations || []).filter(a => a.i >= 0 && a.i < n);
-      anns.forEach((a, k) => { root.appendChild(svg('line', { class: 'ann-line', x1: sx(a.i), x2: sx(a.i), y1: y0 + 10, y2: y1 })); root.appendChild(svg('circle', { cx: sx(a.i), cy: y0 + 2, r: 7.5, fill: 'var(--surface)', stroke: 'var(--ink-2)', 'stroke-width': 1 })); root.appendChild(svg('text', { x: sx(a.i), y: y0 + 5.5, 'text-anchor': 'middle', style: 'font-size:9.5px;font-weight:600', fill: 'var(--ink)' }, String(a.n != null ? a.n : k + 1))); });
+      anns.forEach((a, k) => { const txt = String(a.n != null ? a.n : k + 1); const w = Math.max(15, measure(txt, '600 9.5px "IBM Plex Sans", system-ui, sans-serif') + 8); root.appendChild(svg('line', { class: 'ann-line', x1: sx(a.i), x2: sx(a.i), y1: y0 + 10, y2: y1 })); root.appendChild(svg('rect', { x: sx(a.i) - w / 2, y: y0 - 5.5, width: w, height: 15, rx: 7.5, fill: 'var(--surface)', stroke: 'var(--ink-2)', 'stroke-width': 1 })); root.appendChild(svg('text', { x: sx(a.i), y: y0 + 5.5, 'text-anchor': 'middle', style: 'font-size:9.5px;font-weight:600', fill: 'var(--ink)' }, txt)); });
       // reeksen
       series.forEach((s, si) => {
         const color = s.color || H.util.seriesColor(si + 1);
@@ -137,7 +141,7 @@
         const r = root.getBoundingClientRect(); const px = (e.clientX - r.left) * (W / r.width);
         let i = Math.round(sx.invert(px)); i = Math.max(0, Math.min(n - 1, i));
         hair.setAttribute('x1', sx(i)); hair.setAttribute('x2', sx(i)); hair.setAttribute('visibility', 'visible');
-        ui.tooltip.show(e.clientX, e.clientY, ui.tooltip.content({ title: o.tooltipTitle ? o.tooltipTitle(i) : labels[i], rows: series.map((s, si) => ({ key: s.color || H.util.seriesColor(si + 1), label: s.name, value: s.values[i] == null ? '–' : (s.format || yFmt)(s.values[i]) })).concat(anns.filter(a => a.i === i).map((a, k) => ({ label: 'Gebeurtenis ' + (a.n != null ? a.n : anns.indexOf(a) + 1), value: a.label }))) }));
+        ui.tooltip.show(e.clientX, e.clientY, ui.tooltip.content({ title: o.tooltipTitle ? o.tooltipTitle(i) : labels[i], rows: series.map((s, si) => ({ key: s.color || H.util.seriesColor(si + 1), label: s.name, value: s.values[i] == null ? '–' : (s.format || yFmt)(s.values[i]) })).concat(anns.filter(a => a.i === i).map((a, k) => { const nn = String(a.n != null ? a.n : anns.indexOf(a) + 1); return { label: (nn.length > 1 ? 'Gebeurtenissen ' : 'Gebeurtenis ') + nn, value: a.label }; })) }));
       };
       overlay.addEventListener('pointermove', show); overlay.addEventListener('pointerenter', show);
       overlay.addEventListener('pointerleave', () => { hair.setAttribute('visibility', 'hidden'); ui.tooltip.hide(); });
@@ -192,9 +196,12 @@
       if (o.forecastFrom != null && !horizontal && o.forecastFrom < n) { const fx = band(o.forecastFrom); root.appendChild(svg('rect', { class: 'fc-band', x: fx, y: y0, width: x1 - fx, height: y1 - y0 })); root.appendChild(svg('text', { class: 'ann-text', x: fx + 4, y: y0 - 3 }, 'forecast')); }
       // categorie-labels
       const maxLabels = horizontal ? n : Math.max(1, Math.floor((x1 - x0) / 44)); const every = Math.ceil(n / maxLabels);
+      const catLbl = i => o.labelsShort ? o.labelsShort[i] : cats[i];
+      const catIdx = []; for (let i = 0; i < n; i += every) catIdx.push(i);
+      if (!horizontal && n > 1 && catIdx[catIdx.length - 1] !== n - 1) { catIdx.push(n - 1); const prev = catIdx[catIdx.length - 2]; if (band(prev + 0.5) + measure(catLbl(prev)) / 2 + 8 > band(n - 0.5) - measure(catLbl(n - 1)) / 2) catIdx.splice(catIdx.length - 2, 1); }
       for (let i = 0; i < n; i++) {
         if (horizontal) root.appendChild(svg('text', { class: 'axis-label', x: x0 - 6, y: band(i + 0.5) + 4, 'text-anchor': 'end' }, cats[i]));
-        else if (i % every === 0) root.appendChild(svg('text', { class: 'axis-label', x: band(i + 0.5), y: Hh - 8, 'text-anchor': 'middle' }, o.labelsShort ? o.labelsShort[i] : cats[i]));
+        else if (catIdx.includes(i)) root.appendChild(svg('text', { class: 'axis-label', x: band(i + 0.5), y: Hh - 8, 'text-anchor': 'middle' }, catLbl(i)));
       }
       // marks
       for (let i = 0; i < n; i++) {

@@ -232,5 +232,7 @@
   "measure:Balansstand (gepresenteerd)": "4adbb1ad-8064-45f0-b693-005e6c1ad0c8",
   "relationship:FactBalans.Balanspost->DimBalanspost.Balanspost": "b6908ddb-7213-499c-8e1e-63e64f994944",
   "column:DimRekening.RekeninggroepVolgorde": "73856bee-2c2b-40cd-be00-f231c065affc",
-  "column:DimRekening.Niveau1Volgorde": "2ffc4a24-bad3-4266-83e0-fa2bae64f80b"
+  "column:DimRekening.Niveau1Volgorde": "2ffc4a24-bad3-4266-83e0-fa2bae64f80b",
+  "measure:Omzet per e-bike Actual": "6b971187-5e7a-4d9e-85c9-4acd3533d778",
+  "measure:Nettoschuld": "6b449207-3e3a-400c-a217-4ddf171e4ef3"
 }

@@ -141,12 +141,12 @@ for (let i = 0; i < N_ACT; i++) {
   actualDrivers.push(d);
 }
 addEvent('2023-03', 'Webshop-korting wegens voorraadoverhang', 'margin', 'Na de post-corona hausse lag er te veel voorraad: in H1 2023 werd de webshopprijs met 10% verlaagd en de dealerconditie verruimd. De brutomarge daalde, de voorraaddagen gingen van 138 naar onder de 100.');
-addEvent('2024-01', 'Termijnlening €20M voor nieuwe assemblagelijn', 'financing', 'Een vijfjarige termijnlening (4,45%) financierde de nieuwe assemblagelijn in Eindhoven (capex €14M, jan–aug 2024). Aflossing €333k per maand vanaf februari 2025 na een jaar aflossingsvrij.');
-addEvent('2025-02', 'Terugroepactie Cargo-remsysteem', 'oneoff', 'Een remkabelprobleem bij de Cargo-lijn leidde tot een terugroepactie: €1,5M eenmalige kosten (feb–mrt 2025) en 20–38% lagere Cargo-verkopen in februari t/m april.');
+addEvent('2024-01', 'Termijnlening € 20M voor nieuwe assemblagelijn', 'financing', 'Een vijfjarige termijnlening (4,45%) financierde de nieuwe assemblagelijn in Eindhoven (investering € 14M, jan–aug 2024). Aflossing € 333k per maand vanaf februari 2025 na een jaar aflossingsvrij.');
+addEvent('2025-02', 'Terugroepactie Cargo-remsysteem', 'oneoff', 'Een remkabelprobleem bij de Cargo-lijn leidde tot een terugroepactie: € 1,5M eenmalige kosten (feb–mrt 2025) en 20–38% lagere Cargo-verkopen in februari t/m april.');
 addEvent('2025-07', 'Celprijsspike batterijen', 'margin', 'Lithium-celprijzen stegen in Q3 2025 met 9%; de brutomarge zakte tijdelijk ruim 3 punten. Vanaf oktober werd 3% prijsverhoging doorgevoerd en in Q4 normaliseerde de inkoopprijs deels (+4%).');
 addEvent('2025-09', 'Start Duitse uitrol', 'growth', 'Acht extra sales-FTE, een Q4-campagne en langere dealertermijnen (DSO +6 dagen). Het Duitse volume-aandeel loopt op van 13% naar ruim 20%.');
 addEvent('2026-04', 'Sterk voorjaar door leaseregeling', 'growth', 'De fiscale leaseregeling joeg het leasekanaal in Q2 2026 12% boven trend.');
-addEvent('2026-06', 'ERP-migratie: eenmalig €350k', 'oneoff', 'Eenmalige advieskosten voor de ERP-migratie drukken het resultaat van juni 2026.');
+addEvent('2026-06', 'ERP-migratie: eenmalig € 350k', 'oneoff', 'Eenmalige advieskosten voor de ERP-migratie drukken het resultaat van juni 2026.');
 
 // ---------- Budget 2026 (opgesteld nov 2025: zonder ruis, met toen geldende aannames) ----------
 const budgetDrivers = [];
