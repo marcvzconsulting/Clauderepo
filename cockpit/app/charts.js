@@ -106,7 +106,7 @@
       const maxLabels = Math.max(2, Math.floor((x1 - x0) / 56));
       const every = Math.ceil(n / maxLabels);
       const labelIdx = []; for (let i = 0; i < n; i += every) labelIdx.push(i);
-      if (n > 1 && labelIdx[labelIdx.length - 1] !== n - 1) { if (n - 1 - labelIdx[labelIdx.length - 1] < Math.max(1, every / 2)) labelIdx.pop(); labelIdx.push(n - 1); }
+      if (n > 1 && labelIdx[labelIdx.length - 1] !== n - 1) { const prev = labelIdx[labelIdx.length - 1]; const need = (measure(labels[prev]) + measure(labels[n - 1])) / 2 + 8; if (sx(n - 1) - sx(prev) < need) labelIdx.pop(); labelIdx.push(n - 1); }
       for (const i of labelIdx) root.appendChild(svg('text', { class: 'axis-label', x: sx(i), y: Hh - 8, 'text-anchor': i === 0 ? 'start' : (i === n - 1 ? 'end' : 'middle') }, labels[i]));
       for (const r of refLines) { root.appendChild(svg('line', { x1: x0, x2: x1, y1: sy(r.value), y2: sy(r.value), stroke: 'var(--ink-2)', 'stroke-width': 1, 'stroke-dasharray': '4 3' })); if (r.label) root.appendChild(svg('text', { class: 'dlabel', x: x1 + 4, y: sy(r.value) + 4 }, r.label)); }
       const anns = (o.annotations || []).filter(a => a.i >= 0 && a.i < n);
@@ -263,7 +263,7 @@
       root.appendChild(svg('line', { class: 'baseline', x1: x0, x2: x1, y1: sy(0), y2: sy(0) }));
       steps.forEach((s, i) => {
         const r = runs[i]; const cx = band(i + 0.5); const top = sy(Math.max(r.a, r.b)), bot = sy(Math.min(r.a, r.b));
-        const color = s.color || (s.type === 'total' ? 'var(--ink-2)' : (o.polarity === 'status' ? (s.value >= 0 ? 'var(--good)' : 'var(--critical)') : (s.value >= 0 ? 'var(--series-1)' : 'var(--series-dim)')));
+        const color = s.color || (s.type === 'total' ? 'var(--ink-2)' : (o.polarity === 'status' ? (s.value >= 0 ? 'var(--good)' : 'var(--critical)') : (s.value >= 0 ? 'var(--series-1)' : 'var(--series-2)')));
         const p = svg('path', { d: roundedBarPath(cx - inner / 2, top, inner, Math.max(1, bot - top), 4, s.type === 'total' || s.value >= 0 ? 'up' : 'down'), fill: color });
         mark(p); hoverable(p, e => tip(e, i), e => tip(e, i), () => ui.tooltip.hide()); root.appendChild(p);
         if (i < n - 1) root.appendChild(svg('line', { x1: cx + inner / 2, x2: band(i + 1.5) - inner / 2, y1: sy(r.b), y2: sy(r.b), stroke: 'var(--line-2)', 'stroke-width': 1 }));
@@ -278,7 +278,8 @@
       function tip(e, i) { const s = steps[i]; ui.tooltip.show(e.clientX, e.clientY, ui.tooltip.content({ title: s.label, rows: [{ label: s.type === 'total' ? 'Totaal' : 'Mutatie', value: s.type === 'total' ? yFmt(s.value) : fmt.signed(s.value, yFmt) }].concat(s.type === 'total' ? [] : [{ label: 'Stand na', value: yFmt(runs[i].b) }]) })); }
       return root;
     });
-    return { el, legend: null, table: () => ui.table({ columns: [{ key: 'label', label: 'Stap' }, { key: 'value', label: 'Bedrag', align: 'num', format: (v, r) => r.type === 'total' ? yFmt(v) : fmt.signed(v, yFmt) }, { key: 'cum', label: 'Stand', align: 'num', format: yFmt }], rows: steps.map((s, i) => Object.assign({ cum: runs[i].b }, s)) }) };
+    const wfLegend = o.legend === false ? null : legend(o.polarity === 'status' ? [{ name: 'Gunstig', color: 'var(--good)' }, { name: 'Ongunstig', color: 'var(--critical)' }, { name: 'Totaal', color: 'var(--ink-2)' }] : [{ name: 'Toename', color: 'var(--series-1)' }, { name: 'Afname', color: 'var(--series-2)' }, { name: 'Totaal', color: 'var(--ink-2)' }]);
+    return { el, legend: wfLegend, table: () => ui.table({ columns: [{ key: 'label', label: 'Stap' }, { key: 'value', label: 'Bedrag', align: 'num', format: (v, r) => r.type === 'total' ? yFmt(v) : fmt.signed(v, yFmt) }, { key: 'cum', label: 'Stand', align: 'num', format: yFmt }], rows: steps.map((s, i) => Object.assign({ cum: runs[i].b }, s)) }) };
   };
 
   // =====================================================================

@@ -118,7 +118,7 @@
   const PRESETS = {
     all: { label: 'Alles (2023–2029)', from: '2023-01', to: '2029-12' },
     actuals: { label: 'Actuals (2023–sep 2026)', from: '2023-01', to: '2026-09' },
-    ltm: { label: 'Laatste 12 maanden', from: '2025-10', to: '2026-09' },
+    ltm: { label: 'Laatste twaalf maanden', from: '2025-10', to: '2026-09' },
     ytd: { label: 'YTD 2026', from: '2026-01', to: '2026-09' },
     y2025: { label: 'Boekjaar 2025', from: '2025-01', to: '2025-12' },
     y2026: { label: 'Boekjaar 2026', from: '2026-01', to: '2026-12' },
@@ -280,6 +280,10 @@
   ui.deltaPp = function (cur, prev, opts) { opts = opts || {}; if (prev == null) return null; const diff = cur - prev; const dir = Math.abs(diff) < 0.0005 ? 'flat' : diff > 0 ? 'up' : 'down'; const upIsGood = opts.upIsGood !== false; return { text: fmt.pp(diff), dir, good: dir === 'flat' ? null : (dir === 'up') === upIsGood, label: opts.label }; };
 
   ui.chip = function (text, tone, icon) { return h('span', { class: 'chip' + (tone ? ' ' + tone : '') }, icon ? HC.icon(icon, 12) : null, text); };
+  /** canonieke scenario-chip voor de paginakop: 'Forecast: Basis (aangepast)' */
+  ui.scenarioChip = function () { const s = HC.state.get(); const sc = model.scenarios[s.scenarioKey] || model.scenarios.basis; const custom = Object.keys(s.overrides || {}).length > 0; return ui.chip('Forecast: ' + sc.label + (custom ? ' (aangepast)' : ''), 'forecast'); };
+  /** canonieke periodechip: toon 'actual' alleen als het hele bereik actual is */
+  ui.rangeChip = function (range, prefix) { range = range || HC.state.range(); const allActual = range.to <= model.lastActualPeriod; return ui.chip((prefix ? prefix + ' ' : '') + fmt.month(range.from) + ' – ' + fmt.month(range.to), allActual ? 'actual' : null); };
   ui.note = function (text, tone) { return h('div', { class: 'note' + (tone ? ' ' + tone : '') }, text); };
   ui.button = function (label, onClick, opts) { opts = opts || {}; return h('button', { class: 'btn' + (opts.primary ? ' primary' : '') + (opts.sm ? ' sm' : '') + (opts.ghost ? ' ghost' : ''), type: 'button', onClick, id: opts.id, title: opts.title, disabled: opts.disabled }, opts.icon ? HC.icon(opts.icon, 14) : null, label); };
   ui.segmented = function (o) {

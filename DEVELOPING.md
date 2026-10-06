@@ -98,6 +98,56 @@ Engine-helpers: `E.LINES, E.CHANNELS, E.COUNTRIES, E.DEPTS, E.DEPT_LABELS, E.agg
 - CSS: `.span-5`, `.span-7`, `.statement tr.section`, `.statement tr.check`, `.table-wrap.scroll`, `th .forecast`; `<figure>` heeft geen UA-marge meer; `.card-head` wrapt op smalle schermen; favicon aanwezig.
 - `scripts/shot.mjs` wacht (max. 20 s) tot er geen element met `data-busy="true"` meer is: zet dat attribuut tijdens asynchroon werk (bijv. een simulatie) en haal het weg als de weergave definitief is.
 
+
+## Canon (terminologie en markering, productbreed)
+
+Deze beslissingen gelden voor elk tabblad; wijk er niet van af.
+
+| Begrip | Canonieke vorm |
+|---|---|
+| omzet (W&V-regel) | Netto-omzet |
+| omzet (KPI/grafiek, kort) | Omzet + periode, bijv. 'Omzet LTM', 'Omzet 2027' |
+| kostprijs | Kostprijs van de omzet |
+| brutowinst (€) | Brutowinst |
+| brutomarge (%) | Brutomarge (altijd een percentage; nooit 'Brutomarge %') |
+| bedrijfskosten totaal | Bedrijfskosten |
+| overige opex | Overige bedrijfskosten (= huisvesting + IT & software + overige algemene kosten) |
+| EBITDA-marge | EBITDA-marge (nooit 'EBITDA %' of kale 'Marge') |
+| nettowinst | Nettowinst |
+| LTM (label) | <metriek> LTM, bijv. 'EBITDA LTM', 'Omzet LTM' (nooit 'LTM-EBITDA' of 'LTM EBITDA' in UI-tekst; de DAX-maat 'LTM EBITDA' blijft) |
+| LTM (zin) | laatste twaalf maanden (LTM) — 'twaalf' voluit, ook in de presetlabel 'Laatste twaalf maanden' |
+| YTD | YTD 2026, 'januari t/m september 2026' |
+| kas (balansregel en Balans-tegel) | Liquide middelen |
+| kas (korte vorm in KPI/grafiek) | Kas + periode, bijv. 'Kas sep 26', 'Kas eind jaar', 'Laagste kas in forecast' (nooit 'Kaspositie') |
+| nettoschuld | Nettoschuld; bij negatieve stand 'Nettokas' (subtitel: 'negatieve nettoschuld = nettokas') |
+| leverage | Nettoschuld / EBITDA (spaties rond de schuine streep; in lopende tekst 'nettoschuld / EBITDA'); 'leverage' hooguit één keer per tab tussen haakjes; 'Hoogste nettoschuld / EBITDA' i.p.v. 'Hoogste/Max. leverage'; nettokas in ratiografieken = 0x, in tabellen 'nettokas' |
+| rentedekking | Rentedekking (EBITDA / rente); 'ICR' hooguit één keer per tab tussen haakjes; 'Laagste rentedekking' |
+| convenant | Convenant (enkelvoud), convenanten; limieten 'nettoschuld / EBITDA ≤ 3,0x' en 'rentedekking ≥ 4,0x'; kwartaaltoets |
+| convenantstatus | 'binnen convenant' / 'convenantbreuk'; compact (kolomkop 'Convenant'): 'ok' / 'breuk' |
+| vrije kasstroom | Vrije kasstroom (nooit 'FCF'); Waardering: 'vrije kasstroom vóór financiering (FCFF)' |
+| operationele kasstroom | Kasstroom uit operationele activiteiten; kort 'operationele kasstroom' (nooit 'CFO') |
+| investeringen | Investeringen (nooit 'capex') |
+| werkkapitaal | Werkkapitaal = debiteuren + voorraden − crediteuren |
+| RCF | Rekening-courantkrediet (RCF) op de balans; 'Mutatie rekening-courantkrediet' in het kasstroomoverzicht; kort 'RCF', 'RCF-ruimte', 'RCF benut' |
+| termijnlening | Termijnlening |
+| eigen vermogen | Eigen vermogen; 'Solvabiliteit = eigen vermogen / balanstotaal' |
+| werkkapitaaldagen | Debiteurentermijn (DSO), Voorraaddagen (DIO), Crediteurentermijn (DPO), Kasconversiecyclus (CCC) |
+| eenheden | Eenheden (labels/kolommen); 'verkochte e-bikes' in hints en zinnen; 'per e-bike' in unit economics (nooit 'Fietsen', 'stuks', 'per fiets') |
+| dimensies | Productlijn: City / Trek / Cargo = reeks 1/2/3; Kanaal: Dealers / Webshop / Lease = 1/2/3; Land: Nederland / Duitsland / België = 1/2/3 (H.util.lineColor/channelColor/countryColor) |
+| actual/forecast | actual, forecast (kleine letters in zinnen); chip 'Actuals t/m sep 26' |
+| budget | Budget 2026; delta-label 'vs. budget € 90,3M' |
+| vergelijking | altijd 'vs.' met punt: 'vs. jaar ervoor', 'vs. budget', 'vs. dec 26', 'vs. basisscenario' |
+| scenario's | Basis, Recessie, Expansie DE, Margefocus; aangepast: 'Basis (aangepast)'; paginakop-chip 'Forecast: Basis (aangepast)' met toon 'forecast' op elk tabblad |
+| aanspreekvorm | u / uw (nooit je/jouw in UI-tekst; alleen in de Claude-instructie van de analist is 'je' toegestaan) |
+| fictief | 'Fictieve data'-chip in de filterbalk en één voetnoot per tabblad; niet in elke kaart |
+| statusdeltas | groen (good-ink) alleen voor gunstig, rood (critical-ink) alleen voor ongunstig; neutrale drempels en limieten als gestippelde lijn in var(--ink-2) |
+
+**Forecastmarkering.** Grafieken: gearceerde band (.fc-band) + gestippelde lijn vanaf de eerste forecastperiode + het woord 'forecast' rechtsboven, zoals charts.js het tekent; kaartsubtitel 'gearceerd = forecast'. Categorie-, kolom- en rijlabels: 'F' = forecast ('2027 F', 'Q4 2026 F' als gedempte tekst via <span class="forecast">, nooit een chip per kolom of per rij), '*' = deels forecast (actual én forecast in één periode: '2026*'; nooit 'F*', nooit 'deels actual'), '(n mnd)' = deel van de periode in het gekozen bereik ('2027 (9 mnd)'); tabelrijen in de forecast krijgen daarnaast rowClass 'forecast'. Legendazin letterlijk en overal gelijk: '* = deels forecast · F = forecast' (aangevuld met ' · (n mnd) = deel van de periode in het bereik' alleen als dat voorkomt). Paginakop: chip 'Forecast: <scenario>' met toon 'forecast' op elk tabblad; een periodechip krijgt toon 'actual' alleen als het hele bereik actual is. Een KPI-tegel met een forecaststand draagt de periode én 'F' in het label ('Liquide middelen dec 27 F').
+
+**Periodelabels.** Maand kort 'sep 26' (fmt.month) in chips, assen en tegels; voluit 'september 2026' (fmt.monthLong) in zinnen. Kwartaal altijd 'Q3 2026' (fmt.quarter) op assen, in kolommen en chips — nooit 'Q3 26' of '2026-Q3'; de lange vorm 'kwartaal 3 2026' (fmt.periodLong) alleen in tooltips. Jaar '2027'; forecastjaar '2027 F'; gemengd jaar '2026*'; boekjaar in zinnen 'boekjaar 2027'. Bereiken met halve kastlijn en spaties: 'okt 25 – sep 26', 'januari t/m september 2026'; 'LTM' als prefix van een bereik: 'LTM okt 25 – sep 26'. Inclusief einde altijd 't/m'. Horizon 'jan 23 – dec 29'.
+
+Helpers: `ui.scenarioChip()` (paginakop, elk tabblad), `ui.rangeChip(range, prefix)`, `model.prevRange()`.
+
 ## Regels
 
 1. **Nederlands** in alle UI-tekst (sentence case; "Netto-omzet", "Brutomarge", "Eigen vermogen", "Kasstroom uit operationele activiteiten"). Getallen via `fmt`, nooit `toFixed` of `toLocaleString` direct.

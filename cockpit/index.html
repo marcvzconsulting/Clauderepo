@@ -135,6 +135,7 @@ button, input, select { font: inherit; color: inherit; }
 .kpi-label { font-size: 12px; color: var(--muted); font-weight: 500; }
 .kpi-value { font-size: 24px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.15; }
 .kpi.hero { grid-column: span 2; }
+@media (min-width: 1101px) { .kpi-row.hero-row { grid-template-columns: repeat(7, minmax(0, 1fr)); } }
 .kpi.hero .kpi-value { font-size: 44px; font-weight: 600; }
 .kpi-delta { font-size: 12.5px; display: flex; align-items: center; gap: 6px; color: var(--ink-2); flex-wrap: wrap; }
 .kpi-delta > span:first-child { white-space: nowrap; display: inline-flex; align-items: center; gap: 3px; }

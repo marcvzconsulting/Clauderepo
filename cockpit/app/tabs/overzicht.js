@@ -18,16 +18,16 @@
         const sc = model.scenarios[state.scenarioKey];
         el.appendChild(h('div', { class: 'page-head' },
           h('div', null, h('h1', null, 'Overzicht'), h('p', null, `Laatste twaalf maanden t/m ${fmt.monthLong(last.period)}, vergeleken met de twaalf maanden daarvoor. Forecast volgens scenario ${sc.label.toLowerCase()}.`)),
-          h('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap' } }, ui.chip('LTM ' + fmt.month(E.addMonths(last.period, -11)) + ' – ' + fmt.month(last.period), 'actual'), ui.chip(sc.label, 'forecast'))));
+          h('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap' } }, ui.chip('LTM ' + fmt.month(E.addMonths(last.period, -11)) + ' – ' + fmt.month(last.period), 'actual'), ui.scenarioChip())));
 
         // ---------- KPI's ----------
         const trendEbitda = months.slice(model.actualCount - 24, model.actualCount).map(m => m.pl.ebitda);
-        const kpis = h('div', { class: 'kpi-row' });
-        kpis.appendChild(ui.kpi({ hero: true, label: 'EBITDA, laatste 12 maanden', value: fmt.eurM(ltm.pl.ebitda), delta: ui.delta(ltm.pl.ebitda, prior.pl.ebitda, { label: 'vs. jaar ervoor' }), trend: trendEbitda, hint: fmt.pct(ltm.kpi.ebitdaPct) + ' van de omzet · 24 maanden' }));
+        const kpis = h('div', { class: 'kpi-row hero-row' });
+        kpis.appendChild(ui.kpi({ hero: true, label: 'EBITDA LTM', value: fmt.eurM(ltm.pl.ebitda), delta: ui.delta(ltm.pl.ebitda, prior.pl.ebitda, { label: 'vs. jaar ervoor' }), trend: trendEbitda, hint: fmt.pct(ltm.kpi.ebitdaPct) + ' van de omzet · 24 maanden' }));
         kpis.appendChild(ui.kpi({ label: 'Omzet LTM', value: fmt.eurM(ltm.pl.revenue), delta: ui.delta(ltm.pl.revenue, prior.pl.revenue, { label: 'vs. jaar ervoor' }), hint: fmt.int(ltm.kpi.units) + ' e-bikes · ASP ' + fmt.eur(ltm.kpi.asp, { full: true }) }));
         kpis.appendChild(ui.kpi({ label: 'Brutomarge LTM', value: fmt.pct(ltm.kpi.grossMarginPct), delta: ui.deltaPp(ltm.kpi.grossMarginPct, prior.kpi.grossMarginPct, { label: 'vs. jaar ervoor' }), hint: 'na terugroepactie en celprijsspike 2025' }));
         kpis.appendChild(ui.kpi({ label: 'Nettowinst LTM', value: fmt.eurM(ltm.pl.netIncome), delta: ui.delta(ltm.pl.netIncome, prior.pl.netIncome, { label: 'vs. jaar ervoor' }), hint: 'na ' + fmt.eurM(ltm.pl.tax) + ' VPB' }));
-        kpis.appendChild(ui.kpi({ label: 'Kaspositie ' + fmt.month(last.period), value: fmt.eurM(last.bs.cash), delta: ui.delta(last.bs.cash, months[model.actualCount - 13].bs.cash, { label: 'vs. jaar ervoor' }), hint: 'RCF-ruimte ' + fmt.eurM(last.kpi.rcfHeadroom) }));
+        kpis.appendChild(ui.kpi({ label: 'Kas ' + fmt.month(last.period), value: fmt.eurM(last.bs.cash), delta: ui.delta(last.bs.cash, months[model.actualCount - 13].bs.cash, { label: 'vs. jaar ervoor' }), hint: 'RCF-ruimte ' + fmt.eurM(last.kpi.rcfHeadroom) }));
         const lev = last.kpi.leverage; const levTone = lev > model.config.covenantLeverageMax ? 'critical' : lev > model.config.covenantLeverageMax * 0.8 ? 'warning' : 'good';
         kpis.appendChild(ui.kpi({ label: 'Nettoschuld / EBITDA', value: last.kpi.netDebt < 0 ? 'nettokas' : fmt.x(lev, 2), hint: (last.kpi.netDebt < 0 ? fmt.eurM(-last.kpi.netDebt) + ' nettokas · ' : fmt.eurM(last.kpi.netDebt) + ' nettoschuld · ') + 'convenant ≤ ' + fmt.x(model.config.covenantLeverageMax), class: levTone === 'good' ? '' : '' }));
         el.appendChild(kpis);
@@ -63,8 +63,8 @@
         const ytdB = bva.reduce((s, x) => s + x.budget.pl.revenue, 0), ytdA = bva.reduce((s, x) => s + x.actual.pl.revenue, 0);
         const ytdBe = bva.reduce((s, x) => s + x.budget.pl.ebitda, 0), ytdAe = bva.reduce((s, x) => s + x.actual.pl.ebitda, 0);
         const bvaKpis = h('div', { class: 'kpi-row' },
-          ui.kpi({ label: 'Omzet YTD vs budget', value: fmt.eurM(ytdA), delta: ui.delta(ytdA, ytdB, { label: 'vs budget ' + fmt.eurM(ytdB) }) }),
-          ui.kpi({ label: 'EBITDA YTD vs budget', value: fmt.eurM(ytdAe), delta: ui.delta(ytdAe, ytdBe, { label: 'vs budget ' + fmt.eurM(ytdBe) }) }));
+          ui.kpi({ label: 'Omzet YTD', value: fmt.eurM(ytdA), delta: ui.delta(ytdA, ytdB, { label: 'vs. budget ' + fmt.eurM(ytdB) }) }),
+          ui.kpi({ label: 'EBITDA YTD', value: fmt.eurM(ytdAe), delta: ui.delta(ytdAe, ytdBe, { label: 'vs. budget ' + fmt.eurM(ytdBe) }) }));
         grid2.appendChild(ui.card({ span: 6, title: 'Budget 2026 versus actual', subtitle: 'omzet per maand, januari t/m ' + fmt.monthLong(last.period).split(' ')[0], body: [bvaKpis, ui.figure({ chart: bvaChart })], footer: 'Budget vastgesteld in november 2025; de analyse per regel staat onder Winst & verlies.' }));
         const years = E.aggregate(months, 'Y').filter(y => y.year <= 2027);
         const dim = state.split || 'line'; const keys = H.util.dimKeys(dim); const field = H.util.dimField(dim);
