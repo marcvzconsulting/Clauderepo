@@ -1,0 +1,10 @@
+Balanspost,Zijde,Volgorde,Teken
+Materiële vaste activa,Activa,1,1
+Voorraden,Activa,2,1
+Debiteuren,Activa,3,1
+Liquide middelen,Activa,4,1
+Eigen vermogen,Passiva,5,-1
+Termijnlening,Passiva,6,-1
+Rekening-courantkrediet,Passiva,7,-1
+Crediteuren,Passiva,8,-1
+Belastingschuld,Passiva,9,-1

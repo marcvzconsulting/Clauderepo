@@ -1,0 +1,54 @@
+/// Verkoopkanalen met prijsfactor t.o.v. de adviesprijs.
+table DimKanaal
+	lineageTag: c8976a3f-8055-4a42-a5ae-cf3cd0921447
+
+	/// Sleutel naar DimKanaal.
+	column KanaalKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: b73e1a47-e4d9-4825-80bd-87231062984a
+		summarizeBy: none
+		sourceColumn: KanaalKey
+
+		annotation SummarizationSetBy = User
+
+	/// Dealers, Webshop of Lease.
+	column Kanaal
+		dataType: string
+		lineageTag: f09dbafb-7ea8-4c54-ac1a-47b5aebcba52
+		summarizeBy: none
+		sourceColumn: Kanaal
+
+		annotation SummarizationSetBy = User
+
+	/// Direct (webshop) of Indirect.
+	column Type
+		dataType: string
+		lineageTag: 75026c61-95a7-4e4e-8932-8bc0d3113ec4
+		summarizeBy: none
+		sourceColumn: Type
+
+		annotation SummarizationSetBy = User
+
+	/// Gerealiseerde prijs als factor van de adviesprijs.
+	column Prijsfactor
+		dataType: double
+		formatString: 0.00
+		lineageTag: 289c625a-4e2b-45e0-b574-43d71a7eb463
+		summarizeBy: none
+		sourceColumn: Prijsfactor
+
+		annotation SummarizationSetBy = User
+
+	partition DimKanaal = m
+		mode: import
+		source =
+				let
+				    Bron = Csv.Document(File.Contents(CsvMap & "DimKanaal.csv"), [Delimiter=",", Columns=4, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
+				    Typen = Table.TransformColumnTypes(Kop, {{"KanaalKey", Int64.Type}, {"Kanaal", type text}, {"Type", type text}, {"Prijsfactor", type number}}, "en-US")
+				in
+				    Typen
+
+	annotation PBI_ResultType = Table

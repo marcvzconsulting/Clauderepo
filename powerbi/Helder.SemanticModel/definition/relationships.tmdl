@@ -1,0 +1,75 @@
+relationship 1f076d1e-0496-4995-ba4d-7af2f8123c50
+	fromColumn: FactVerkoop.DatumKey
+	toColumn: DimDatum.DatumKey
+
+relationship 8320e8cc-92d3-4054-bb95-c293fc9cec4f
+	fromColumn: FactVerkoop.ScenarioKey
+	toColumn: DimScenario.ScenarioKey
+
+relationship b725f221-6201-4759-b8b7-1b9b6381724c
+	fromColumn: FactVerkoop.ProductlijnKey
+	toColumn: DimProductlijn.ProductlijnKey
+
+relationship 63354be9-76f2-410e-aeb4-0c79aecd0eb7
+	fromColumn: FactVerkoop.KanaalKey
+	toColumn: DimKanaal.KanaalKey
+
+relationship 4fd3c549-3dd0-486e-9329-b7b58c452a38
+	fromColumn: FactVerkoop.LandKey
+	toColumn: DimLand.LandKey
+
+relationship 46fcbe54-a933-4125-a5f1-bfcfd1d22631
+	fromColumn: FactWinstVerlies.DatumKey
+	toColumn: DimDatum.DatumKey
+
+relationship 71dcb18a-b08f-40ae-9a4c-4473fd5c2965
+	fromColumn: FactWinstVerlies.ScenarioKey
+	toColumn: DimScenario.ScenarioKey
+
+relationship b72beb9c-d0fc-4cdf-bc4e-16472a289587
+	fromColumn: FactWinstVerlies.RekeningKey
+	toColumn: DimRekening.RekeningKey
+
+relationship 986576ee-5335-4d9f-9b15-67c904efde47
+	fromColumn: FactBalans.DatumKey
+	toColumn: DimDatum.DatumKey
+
+relationship 50fd447a-c2a8-4efe-aa96-578c7d424b23
+	fromColumn: FactBalans.ScenarioKey
+	toColumn: DimScenario.ScenarioKey
+
+relationship b6908ddb-7213-499c-8e1e-63e64f994944
+	fromColumn: FactBalans.Balanspost
+	toColumn: DimBalanspost.Balanspost
+
+relationship bf05cd22-bb3d-4b1f-9f4d-9e40dc4fdf94
+	fromColumn: FactKasstroom.DatumKey
+	toColumn: DimDatum.DatumKey
+
+relationship c72cb325-955e-49b4-ae5c-c6025cb491bb
+	fromColumn: FactKasstroom.ScenarioKey
+	toColumn: DimScenario.ScenarioKey
+
+relationship 9be84da4-e68f-4626-b44a-b4db3ac4908a
+	fromColumn: FactKPI.DatumKey
+	toColumn: DimDatum.DatumKey
+
+relationship 0d7f4843-6eaa-444e-9e9d-cf7f241eeac4
+	fromColumn: FactKPI.ScenarioKey
+	toColumn: DimScenario.ScenarioKey
+
+relationship 0b2021c3-96ef-4d0e-9be1-d17917037d68
+	fromColumn: FactFTE.DatumKey
+	toColumn: DimDatum.DatumKey
+
+relationship 60b6656a-36b6-4249-8d46-e68eee4bb8ef
+	fromColumn: FactFTE.ScenarioKey
+	toColumn: DimScenario.ScenarioKey
+
+relationship 18d02e17-1f2a-43f0-bba5-1d14b2ff17f1
+	fromColumn: FactFTE.AfdelingKey
+	toColumn: DimAfdeling.AfdelingKey
+
+relationship 64c94340-1b38-4c67-9df0-0bd014de33e7
+	fromColumn: Gebeurtenissen.DatumKey
+	toColumn: DimDatum.DatumKey

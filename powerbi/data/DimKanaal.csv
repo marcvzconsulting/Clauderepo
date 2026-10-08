@@ -1,0 +1,4 @@
+KanaalKey,Kanaal,Type,Prijsfactor
+1,Dealers,Indirect,0.70
+2,Webshop,Direct,1
+3,Lease,Indirect,0.88

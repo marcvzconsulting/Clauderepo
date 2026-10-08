@@ -1,0 +1,54 @@
+/// Productlijnen City, Trek en Cargo.
+table DimProductlijn
+	lineageTag: b4321a18-0d26-4f46-bd3a-41c31c97bdbe
+
+	/// Sleutel naar DimProductlijn.
+	column ProductlijnKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: 8ec00a94-7f4d-4af7-a91a-22dc97877e87
+		summarizeBy: none
+		sourceColumn: ProductlijnKey
+
+		annotation SummarizationSetBy = User
+
+	/// City, Trek of Cargo.
+	column Productlijn
+		dataType: string
+		lineageTag: 0d1b072a-0584-46d4-85e0-556ff3585acd
+		summarizeBy: none
+		sourceColumn: Productlijn
+
+		annotation SummarizationSetBy = User
+
+	/// Doelgroep van de productlijn.
+	column Segment
+		dataType: string
+		lineageTag: 7e2a2b25-5fdc-4c50-b7e3-f95fbd76e4de
+		summarizeBy: none
+		sourceColumn: Segment
+
+		annotation SummarizationSetBy = User
+
+	/// Adviesprijs 2026 in euro.
+	column Adviesprijs2026
+		dataType: int64
+		formatString: #,0
+		lineageTag: e9050c7e-4354-4a63-8ada-2e5ebba8f815
+		summarizeBy: none
+		sourceColumn: Adviesprijs2026
+
+		annotation SummarizationSetBy = User
+
+	partition DimProductlijn = m
+		mode: import
+		source =
+				let
+				    Bron = Csv.Document(File.Contents(CsvMap & "DimProductlijn.csv"), [Delimiter=",", Columns=4, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
+				    Typen = Table.TransformColumnTypes(Kop, {{"ProductlijnKey", Int64.Type}, {"Productlijn", type text}, {"Segment", type text}, {"Adviesprijs2026", Int64.Type}}, "en-US")
+				in
+				    Typen
+
+	annotation PBI_ResultType = Table

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Helder"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "30414489-81ec-48b3-9016-f27914d1cd16"
+  }
+}

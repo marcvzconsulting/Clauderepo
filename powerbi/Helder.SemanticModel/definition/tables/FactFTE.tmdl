@@ -1,0 +1,59 @@
+/// FTE per afdeling per maand.
+table FactFTE
+	lineageTag: bd29ae6b-98fc-44f9-859d-20e6df622051
+
+	/// Sleutel naar DimDatum (yyyymmdd, eerste dag van de maand).
+	column DatumKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: 05cd3db2-3ba1-454c-abca-63f9a08582fa
+		summarizeBy: none
+		sourceColumn: DatumKey
+
+		annotation SummarizationSetBy = User
+
+	/// Sleutel naar DimScenario (1 Actual, 2 Budget, 3 Forecast).
+	column ScenarioKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: 335ca57c-ec86-472e-b386-e9f4ed643eb5
+		summarizeBy: none
+		sourceColumn: ScenarioKey
+
+		annotation SummarizationSetBy = User
+
+	/// Sleutel naar DimAfdeling.
+	column AfdelingKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: fad88c4c-d509-45d0-a9ff-1c563cfcc5c9
+		summarizeBy: none
+		sourceColumn: AfdelingKey
+
+		annotation SummarizationSetBy = User
+
+	/// Aantal fte in de maand.
+	column FTE
+		dataType: double
+		formatString: #,0.0
+		lineageTag: 5a3f0673-8736-431d-9034-1f2196930973
+		summarizeBy: sum
+		sourceColumn: FTE
+
+		annotation SummarizationSetBy = User
+
+	partition FactFTE = m
+		mode: import
+		source =
+				let
+				    Bron = Csv.Document(File.Contents(CsvMap & "FactFTE.csv"), [Delimiter=",", Columns=4, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
+				    Typen = Table.TransformColumnTypes(Kop, {{"DatumKey", Int64.Type}, {"ScenarioKey", Int64.Type}, {"AfdelingKey", Int64.Type}, {"FTE", type number}}, "en-US"),
+				    Binnen = Table.SelectRows(Typen, each [DatumKey] >= 20230101 and [DatumKey] <= 20291231)
+				in
+				    Binnen
+
+	annotation PBI_ResultType = Table

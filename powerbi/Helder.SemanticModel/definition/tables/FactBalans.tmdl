@@ -1,0 +1,58 @@
+/// Balansstanden per maandeinde in lang formaat; passiva en eigen vermogen negatief opgeslagen.
+table FactBalans
+	lineageTag: 66d8f6fc-f7d5-4a94-81db-5f91428cee24
+
+	/// Sleutel naar DimDatum (yyyymmdd, eerste dag van de maand).
+	column DatumKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: d6a30b82-0cbe-401d-94e0-84f086e37085
+		summarizeBy: none
+		sourceColumn: DatumKey
+
+		annotation SummarizationSetBy = User
+
+	/// Sleutel naar DimScenario (1 Actual, 2 Budget, 3 Forecast).
+	column ScenarioKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: 477c5705-c963-466e-8717-a4c2d3c99330
+		summarizeBy: none
+		sourceColumn: ScenarioKey
+
+		annotation SummarizationSetBy = User
+
+	/// Balanspost (tekst); relatie naar DimBalanspost.
+	column Balanspost
+		dataType: string
+		isHidden
+		lineageTag: 2b429869-25e4-4a8f-9d60-4df8abac82d6
+		summarizeBy: none
+		sourceColumn: Balanspost
+
+		annotation SummarizationSetBy = User
+
+	/// Stand per maandeinde in euro; passiva en eigen vermogen negatief.
+	column Bedrag
+		dataType: double
+		formatString: #,0
+		lineageTag: b9d0f78d-bd0b-4680-a247-06d10a10cef4
+		summarizeBy: sum
+		sourceColumn: Bedrag
+
+		annotation SummarizationSetBy = User
+
+	partition FactBalans = m
+		mode: import
+		source =
+				let
+				    Bron = Csv.Document(File.Contents(CsvMap & "FactBalans.csv"), [Delimiter=",", Columns=4, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
+				    Typen = Table.TransformColumnTypes(Kop, {{"DatumKey", Int64.Type}, {"ScenarioKey", Int64.Type}, {"Balanspost", type text}, {"Bedrag", type number}}, "en-US"),
+				    Binnen = Table.SelectRows(Typen, each [DatumKey] >= 20230101 and [DatumKey] <= 20291231)
+				in
+				    Binnen
+
+	annotation PBI_ResultType = Table

@@ -1,0 +1,23 @@
+{
+  "name": "CY24SU06",
+  "dataColors": [
+    "#1F5F8B",
+    "#3DA5D9",
+    "#73BFB8",
+    "#FEC601",
+    "#EA7317",
+    "#C84C09",
+    "#6B7280",
+    "#A3A9B4"
+  ],
+  "background": "#FFFFFF",
+  "foreground": "#1F2937",
+  "tableAccent": "#1F5F8B",
+  "good": "#2E8B57",
+  "neutral": "#FEC601",
+  "bad": "#C84C09",
+  "maximum": "#1F5F8B",
+  "center": "#73BFB8",
+  "minimum": "#EA7317",
+  "null": "#E5E7EB"
+}

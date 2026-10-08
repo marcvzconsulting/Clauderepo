@@ -1,0 +1,101 @@
+/// Verkopen per maand, scenario, productlijn, kanaal en land (aantallen, omzet, kostprijs).
+table FactVerkoop
+	lineageTag: 98fdfc27-1947-4c9e-b744-1058cc2d2f97
+
+	/// Sleutel naar DimDatum (yyyymmdd, eerste dag van de maand).
+	column DatumKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: bcde043d-042c-4862-a5cf-ce8331cae7aa
+		summarizeBy: none
+		sourceColumn: DatumKey
+
+		annotation SummarizationSetBy = User
+
+	/// Sleutel naar DimScenario (1 Actual, 2 Budget, 3 Forecast).
+	column ScenarioKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: 3d8b806d-996c-4a91-9d3c-3dd13ea04bab
+		summarizeBy: none
+		sourceColumn: ScenarioKey
+
+		annotation SummarizationSetBy = User
+
+	/// Sleutel naar DimProductlijn.
+	column ProductlijnKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: d8c46dfd-8ab2-4a76-973e-8ce0c89b0f13
+		summarizeBy: none
+		sourceColumn: ProductlijnKey
+
+		annotation SummarizationSetBy = User
+
+	/// Sleutel naar DimKanaal.
+	column KanaalKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: 27b03896-2d4d-4fb8-8192-f487a252abe4
+		summarizeBy: none
+		sourceColumn: KanaalKey
+
+		annotation SummarizationSetBy = User
+
+	/// Sleutel naar DimLand.
+	column LandKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: a600d072-ecfd-4349-86e7-f82308f94bc7
+		summarizeBy: none
+		sourceColumn: LandKey
+
+		annotation SummarizationSetBy = User
+
+	/// Aantal verkochte e-bikes.
+	column Aantal
+		dataType: double
+		formatString: #,0
+		lineageTag: 7ceb9629-2816-47f2-a167-350113c1ae6d
+		summarizeBy: sum
+		sourceColumn: Aantal
+
+		annotation SummarizationSetBy = User
+
+	/// Omzet in euro.
+	column Omzet
+		dataType: double
+		formatString: #,0
+		lineageTag: 133df4a1-5b4e-4e00-a107-2830fcb4399e
+		summarizeBy: sum
+		sourceColumn: Omzet
+
+		annotation SummarizationSetBy = User
+
+	/// Directe kostprijs in euro.
+	column Kostprijs
+		dataType: double
+		formatString: #,0
+		lineageTag: 30711b55-9cf9-4bf7-8782-f64e34846fee
+		summarizeBy: sum
+		sourceColumn: Kostprijs
+
+		annotation SummarizationSetBy = User
+
+	partition FactVerkoop = m
+		mode: import
+		source =
+				let
+				    Bron = Csv.Document(File.Contents(CsvMap & "FactVerkoop.csv"), [Delimiter=",", Columns=8, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
+				    Typen = Table.TransformColumnTypes(Kop, {{"DatumKey", Int64.Type}, {"ScenarioKey", Int64.Type}, {"ProductlijnKey", Int64.Type}, {"KanaalKey", Int64.Type}, {"LandKey", Int64.Type}, {"Aantal", type number}, {"Omzet", type number}, {"Kostprijs", type number}}, "en-US"),
+				    Binnen = Table.SelectRows(Typen, each [DatumKey] >= 20230101 and [DatumKey] <= 20291231)
+				in
+				    Binnen
+
+	annotation PBI_ResultType = Table

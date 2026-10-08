@@ -1,0 +1,56 @@
+/// Balansposten met zijde (Activa/Passiva), presentatievolgorde en teken (+1 activa, -1 passiva en eigen vermogen, die negatief zijn opgeslagen). Statische dimensie, niet uit de generator.
+table DimBalanspost
+	lineageTag: 50c67111-e6d8-4f61-aaa3-958226906d05
+
+	/// Naam van de balanspost.
+	column Balanspost
+		dataType: string
+		lineageTag: 6505db93-bc9b-4718-98fb-4f0a065552aa
+		summarizeBy: none
+		sourceColumn: Balanspost
+		sortByColumn: Volgorde
+
+		annotation SummarizationSetBy = User
+
+	/// Activa of Passiva.
+	column Zijde
+		dataType: string
+		lineageTag: d9cbf9a7-2cdc-432c-9009-13869e8a5197
+		summarizeBy: none
+		sourceColumn: Zijde
+
+		annotation SummarizationSetBy = User
+
+	/// Sorteervolgorde voor de weergave.
+	column Volgorde
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 67358b7b-8527-4f73-b8e8-df793be01d50
+		summarizeBy: none
+		sourceColumn: Volgorde
+
+		annotation SummarizationSetBy = User
+
+	/// +1 voor opbrengsten/activa, -1 voor kosten/passiva.
+	column Teken
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: dc608580-0e0d-4141-8354-031ecf3bf87c
+		summarizeBy: none
+		sourceColumn: Teken
+
+		annotation SummarizationSetBy = User
+
+	partition DimBalanspost = m
+		mode: import
+		source =
+				let
+				    Bron = Csv.Document(File.Contents(CsvMap & "DimBalanspost.csv"), [Delimiter=",", Columns=4, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
+				    Typen = Table.TransformColumnTypes(Kop, {{"Balanspost", type text}, {"Zijde", type text}, {"Volgorde", Int64.Type}, {"Teken", Int64.Type}}, "en-US")
+				in
+				    Typen
+
+	annotation PBI_ResultType = Table

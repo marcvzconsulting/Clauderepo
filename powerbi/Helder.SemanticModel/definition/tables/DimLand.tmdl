@@ -1,0 +1,64 @@
+/// Landen: thuismarkt Nederland en export Duitsland/België.
+table DimLand
+	lineageTag: 7b819bd6-880b-455c-8f83-581211e364eb
+
+	/// Sleutel naar DimLand.
+	column LandKey
+		dataType: int64
+		isHidden
+		isAvailableInMdx: false
+		lineageTag: 8b405474-0f94-4a69-a4d5-77920ac535db
+		summarizeBy: none
+		sourceColumn: LandKey
+
+		annotation SummarizationSetBy = User
+
+	/// Landcode (NL, DE, BE).
+	column Land
+		dataType: string
+		lineageTag: ef6e4245-454c-4782-b1e2-6f9d4e0d7183
+		summarizeBy: none
+		sourceColumn: Land
+
+		annotation SummarizationSetBy = User
+
+	/// Landnaam voor kaartvisuals.
+	column Landnaam
+		dataType: string
+		dataCategory: Country
+		lineageTag: 46ae8320-36d8-42db-bec9-438a31324ccf
+		summarizeBy: none
+		sourceColumn: Landnaam
+
+		annotation SummarizationSetBy = User
+
+	/// Thuismarkt of Export.
+	column Regio
+		dataType: string
+		lineageTag: 7fae0d19-8efe-45ae-b537-cb08e0c47be7
+		summarizeBy: none
+		sourceColumn: Regio
+
+		annotation SummarizationSetBy = User
+
+	/// ISO 3166-1 alpha-2 landcode.
+	column ISO3166
+		dataType: string
+		dataCategory: Country
+		lineageTag: 018600aa-083d-4608-a170-30ca74251587
+		summarizeBy: none
+		sourceColumn: ISO3166
+
+		annotation SummarizationSetBy = User
+
+	partition DimLand = m
+		mode: import
+		source =
+				let
+				    Bron = Csv.Document(File.Contents(CsvMap & "DimLand.csv"), [Delimiter=",", Columns=5, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Kop = Table.PromoteHeaders(Bron, [PromoteAllScalars=true]),
+				    Typen = Table.TransformColumnTypes(Kop, {{"LandKey", Int64.Type}, {"Land", type text}, {"Landnaam", type text}, {"Regio", type text}, {"ISO3166", type text}}, "en-US")
+				in
+				    Typen
+
+	annotation PBI_ResultType = Table
