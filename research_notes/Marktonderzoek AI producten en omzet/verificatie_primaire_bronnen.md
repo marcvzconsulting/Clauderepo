@@ -1,0 +1,115 @@
+# Verificatie tegen primaire bronnen (25 november 2026)
+
+Doel: de cijfers in het rapport "Marktonderzoek AI producten en omzet" die op Menlo Ventures, CBS, SEC en TrustMRR rusten, controleren op de primaire pagina. Alleen deze vier sites waren toegestaan in het netwerk. Alle pagina's zijn op 2026-11-25 opgehaald met `curl` (de WebFetch-tool kon de hosts niet bereiken).
+
+Statussen: **Bevestigd** = het getal is op de primaire pagina gelezen. **Afwijkend** = de primaire pagina geeft een ander getal of een andere definitie. **Niet gevonden** = pagina geopend, getal staat er niet. **Niet te openen** = de primaire pagina kon niet worden opgehaald.
+
+## Samenvatting
+
+- **Menlo Ventures:** alle gecontroleerde cijfers bevestigd op menlovc.com (rapporten van 2026 en 2025). Eén afronding aangescherpt (applicaties $77,3 mrd in plaats van "ongeveer $77 mrd") en de definitie vastgelegd: het gaat om "deployment spend" (infrastructuur plus applicaties), als run-rate op jaarbasis per september 2026, exclusief $102,5 mrd aan modelontwikkeling.
+- **CBS:** het conflict is opgelost. Beide getallen kloppen en gaan over een andere populatie: 17% ("een op de zes") van de bedrijven met 2 of meer werkzame personen, 33% ("ongeveer een derde") van de bedrijven met 10 of meer werkzame personen. Cijfers over 2026 verschijnen volgens CBS pas in december 2026.
+- **SEC:** niet te openen. sec.gov weigert elk verzoek met HTTP 403 ("Undeclared Automated Tool") en vraagt een user-agent met bedrijfsnaam en contactgegevens. Die mogen in deze sessie niet worden meegestuurd, en zich voordoen als browser is niet toegestaan. Geen enkel SEC-cijfer is dus gecontroleerd.
+- **TrustMRR:** de verdeling "272 van 10.150 (2,68%)" is op de site niet te reproduceren (volledige lijst alleen via de API met sleutel; de site vraagt niet te scrapen). Het aantal profielen is inmiddels 13.294. De omzet van Archybase is niet meer zichtbaar. Photo AI, TypingMind, HeadshotPro en Chatbase zijn niet gevonden. De portfolio van Marc Lou staat er wel en ligt lager dan de eigen claim.
+
+## Menlo Ventures (menlovc.com)
+
+Bron: "2026: The State of Enterprise AI", 3 november 2026, Tim Tully, Joff Redfern, Deedy Das, Derek Xiao. URL: https://menlovc.com/perspective/2026-the-state-of-enterprise-ai/
+
+Vergelijkingsbron 2025: "2025: The State of Generative AI in the Enterprise". URL: https://menlovc.com/perspective/2025-the-state-of-generative-ai-in-the-enterprise/
+
+| Bewering in het rapport | Waarde in het rapport | Waarde bij de primaire bron | Status | Exacte URL | Geraadpleegd |
+|---|---|---|---|---|---|
+| Totale zakelijke AI-uitgaven | $176,8 mrd per september 2026, 5,4 keer zoveel als een jaar eerder | "By September 2026, spending reached $176.8B, up 5.4x from last year." | Bevestigd | https://menlovc.com/perspective/2026-the-state-of-enterprise-ai/ | 2026-11-25 |
+| Applicatielaag | ongeveer $77 mrd | "The total AI application market is now $77.3B, up from $19B last year." | Bevestigd (aangescherpt naar $77,3 mrd) | idem | 2026-11-25 |
+| Applicaties 2025 | $19 mrd | "up from $19B last year"; rapport 2025: "The application layer captured $19 billion in 2025" | Bevestigd | beide URL's hierboven | 2026-11-25 |
+| Programmeren | $34 mrd, tegen $4 mrd in 2025 | Rapport 2026: "coding ($34.0B, up 7.7x)". Rapport 2025: "Coding is the clear standout at $4.0 billion (55% of departmental AI spend)". Kanttekening: $34,0 mrd gedeeld door 7,7 is circa $4,4 mrd, dus Menlo rekent in 2026 met een iets hoger, heringedeeld basisjaar dan de $4,0 mrd uit het rapport van 2025. | Bevestigd ($34,0 mrd in het rapport van 2026; $4,0 mrd in het rapport van 2025) | https://menlovc.com/perspective/2026-the-state-of-enterprise-ai/ en https://menlovc.com/perspective/2025-the-state-of-generative-ai-in-the-enterprise/ | 2026-11-25 |
+| Aandeel Anthropic, OpenAI en Google | 69% van alle zakelijke AI-uitgaven ($122,7 mrd) | "We estimate Anthropic, OpenAI, and Google command $122.7B of enterprise spend—69% of all deployment dollars, up from 50% last year and 2.3x the rest of the market combined." | Bevestigd | idem | 2026-11-25 |
+| Verticale AI | $10,1 mrd | "Vertical AI is a $10.1B market, up 2.9x from $3.5B last year." | Bevestigd | idem | 2026-11-25 |
+| Zorg | $3,7 mrd | "Healthcare ($3.7B, up 2.5x) still leads every industry category with 37% of vertical spend" | Bevestigd | idem | 2026-11-25 |
+| Juridisch | $1,8 mrd | "Legal ($1.8B) is second, up 2.8x." | Bevestigd | idem | 2026-11-25 |
+| Enquête | bijna 400 Amerikaanse beslissers | "a survey of nearly 400 U.S. enterprise decision-makers responsible for more than $4 billion in AI spending, fielded by Morning Consult from September 8–26, 2026" | Bevestigd | idem | 2026-11-25 |
+| Herkomst van de extra uitgaven (in het rapport via SaaStr) | 22% uit softwarebudgetten, grootste deel bleef bij bestaande leverancier | "new budgets, which funded 55% of incremental AI spend, compared with 22% from software budgets—though even with that, most (13%) stayed with incumbents converting SaaS licenses to AI, like Microsoft Office to Copilot, while only 9% ($12.6B) moved to AI-native vendors" | Bevestigd | idem | 2026-11-25 |
+| Aandeel AI-native in programmeren (niet in het rapport, wel in de opdracht) | 96% | "AI-native providers account for 96% of the $34B market, including the labs' own products (Claude Code, Codex) as well as independent companies like Cognition and Factory." | Bevestigd | idem | 2026-11-25 |
+| Aandeel gevestigde leveranciers in IT, data science en HR (niet in het rapport) | n.v.t. | "incumbents hold their ground where they are the system of record [...] including IT (ServiceNow, 91%), data science (Databricks and Snowflake, 88%), and HR (Workday, 68%)" | Bevestigd | idem | 2026-11-25 |
+| Uitgaven 2025 (notities: $37 mrd, herzien naar $33 mrd) | $37 mrd; herzien naar $33 mrd | Rapport 2025: "companies spent $37 billion on generative AI in 2025, up from $11.5 billion in 2024". Rapport 2026: "$33B in 2025 (3.9x)" en "Figures for prior years were reclassified to reflect this year's taxonomy, which moved data labeling vendors like Mercor from deployment to development." | Bevestigd (beide getallen en de reden van de herziening) | beide URL's hierboven | 2026-11-25 |
+| Anthropic-aandeel in API-uitgaven (in een bronlink van het rapport) | 55% | "Anthropic's share of enterprise API spend increased from 40% to 55%, OpenAI's from 27% to 31%, while Google's fell from 21% to 9%." | Bevestigd | https://menlovc.com/perspective/2026-the-state-of-enterprise-ai/ | 2026-11-25 |
+
+### Definities bij Menlo (letterlijk van de pagina)
+
+- **Wat "spend" dekt in 2026:** "Deployment (using AI) – $176.8B: Infrastructure ($99.5B): The stack that runs models and the agents built on them, from frontier model inference (Anthropic, OpenAI, Google) and inference platforms (Fireworks, Baseten, Modal, Gimlet) to agent infrastructure (Databricks, Temporal). Applications ($77.3B): AI products enterprises use, including coding ($34.0B; Claude Code, Codex) and workplace assistants ($25.0B; Microsoft Copilot)."
+- **Wat er niet in zit:** "Development (building AI) – $102.5B: Training compute ($87.2B) [...] Training data and services ($15.3B)".
+- **Meetwijze:** "Dollar figures for total market size are Menlo Ventures estimates built from a bottoms-up model informed by survey responses, public filings, and third-party reports. Revenue is shown as annualized run rate."
+- **Eigen producten van de labs in de applicatielaag:** "The labs' first-party apps also dominate the app layer and now total $40.0B: Claude Code and Codex account for $24.0B (70%) of coding spend, while enterprise Claude, ChatGPT, and Gemini make up $15.5B (62%) of the AI chatbot and productivity spend."
+- **AI-native tegenover gevestigd:** "AI-native providers now capture 77% of application-layer spend and 90% of infrastructure-layer spend, up from 63% and 44% last year. [...] excluding them [de labs], startups still take 61% of application spend."
+- **Definitie 2025 (rapport 2025, voetnoot):** "Generative AI spending includes dollars that went to foundation models, model training, AI infrastructure, and AI applications from both startups and incumbents. Note that this market sizing does not include revenue for chips (e.g., Nvidia), inference and model serving (e.g., AWS, GCP, Azure, Fireworks), or AI features built into existing software solutions (e.g., Intuit Assist)." In 2025 was de verdeling $19 mrd applicaties en $18 mrd infrastructuur.
+- **Let op bij de vergelijking:** de afbakening is tussen 2025 en 2026 veranderd (in 2026 tellen inferentieplatforms mee onder infrastructuur en is datalabeling verplaatst naar ontwikkeling). De factor 5,4 rust op Menlo's eigen herindeling van het basisjaar.
+- **Belang:** Menlo noemt Anthropic, Fireworks, Modal, OpenRouter, Legora, Lovable, Factory, OpenEvidence, Suno en Higgsfield als portfoliobedrijven.
+
+## CBS (www.cbs.nl)
+
+| Bewering in het rapport | Waarde in het rapport | Waarde bij de primaire bron | Status | Exacte URL | Geraadpleegd |
+|---|---|---|---|---|---|
+| AI-gebruik Nederlandse bedrijven 2025, alle bedrijven | "een op de zes" | Nieuwsbericht "Bedrijven gebruiken AI vaakst voor marketing of verkoop", 12-12-2025: "Een op de zes bedrijven gebruikt in 2025 AI, een verdubbeling ten opzichte van twee jaar eerder." Tabel "Gebruik AI, bedrijfsgrootte": "Totaal (2 of meer werkzame personen): 17 (2025*), 13 (2024), 8 (2023)" | Bevestigd; geldt voor bedrijven met 2 of meer werkzame personen | https://www.cbs.nl/nl-nl/nieuws/2025/50/bedrijven-gebruiken-ai-vaakst-voor-marketing-of-verkoop | 2026-11-25 |
+| AI-gebruik 2025, bedrijven met 10 of meer werkzame personen | "ongeveer een derde" | Tabel "ICT-gebruik bij bedrijven; bedrijfsgrootte, 2025" (gewijzigd 12-12-2025), rij "10 of meer werkzame personen", kolom "Artificial intelligence, AI gebruikt (% van bedrijven)": **33**. Voorlopig cijfer. Ook: "In 2025 gebruikte ongeveer een derde van de Nederlandse bedrijven met 10 of meer werkzame personen één of meer AI-technologieën (CBS, StatLine)." | Bevestigd: 33% | https://www.cbs.nl/nl-nl/cijfers/detail/86118NED en https://www.cbs.nl/nl-nl/longread/rapportages/2026/gebruik-van-ai-technologie-door-nederlandse-microbedrijven/1-inleiding | 2026-11-25 |
+| Conflict "een derde" tegenover "een op de zes" | niet eenduidig | Geen conflict: 17% is de populatie van 2 of meer werkzame personen, 33% die van 10 of meer. | Opgelost | zie de twee rijen hierboven | 2026-11-25 |
+| Microbedrijven (2 tot 10 werkzame personen) | 13,8% | Rapportage "Gebruik van AI-technologie door Nederlandse microbedrijven", 16-3-2026: "In 2025 gebruikte 13,8 procent van de Nederlandse microbedrijven één of meer van de genoemde zeven uitgevraagde AI-technologieën." Tabel 2.1: "2025*: 13,8 (12,8 - 14,8)". Het nieuwsbericht rondt af op 14. | Bevestigd | https://www.cbs.nl/nl-nl/longread/rapportages/2026/gebruik-van-ai-technologie-door-nederlandse-microbedrijven/2-gebruik-ai-technologie | 2026-11-25 |
+| Grootbedrijf, 250 of meer werkzame personen (opdracht en notities: 65%, notities "55–65%") | 65% | "In het grootbedrijf (250 of meer werkzame personen) was dit zelfs 66,2 procent." Nieuwsbericht: "250 of meer werkzame personen: 66 (2025*), 53 (2024), 42 (2023)" | Afwijkend: 66,2% (afgerond 66%), niet 65% | zelfde URL als de rij hierboven en https://www.cbs.nl/nl-nl/nieuws/2025/50/bedrijven-gebruiken-ai-vaakst-voor-marketing-of-verkoop | 2026-11-25 |
+| Overige grootteklassen (niet in het rapport) | n.v.t. | Nieuwsbericht: "2 tot 10: 14; 10 tot 50: 27; 50 tot 250: 45; 250 of meer: 66". Rapportage: "29,8 procent van het midden- en kleinbedrijf (10-249 werkzame personen)"; "bijna driekwart van de grootste bedrijven met 500 of meer werkzame personen [...] 10 tot 20 werkzame personen 'slechts' één kwart" | Bevestigd | zie hierboven | 2026-11-25 |
+| Meest voorkomende doelen | marketing, verkoop en administratie | "Van de bedrijven die software of systemen op basis van AI gebruiken, doet 35 procent dit voor marketing of verkoop. 32 procent zet AI in voor bedrijfsadministratie of bestuurstaken (zoals risicobeoordeling, selectie van sollicitanten, vertalingen of planning) en 25 procent voor R&D (onderzoek en ontwikkeling) of innovatie." Tabel: productie- of serviceprocessen 18, boekhouding, controle of financieel beheer 17, ICT-beveiliging 11, logistiek 4. | Bevestigd | https://www.cbs.nl/nl-nl/nieuws/2025/50/bedrijven-gebruiken-ai-vaakst-voor-marketing-of-verkoop | 2026-11-25 |
+| Meest gebruikte technologieën (niet in het rapport) | n.v.t. | "Bedrijven gebruiken het vaakst de AI-technologieën textmining (het analyseren van geschreven tekst: 12 procent van de bedrijven) en natural language generation (het genereren van geschreven of gesproken tekst: 8 procent)." Daarna spraakherkenning 6, machine learning 4, robotgestuurde procesautomatisering 3, beeldherkenning 2, autonome robots of drones 1. | Bevestigd | idem | 2026-11-25 |
+| Bedrijfstakken (niet in het rapport) | n.v.t. | "Bedrijven in de informatie en communicatie gebruiken met 54 procent het vaakst een of meer AI-technologieën." Specialistische zakelijke dienstverlening 31, financiële dienstverlening 28. | Bevestigd | idem | 2026-11-25 |
+| Cijfers over 2026 | niet in het rapport | Tabeltoelichting: "Cijfers over 2026 komen in december 2026 beschikbaar. Deze cijfers zullen worden gepubliceerd in een nieuwe tabel." Op de AI-reekspagina staat op 25-11-2026 geen nieuwsbericht over AI-gebruik door bedrijven in 2026. | Niet gevonden (nog niet gepubliceerd) | https://www.cbs.nl/nl-nl/cijfers/detail/86118NED en https://www.cbs.nl/nl-nl/reeksen/redactioneel/kunstmatige-intelligentie--ai-- | 2026-11-25 |
+| Ter vergelijking 2024 | niet in het rapport | Zoekresultaat op cbs.nl, artikel van 27-2-2025: "In 2024 gebruikte 22,7 procent van de bedrijven met 10 of meer werkzame personen één of meer AI-technologieën." | Bevestigd (samenvatting op cbs.nl, artikel zelf niet geopend) | https://www.cbs.nl/nl-nl/zoeken?q=AI+bedrijven+2026 | 2026-11-25 |
+
+Opmerkingen:
+
+- Alle cijfers over 2025 zijn bij CBS voorlopig. CBS meldt bij de tabel: "Vanaf dit jaar is de wegingsmethode verbeterd, waardoor de cijfers licht kunnen verschillen ten opzichte van eerdere jaren."
+- De volledige StatLine-tabellen staan op opendata.cbs.nl, dat niet is toegestaan. De voorbeeldweergave op www.cbs.nl/nl-nl/cijfers/detail/86118NED toont alleen de rijen "10 of meer werkzame personen" (33) en "250 tot 500 werkzame personen" (61); de overige grootteklassen en de uitsplitsing naar bedrijfstak voor bedrijven met 10 of meer werkzame personen zijn alleen op de geblokkeerde host te zien.
+- De 33% voor Nederland is direct vergelijkbaar met het Eurostat-gemiddelde van 20,0% (ook bedrijven met 10 of meer werkzame personen); het Eurostat-getal zelf is niet opnieuw gecontroleerd.
+
+## SEC (sec.gov)
+
+Geprobeerd: https://www.sec.gov/Archives/edgar/data/0001562088/000162828026069692/duol-20260930.htm en de EDGAR-bedrijfsindex voor Duolingo (CIK 1562088), met user-agent "research-client/1.0". Antwoord in beide gevallen HTTP 403 met de pagina "Your Request Originates from an Undeclared Automated Tool": "Please declare your traffic by updating your user agent to include company specific information." Een user-agent met bedrijfsnaam en e-mailadres mag in deze sessie niet worden meegestuurd; een browser nabootsen is geweigerd. Daarna zijn geen verdere SEC-verzoeken gedaan.
+
+| Bewering in het rapport | Waarde in het rapport | Waarde bij de primaire bron | Status | Exacte URL | Geraadpleegd |
+|---|---|---|---|---|---|
+| Duolingo, omzet Q3 2026 | $309,0 mln (+14% volgens de notities) | niet gelezen | Niet te openen (HTTP 403) | https://www.sec.gov/Archives/edgar/data/0001562088/000162828026069692/duol-20260930.htm | 2026-11-25 |
+| Duolingo, betalende abonnees en DAU | 13,1 mln en 64,9 mln (notities) | niet gelezen | Niet te openen | idem | 2026-11-25 |
+| Duolingo stopt met de Max-tier | ja (via Finviz) | niet gelezen | Niet te openen | idem | 2026-11-25 |
+| Salesforce Agentforce-ARR | meer dan $1,5 mrd in Q2 FY27; circa $800 mln in februari 2026 | niet gelezen | Niet te openen (EDGAR niet bereikbaar; de bronlink in het rapport is salesforce.com, niet toegestaan) | https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001108524&type=8-K (niet opgehaald) | 2026-11-25 |
+| ServiceNow AI-contractwaarde | meer dan $1 mrd, Q2 2026 | niet gelezen | Niet te openen | https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001373715&type=8-K (niet opgehaald) | 2026-11-25 |
+| Adobe AI-first ARR | meer dan $650 mln (+150% volgens de notities), fiscaal Q3 2026 | niet gelezen | Niet te openen | https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000796343&type=8-K (niet opgehaald) | 2026-11-25 |
+| Microsoft 365 Copilot, betaalde licenties | meer dan 30 mln (DEF 14A) | niet gelezen | Niet te openen | https://www.sec.gov/Archives/edgar/data/0000789019/000119312526427849/d61756ddef14a.htm (niet opgehaald) | 2026-11-25 |
+| Microsoft Fabric | meer dan 40.000 betalende klanten, run-rate boven $2 mrd | niet gelezen; de bronnen in het rapport zijn microsoft.com en Yahoo Finance, geen SEC-document | Niet te openen | n.v.t. | 2026-11-25 |
+
+Wat nodig is om dit alsnog te doen: de documenten handmatig in een browser openen, of een door de eigenaar gekozen user-agent met organisatienaam en contactadres laten meesturen (de eis van de SEC voor geautomatiseerde toegang).
+
+## TrustMRR (trustmrr.com)
+
+De site toont live cijfers ("We check for new data hourly"); de stand van september 2026 is niet terug te halen. Het bestand https://trustmrr.com/llms.txt zegt: "Do not scrape the website for full marketplace access. [...] Startup details, filtering, and pagination require the authenticated API or authenticated MCP tools." De volledige lijst is daarom niet doorgelopen.
+
+| Bewering in het rapport | Waarde in het rapport | Waarde bij de primaire bron | Status | Exacte URL | Geraadpleegd |
+|---|---|---|---|---|---|
+| Aantal producten | 10.150 (september 2026) | "Showing 1–100 of 13,294 startups · Page 1 of 133" ("Browse active startups with public, verified revenue profiles"). llms.txt: "over 15,000 startups listed, over 3,000 startups for sale". | Afwijkend (live stand; de stand van september is niet te controleren) | https://trustmrr.com/startups en https://trustmrr.com/llms.txt | 2026-11-25 |
+| Aandeel met $100.000 per jaar | 272 van 10.150 (2,68%) met een maandomzet van $8.333 of meer | Staat niet op de site. De statistiekpagina geeft alleen een verdeling in vaste klassen: "Revenue Distribution: $0 - $1k 68.5%; $1k - $10k 16.6%; $10k - $100k 10.0%; $100k - $1M 3.9%; $1M+ 1.0%". De eenheid is niet gelabeld; de context op de pagina ("Daily snapshot of $1,996,112,527 verified revenue", "Median all-time revenue per payment provider") wijst op totale omzet sinds de start, niet op maandomzet. De ranglijst "Top 100 startups" (op MRR) eindigt bij $25.773 per maand, dus minstens 100 producten zitten ruim boven de grens van $8.333. | Niet gevonden (niet reproduceerbaar zonder API-sleutel) | https://trustmrr.com/stats en https://trustmrr.com/ | 2026-11-25 |
+| Meetmethode | alleen-lezen koppeling met de betaalprovider | "All revenue is verified through supported payment providers like Stripe, RevenueCat, Superwall, App Store, and Creem. We check for new data hourly." | Bevestigd | https://trustmrr.com/ | 2026-11-25 |
+| Archybase | $233.647 totaal tot februari 2026, "Geverifieerd (TrustMRR)" | Pagina "ArchyBase": "All-time revenue: -", "MRR: -", "No active subscriptions", "Founded February 2026, Hong Kong SAR China", "Revenue is verified with Stripe API key. Last updated: Nov 25, 2026, 03:22 AM". Het bedrag $233.647 staat nergens in de pagina. | Afwijkend: de pagina toont geen omzet meer; het bedrag is niet te bevestigen. "Founded February 2026" past bovendien slecht bij "totaal tot februari 2026". | https://trustmrr.com/startup/archybase | 2026-11-25 |
+| Portfolio Marc Lou | $82.000 tot $98.000 per maand (zelf geclaimd) | Founderpagina: "Marc Lou (@marclou) - 20 startups · $3,338,671 revenue", "MRR $42,703 Across all startups". De som van "Revenue (30d)" over de twintig kaarten is circa $73.000 (TrustMRR $36k, DataFast $27k, MailCheap $3,7k, CodeFast $3,1k, Ship or Die $2k, ShipFast $548, rest onder $300). | Afwijkend: geverifieerd circa $73.000 in de laatste 30 dagen en $42.703 MRR, onder de eigen claim. Niet alle inkomsten (bijvoorbeeld sponsoring of nieuwsbrief) hoeven op TrustMRR te staan. | https://trustmrr.com/founder/marclou | 2026-11-25 |
+| Producten van Marc Lou afzonderlijk (niet in het rapport) | n.v.t. | ShipFast: "All-time revenue $1,273,440, Ranked #96". CodeFast: "$837,773, Ranked #154". TrustMRR: "$429,819, Ranked #249, MRR $11,992". DataFast: "$348,892, Ranked #291, MRR $27,356, 1263 active subscriptions". | Bevestigd | https://trustmrr.com/startup/shipfast, /startup/codefast, /startup/trustmrr, /startup/datafast | 2026-11-25 |
+| Photo AI (Pieter Levels) | circa $105.000 per maand | Geen pagina gevonden: /startup/photo-ai, /startup/photoai en /founder/levelsio geven "not found". | Niet gevonden | https://trustmrr.com/startup/photo-ai | 2026-11-25 |
+| TypingMind (Tony Dinh) | circa $137.000 per maand | Geen pagina gevonden: /startup/typingmind, /startup/typing-mind en /founder/tdinh_me geven "not found". | Niet gevonden | https://trustmrr.com/startup/typingmind | 2026-11-25 |
+| HeadshotPro | circa $300.000 per maand | Geen pagina gevonden: /startup/headshotpro, /startup/headshot-pro en /founder/dannypostmaa geven "not found". | Niet gevonden | https://trustmrr.com/startup/headshotpro | 2026-11-25 |
+| Chatbase | $10 mln ARR | Geen pagina gevonden: /startup/chatbase, /startup/chatbase-co en /founder/yasser_elsaid_ geven "not found". | Niet gevonden | https://trustmrr.com/startup/chatbase | 2026-11-25 |
+
+Opmerkingen:
+
+- "Niet gevonden" betekent hier: geen pagina onder de voor de hand liggende adressen. De zoekfunctie van de site werkt alleen in de browser; een product kan onder een andere naam of anoniem ("Stealth", "Private") zijn aangemeld.
+- De ranglijst op de voorpagina bevat veel anonieme en zakelijke inzendingen (bijvoorbeeld Stan, Rezi, AiSDR). TrustMRR is dus geen zuivere lijst van eenmansproducten.
+
+## Wat in het rapport is aangepast
+
+- Menlo-cijfers: label "bevestigd bij de bron", link naar menlovc.com toegevoegd, applicatielaag aangescherpt naar $77,3 mrd, definitie (deployment, run-rate) en het aandeel eigen lab-producten ($40,0 mrd) toegevoegd. Geen enkel Menlo-bedrag hoefde te worden gecorrigeerd.
+- CBS: conflict opgelost (17% bij 2 of meer, 33% bij 10 of meer werkzame personen), label "geverifieerd", doelen en percentages toegevoegd.
+- TrustMRR: actuele stand toegevoegd, Archybase-regel gecorrigeerd, regel Marc Lou aangevuld met de geverifieerde stand.
+- SEC-cijfers: ongewijzigd, met de vermelding dat het document zelf niet is geopend.
+- Het hoofdstuk over de bronnen en de eerste vervolgstap zijn herschreven.
